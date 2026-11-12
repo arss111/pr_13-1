@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Гости · статистика</title>
 <meta name="theme-color" content="#0d0b10">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%237c1f33'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='28' text-anchor='middle' fill='%23f3d9a4'%3E46%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%237c1f33'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-style='italic' font-size='34' text-anchor='middle' fill='%23f3d9a4'%3E%D0%9C%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -218,8 +218,8 @@ h2 { font-size: 24px; margin-bottom: 12px; }
   let rows = [], filter = "all", key = store.get();
 
   const dateText = P.date ? new Date(P.date + "T12:00:00Z").toLocaleDateString("ru-RU", { day: "numeric", month: "long", timeZone: "UTC" }) : "";
-  $("loginTitle").textContent = (P.name ? P.name + " · " : "") + (P.age || "");
-  $("titleName").textContent = (P.name || "") + (P.age ? " · " + P.age : "");
+  $("loginTitle").textContent = "День рождения" + (P.name ? " · " + P.name : "");
+  $("titleName").textContent = P.name || "";
   $("evtLine").textContent = [dateText, P.time, P.place].filter(Boolean).join(" · ");
 
   /* === ВХОД / ЗАГРУЗКА === */

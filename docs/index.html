@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Митьен · 46 · приглашение на день рождения</title>
+<title>Митьен приглашает на день рождения</title>
 <meta name="description" content="6 декабря, 13:00 · Ресторан «Мансарда». Открой, чтобы ответить на приглашение.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Митьен · 46 · приглашение на день рождения">
+<meta property="og:title" content="Митьен приглашает на день рождения">
 <meta property="og:description" content="6 декабря, 13:00 · Ресторан «Мансарда». Открой, чтобы ответить на приглашение.">
 <meta property="og:image" content="og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0d0b10">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%237c1f33'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='28' text-anchor='middle' fill='%23f3d9a4'%3E46%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%237c1f33'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-style='italic' font-size='34' text-anchor='middle' fill='%23f3d9a4'%3E%D0%9C%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -189,7 +189,7 @@ body { background: var(--night); color: var(--cream); font-family: var(--font-bo
   box-shadow: 0 0 0 rgba(255,220,150,0); }
 .letter::before { content: ""; position: absolute; inset: 18px; border: 2px solid rgba(169,123,60,.45); border-radius: 4px; }
 .letter .l1 { font: 600 22px var(--font-body); letter-spacing: .36em; text-transform: uppercase; color: var(--gold-lo); }
-.letter .l2 { font: 300 190px/1 var(--font-display); }
+.letter .l2 { font: italic 300 112px/.95 var(--font-display); text-align: center; margin: 22px 0 14px; }
 .letter .l3 { font: italic 400 46px var(--font-display); color: #3a2a20; }
 .env-front { position: absolute; inset: 0; z-index: 3; border-radius: 18px;
   background: repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 2px, transparent 2px 6px), linear-gradient(160deg, #96293f, #731c2f 55%, #5e1626);
@@ -265,12 +265,12 @@ body { background: var(--night); color: var(--cream); font-family: var(--font-bo
 .s-who .inner { justify-content: center; }
 .who-name { font: 400 150px/1 var(--font-display); }
 .who-sub { font: italic 400 64px/1 var(--font-display); color: var(--muted); margin-top: 26px; }
-.age-svg { width: 960px; height: 640px; margin: 10px 0 -10px; overflow: visible; }
-.age-svg text { font-family: var(--font-display); font-weight: 300; font-size: 620px; }
-.age-stroke { fill: none; stroke: var(--gold); stroke-width: 2.5; stroke-dasharray: 2400; stroke-dashoffset: 2400; }
+.age-svg { width: 960px; height: 560px; margin: 20px 0 10px; overflow: visible; }
+.age-svg text { font-family: var(--font-display); font-style: italic; font-weight: 300; font-size: 232px; }
+.age-stroke { fill: none; stroke: var(--gold); stroke-width: 2; stroke-dasharray: 900; stroke-dashoffset: 900; }
 .age-fill { opacity: 0; }
 .age-glow { opacity: 0; filter: blur(40px); }
-.slide.visible .age-stroke { animation: drawAge 2.2s .5s cubic-bezier(.6,0,.3,1) forwards, fadeOut 1s 2.6s forwards; }
+.slide.visible .age-stroke { animation: drawAge 2.6s .5s cubic-bezier(.6,0,.3,1) forwards, fadeOut 1s 2.6s forwards; }
 .slide.visible .age-fill { animation: fadeIn 1.4s 1.7s forwards; }
 .slide.visible .age-glow { animation: glow 3.5s 2s ease-in-out infinite alternate; }
 .age-shine { transform: translateX(-300px) skewX(-20deg); }
@@ -442,7 +442,7 @@ noscript { position: fixed; inset: 0; display: grid; place-items: center; paddin
           <div class="burst" aria-hidden="true"></div>
           <div class="envelope">
             <div class="env-back"></div>
-            <div class="letter"><span class="l1">Приглашение</span><span class="l2" data-f="age">46</span><span class="l3" data-f="dateShort">6 декабря</span></div>
+            <div class="letter"><span class="l1">Приглашение</span><span class="l2">на день<br>рождения</span><span class="l3" data-f="dateShort">6 декабря</span></div>
             <div class="env-front"></div>
             <div class="env-flap"><svg class="flap-edge" viewBox="0 0 860 348" preserveAspectRatio="none" aria-hidden="true"><path d="M8 6L430 340L852 6"/></svg></div>
             <button class="seal" id="seal" type="button" aria-label="Сломать печать и открыть приглашение"><span class="half l"></span><span class="half r"></span></button>
@@ -466,24 +466,24 @@ noscript { position: fixed; inset: 0; display: grid; place-items: center; paddin
     </section>
 
     <!-- === SLIDE 2: КТО И СКОЛЬКО ЛЕТ === -->
-    <section class="slide s-who" data-step="who" data-info aria-label="Кто и сколько лет">
+    <section class="slide s-who" data-step="who" data-info aria-label="Приглашение на день рождения">
       <div class="balloons" id="balloonsWho"></div>
       <div class="inner">
-        <p class="kicker reveal-down" style="--d:0">У нас праздник</p>
+        <p class="kicker reveal-down" style="--d:0">Приглашение</p>
         <h2 class="who-name reveal-l" style="--d:1" data-f="name"></h2>
-        <p class="who-sub reveal-r" style="--d:2">празднует</p>
-        <svg class="age-svg" viewBox="0 0 960 640" role="img" aria-label="46 лет">
+        <p class="who-sub reveal-r" style="--d:2">приглашает тебя на свой</p>
+        <svg class="age-svg" viewBox="0 0 960 560" role="img" aria-label="день рождения">
           <defs>
             <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3d6"/><stop offset=".45" stop-color="#e8c78a"/><stop offset="1" stop-color="#a47838"/></linearGradient>
             <linearGradient id="shineGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-            <mask id="ageMask"><text x="480" y="560" text-anchor="middle" fill="#fff" data-f="age">46</text></mask>
+            <mask id="ageMask"><text text-anchor="middle" fill="#fff"><tspan x="480" y="230">день</tspan><tspan x="480" y="480">рождения</tspan></text></mask>
           </defs>
-          <text class="age-glow" x="480" y="560" text-anchor="middle" fill="#e8c78a" data-f="age">46</text>
-          <text class="age-fill" x="480" y="560" text-anchor="middle" fill="url(#goldGrad)" data-f="age">46</text>
-          <text class="age-stroke" x="480" y="560" text-anchor="middle" data-f="age">46</text>
-          <g mask="url(#ageMask)"><rect class="age-shine" x="0" y="0" width="220" height="640" fill="url(#shineGrad)"/></g>
+          <text class="age-glow" text-anchor="middle" fill="#e8c78a"><tspan x="480" y="230">день</tspan><tspan x="480" y="480">рождения</tspan></text>
+          <text class="age-fill" text-anchor="middle" fill="url(#goldGrad)"><tspan x="480" y="230">день</tspan><tspan x="480" y="480">рождения</tspan></text>
+          <text class="age-stroke" text-anchor="middle"><tspan x="480" y="230">день</tspan><tspan x="480" y="480">рождения</tspan></text>
+          <g mask="url(#ageMask)"><rect class="age-shine" x="0" y="0" width="220" height="560" fill="url(#shineGrad)"/></g>
         </svg>
-        <p class="who-caps reveal" style="--d:8" data-f="ageWord">лет</p>
+        <p class="who-caps reveal" style="--d:8" data-f="dateTime"></p>
       </div>
       <div class="tap-hint reveal" style="--d:12">Дальше <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
     </section>
@@ -649,7 +649,8 @@ const F = {
   timeBlock: P.time ? " · начало в " + P.time : "", place: P.place,
   addressFull: [P.city, P.address].filter(Boolean).join(", "),
   greeting: (P.greeting || "").replace(/^Привет!?\s*/, "") || "У меня для тебя кое-что важное",
-  ageWord: plural(Number(P.age), ["год", "года", "лет"]),
+  initial: (P.name || "М").trim().charAt(0).toUpperCase(),
+  dateTime: dateShort + (P.time ? " · " + P.time : ""),
 };
 document.querySelectorAll("[data-f]").forEach((el) => { const v = F[el.dataset.f]; if (v != null) el.textContent = v; });
 document.querySelectorAll(".when-meta [data-f='timeBlock']").forEach((el) => { el.innerHTML = ""; if (P.time) { el.append(" · начало в "); const b = document.createElement("b"); b.textContent = P.time; el.append(b); } });
@@ -934,7 +935,7 @@ function onEnter(step) {
     <circle cx="115" cy="115" r="74" fill="none" stroke="rgba(40,0,8,.35)" stroke-width="8"/>
     <circle cx="113" cy="113" r="74" fill="none" stroke="rgba(255,205,170,.28)" stroke-width="2.5"/>
     <circle cx="115" cy="115" r="60" fill="none" stroke="rgba(243,217,164,.4)" stroke-width="2" stroke-dasharray="2 7"/>
-    <text x="115" y="140" text-anchor="middle" font-family="Cormorant Garamond, serif" font-weight="600" font-size="72" fill="#f3d9a4" stroke="rgba(60,5,12,.35)" stroke-width="1">${F.age}</text>
+    <text x="115" y="140" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-weight="500" font-size="120" fill="#f3d9a4" stroke="rgba(60,5,12,.35)" stroke-width="1">${F.initial}</text>
     <ellipse cx="80" cy="62" rx="30" ry="14" fill="rgba(255,255,255,.2)" transform="rotate(-32 80 62)"/></svg>`;
   document.querySelectorAll("#seal .half").forEach((h) => (h.innerHTML = svg));
 })();
@@ -1055,7 +1056,7 @@ function downloadIcs() {
   const esc = (s) => String(s || "").replace(/([,;\\])/g, "\\$1");
   const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//birthday-invite//RU", "CALSCALE:GREGORIAN", "BEGIN:VEVENT",
     "UID:birthday-" + P.date + "@invite", "DTSTAMP:" + z(new Date()), "DTSTART:" + z(start), "DTEND:" + z(end),
-    "SUMMARY:" + esc("День рождения " + P.name + " · " + P.age), "LOCATION:" + esc([P.place, P.city, P.address].filter(Boolean).join(", ")),
+    "SUMMARY:" + esc("День рождения — " + P.name), "LOCATION:" + esc([P.place, P.city, P.address].filter(Boolean).join(", ")),
     "BEGIN:VALARM", "TRIGGER:-P1D", "ACTION:DISPLAY", "DESCRIPTION:" + esc("Завтра день рождения!"), "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
