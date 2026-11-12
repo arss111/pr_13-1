@@ -39,6 +39,7 @@ window.PARTY = {
     { id: "prosecco", label: "Просекко" },
     { id: "champagne", label: "Шампанское" },
     { id: "wine", label: "Вино" },
+    { id: "other", label: "Свой вариант" }, // гость вписывает свой напиток
     { id: "none", label: "Не пью алкоголь" },
   ],
 

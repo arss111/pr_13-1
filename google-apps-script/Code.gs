@@ -11,9 +11,10 @@ const ADMIN_PASSWORD = 'поменяйте-этот-пароль';
 
 // ------------------------------------------------------------
 const SHEET_NAME = 'Ответы';
-const HEADERS = ['id', 'Дата ответа', 'Имя', 'Придёт?', 'Сколько человек', 'Напитки', 'Комментарий', 'Изменён'];
+const HEADERS = ['id', 'Дата ответа', 'Имя', 'Придёт?', 'Сколько человек', 'Напитки', 'Свой вариант напитка', 'Изменён'];
 const ATTENDING = { yes: 'Да', maybe: 'Пока не знаю', no: 'Нет' };
-const DRINKS = { vodka: 'Водка', prosecco: 'Просекко', champagne: 'Шампанское', wine: 'Вино', none: 'Не пью алкоголь' };
+const DRINKS = { vodka: 'Водка', prosecco: 'Просекко', champagne: 'Шампанское', wine: 'Вино', other: 'Свой вариант', none: 'Не пью алкоголь' };
+const ALCOHOL = ['vodka', 'prosecco', 'champagne', 'wine'];
 const MAX_GUESTS = 10;
 
 function sheet_() {
@@ -68,16 +69,23 @@ function validate_(d) {
       if (!DRINKS[raw[i]]) return { ok: false, error: 'Неизвестный напиток' };
       if (drinks.indexOf(raw[i]) < 0) drinks.push(raw[i]);
     }
-    if (drinks.indexOf('none') >= 0) drinks = ['none']; // «Не пью алкоголь» исключает остальное
+    // «Не пью алкоголь» исключает алкогольные напитки (свой вариант оставляем — это может быть морс или сок)
+    if (drinks.indexOf('none') >= 0) drinks = drinks.filter(function (x) { return ALCOHOL.indexOf(x) < 0; });
+    if (!drinks.length) return { ok: false, error: 'Выбери хотя бы один напиток' };
     const order = Object.keys(DRINKS);
     drinks.sort(function (a, b) { return order.indexOf(a) - order.indexOf(b); });
   }
 
-  const comment = clean_(d.comment, 500, true);
+  let other = '';
+  if (drinks.indexOf('other') >= 0) {
+    other = clean_(d.drinkOther, 80, false);
+    if (!other) return { ok: false, error: 'Напиши свой вариант напитка' };
+  }
+  const listed = drinks.filter(function (x) { return x !== 'other'; }).map(function (x) { return DRINKS[x]; }).join(', ');
   return {
     ok: true,
     id: id,
-    row: [id, null, name, att, guests, drinks.map(function (x) { return DRINKS[x]; }).join(', '), comment, null],
+    row: [id, null, name, att, guests, listed, other, null],
   };
 }
 
@@ -151,14 +159,17 @@ function doGet(e) {
     sh.getRange(2, 1, last - 1, HEADERS.length).getValues().forEach(function (r) {
       if (!r[0]) return;
       const iso = function (v) { return v instanceof Date ? v.toISOString() : (v ? String(v) : ''); };
+      const drinks = String(r[5] || '').split(',').map(function (s) { return drinkBack[s.trim()]; }).filter(Boolean);
+      const other = String(r[6] || '');
+      if (other) drinks.push('other');
       rows.push({
         id: String(r[0]),
         created: iso(r[1]),
         name: String(r[2]),
         attending: attBack[r[3]] || 'yes',
         guests: Number(r[4]) || 0,
-        drinks: String(r[5] || '').split(',').map(function (s) { return drinkBack[s.trim()]; }).filter(Boolean),
-        comment: String(r[6] || ''),
+        drinks: drinks,
+        drinkOther: other,
         updated: iso(r[7]) || iso(r[1]),
       });
     });

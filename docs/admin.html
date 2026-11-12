@@ -102,6 +102,12 @@ h2 { font-size: 24px; margin-bottom: 12px; }
 .tag.no { background: rgba(228,143,143,.14); color: var(--no); }
 .del { min-height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid rgba(228,143,143,.4); background: transparent; color: var(--no); font: 500 13px var(--sans); cursor: pointer; }
 .empty { color: var(--muted); padding: 24px 0 8px; text-align: center; }
+.others { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 8px; }
+.others:empty { display: none; }
+.others li { padding: 10px 14px; border-radius: 12px; background: rgba(0,0,0,.22); font-size: 14px; }
+.others li b { color: var(--gold); font-weight: 600; }
+.others .t { color: var(--muted); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; background: none; padding: 0 2px; }
+.tbl .other { color: var(--gold); font-style: italic; }
 .status { color: var(--muted); font-size: 13px; margin: -8px 0 14px; }
 
 /* === ТЕЛЕФОН === */
@@ -168,6 +174,7 @@ h2 { font-size: 24px; margin-bottom: 12px; }
         <h2>Напитки</h2>
         <p class="muted small">Сколько гостей выбрали (среди «Да» и «Пока не знаю»)</p>
         <div class="bars" id="bars"></div>
+        <ul class="others" id="others"></ul>
       </div>
     </section>
 
@@ -183,7 +190,7 @@ h2 { font-size: 24px; margin-bottom: 12px; }
         <button class="chip" data-f="no" type="button">Не придут</button>
       </div>
       <table class="tbl" id="tbl">
-        <thead><tr><th>Имя</th><th>Ответ</th><th>Человек</th><th>Напитки</th><th>Комментарий</th><th>Когда ответил</th><th></th></tr></thead>
+        <thead><tr><th>Имя</th><th>Ответ</th><th>Человек</th><th>Напитки</th><th>Свой вариант</th><th>Когда ответил</th><th></th></tr></thead>
         <tbody id="tbody"></tbody>
       </table>
       <p class="empty" id="empty" hidden></p>
@@ -264,6 +271,12 @@ h2 { font-size: 24px; margin-bottom: 12px; }
       if (s.people > s.n) val.appendChild(el("small", null, " · " + s.people + " чел."));
       row.append(el("span", "bar-label", s.label), track, val); bars.appendChild(row);
     });
+    const ol = $("others"); ol.innerHTML = "";
+    const custom = coming.filter((r) => r.drinkOther);
+    if (custom.length) {
+      ol.appendChild(el("li", "t", "Свои варианты гостей"));
+      custom.forEach((r) => { const li = el("li"); li.append(el("b", null, r.name + ": "), document.createTextNode(r.drinkOther)); ol.appendChild(li); });
+    }
     table();
   }
 
@@ -298,8 +311,8 @@ h2 { font-size: 24px; margin-bottom: 12px; }
       td("Имя", "name", r.name);
       const a = ATT[r.attending] || ATT.yes; td("Ответ").appendChild(el("span", "tag " + a[1], a[0]));
       td("Человек", null, r.attending === "no" ? "—" : String(r.guests));
-      td("Напитки", null, r.drinks.map((d) => drinkLabel[d] || d).join(", ") || "—");
-      td("Комментарий", "comment", r.comment || "—");
+      td("Напитки", null, r.drinks.filter((d) => d !== "other").map((d) => drinkLabel[d] || d).join(", ") || "—");
+      td("Свой вариант", "other", r.drinkOther || "—");
       const w = td("Когда", "when", fmt(r.updated || r.created));
       if (r.updated && r.created && r.updated !== r.created) w.appendChild(el("small", "muted", " (изменён)"));
       const act = el("td", "act"); const del = el("button", "del", "Удалить"); del.type = "button";
@@ -326,9 +339,9 @@ h2 { font-size: 24px; margin-bottom: 12px; }
   /* === ВЫГРУЗКА В EXCEL (CSV с BOM и «;» — Excel открывает сразу с кириллицей) === */
   function csv() {
     const cell = (v) => { let s = String(v == null ? "" : v); if (/^[=+\-@\t\r]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""') + '"'; };
-    const head = ["Имя", "Ответ", "Сколько человек", "Напитки", "Комментарий", "Когда ответил"];
+    const head = ["Имя", "Ответ", "Сколько человек", "Напитки", "Свой вариант напитка", "Когда ответил"];
     const lines = [head.map(cell).join(";")].concat(rows.map((r) => [r.name, (ATT[r.attending] || ATT.yes)[0], r.attending === "no" ? 0 : r.guests,
-      r.drinks.map((d) => drinkLabel[d] || d).join(", "), r.comment, fmt(r.updated || r.created)].map(cell).join(";")));
+      r.drinks.filter((d) => d !== "other").map((d) => drinkLabel[d] || d).join(", "), r.drinkOther || "", fmt(r.updated || r.created)].map(cell).join(";")));
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" }));
     a.download = "otvety-gostey.csv"; document.body.appendChild(a); a.click();

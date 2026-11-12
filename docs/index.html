@@ -16,7 +16,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%237c1f33'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='28' text-anchor='middle' fill='%23f3d9a4'%3E46%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Golos+Text:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="config.js"></script>
 <style>
 /* ===========================================
@@ -97,24 +97,30 @@ body { background: var(--night); color: var(--cream); font-family: var(--font-bo
 #confetti { z-index: 2000; }
 
 /* ===========================================
-   SLIDE TRANSITIONS: между экранами
-   Следующий экран выезжает справа из размытия, прошлый уходит влево.
+   SLIDE TRANSITIONS: объёмные переходы между экранами
+   Новый экран прилетает из глубины, прошлый пролетает мимо зрителя.
    =========================================== */
-.slide { transform: translateX(140px) scale(.96); filter: blur(10px);
-  transition: opacity .75s var(--ease-out-expo), visibility .75s, transform 1s var(--ease-out-expo), filter .8s var(--ease-out-expo); }
-.slide.past { transform: translateX(-140px) scale(.96); }
+.deck-stage { perspective: 2400px; }
+.slide { transform: translate3d(0, 70px, -760px) rotateX(9deg); filter: blur(14px);
+  transition: opacity .8s var(--ease-out-expo), visibility .8s, transform 1.15s var(--ease-out-expo), filter .9s var(--ease-out-expo); }
+.slide.past { transform: translate3d(0, -50px, 560px) rotateX(-7deg); }
 .slide.active { transform: none; filter: none; }
 
 /* ===========================================
    ANIMATIONS: появление элементов на активном экране
-   .reveal — снизу вверх, .reveal-blur — из размытия, .reveal-pop — пружинкой.
-   Задержка: style="--d:N" (шаг 120 мс).
+   Элементы залетают с разных сторон:
+   .reveal — снизу, .reveal-down — сверху, .reveal-l — слева, .reveal-r — справа,
+   .reveal-blur — из размытия, .reveal-pop — пружинкой. Задержка: style="--d:N" (шаг 120 мс).
    =========================================== */
-.reveal, .reveal-blur, .reveal-pop { opacity: 0; transition-delay: calc(var(--d, 0) * 120ms + 250ms); }
-.reveal { transform: translateY(46px); transition-property: opacity, transform; transition-duration: 1s; transition-timing-function: var(--ease-out-expo); }
-.reveal-blur { filter: blur(22px); transform: scale(1.08); transition-property: opacity, filter, transform; transition-duration: 1.6s; transition-timing-function: var(--ease-out-expo); }
-.reveal-pop { transform: scale(.6); transition-property: opacity, transform; transition-duration: .9s; transition-timing-function: var(--spring); }
-.slide.visible .reveal, .slide.visible .reveal-blur, .slide.visible .reveal-pop { opacity: 1; transform: none; filter: none; }
+.reveal, .reveal-down, .reveal-l, .reveal-r, .reveal-blur, .reveal-pop { opacity: 0; transition-delay: calc(var(--d, 0) * 120ms + 300ms); }
+.reveal, .reveal-down, .reveal-l, .reveal-r { transition-property: opacity, transform; transition-duration: 1.1s; transition-timing-function: var(--ease-out-expo); }
+.reveal { transform: translateY(70px); }
+.reveal-down { transform: translateY(-70px); }
+.reveal-l { transform: translateX(-180px) rotate(-5deg); }
+.reveal-r { transform: translateX(180px) rotate(5deg); }
+.reveal-blur { filter: blur(22px); transform: scale(1.12); transition-property: opacity, filter, transform; transition-duration: 1.6s; transition-timing-function: var(--ease-out-expo); }
+.reveal-pop { transform: scale(.5) rotate(-6deg); transition-property: opacity, transform; transition-duration: .9s; transition-timing-function: var(--spring); }
+.slide.visible :is(.reveal, .reveal-down, .reveal-l, .reveal-r, .reveal-blur, .reveal-pop) { opacity: 1; transform: none; filter: none; }
 
 /* ===========================================
    TYPOGRAPHY & COMMON COMPONENTS
@@ -155,56 +161,32 @@ body { background: var(--night); color: var(--cream); font-family: var(--font-bo
 @keyframes nudge { 50% { transform: translateX(14px); } }
 
 /* ===========================================
-   SLIDE 0 — КОНВЕРТ
-   1) конверт прилетает лицевой стороной: авиа-кайма, марка, штемпель,
-      «Кому / От» пишутся от руки;
-   2) сам переворачивается — на обороте сургучная печать;
-   3) нажатие на печать: печать раскалывается, клапан открывается, письмо выезжает.
+   SLIDE 0 — КОНВЕРТ С СУРГУЧНОЙ ПЕЧАТЬЮ
+   Конверт прилетает и мягко покачивается. Нажатие на печать:
+   печать раскалывается → вспышка золотого света и искры → клапан распахивается →
+   письмо вылетает вверх → «камера» влетает в письмо, и начинается история.
    =========================================== */
 .s-intro .inner { justify-content: center; gap: 80px; }
 .intro-title { font: italic 300 120px/1 var(--font-display); }
 .env-wrap { position: relative; width: 860px; height: 580px; cursor: pointer; opacity: 0; }
-.env-wrap.landed { opacity: 1; }
-.slide.visible .env-wrap { animation: arrive 1.6s .3s var(--ease-out-expo) forwards; }
-.slide.visible .env-wrap.flip-a { animation: flipA .42s ease-in forwards; }
-.slide.visible .env-wrap.flip-b { animation: flipB .6s var(--ease-out-expo) forwards; }
-.slide.visible .env-wrap.idle { animation: float 5s ease-in-out infinite; }
-.s-intro.opened .env-wrap { animation: none !important; opacity: 1; }
-@keyframes arrive { 0% { opacity: 0; transform: translate(300px, -1300px) rotate(32deg) scale(.8); } 55% { opacity: 1; } 78% { transform: translate(-10px, 16px) rotate(-4deg); } 100% { opacity: 1; transform: rotate(-2deg); } }
-@keyframes flipA { from { transform: perspective(2400px) rotate(-2deg) rotateY(0); } to { transform: perspective(2400px) rotate(-1deg) rotateY(90deg) scale(.95); } }
-@keyframes flipB { from { transform: perspective(2400px) rotateY(-90deg) scale(.95); } to { transform: perspective(2400px) rotateY(0); } }
-@keyframes float { 0%, 100% { transform: none; } 50% { transform: translateY(-16px) rotate(-.6deg); } }
-.env-wrap:not(.show-back) .envelope { visibility: hidden; }
-.env-wrap.show-back .face-front { display: none; }
+.slide.visible .env-wrap { animation: arrive 1.8s .35s var(--ease-out-expo) forwards, float 5s 2.3s ease-in-out infinite; }
+@keyframes arrive {
+  0% { opacity: 0; transform: translateY(-1350px) rotate(-26deg) scale(.7); }
+  45% { opacity: 1; }
+  70% { transform: translateY(34px) rotate(3deg) scale(1.02); }
+  85% { transform: translateY(-10px) rotate(-1.5deg); }
+  100% { opacity: 1; transform: none; } }
+@keyframes float { 0%, 100% { opacity: 1; transform: none; } 50% { opacity: 1; transform: translateY(-16px) rotate(-.8deg); } }
+/* После открытия «камера» влетает в письмо */
+.s-intro.opened .env-wrap { opacity: 1; transform-origin: 50% 200px; animation: zoomInto 1.3s 2s cubic-bezier(.7,0,.25,1) forwards; }
+@keyframes zoomInto { 0% { opacity: 1; transform: none; filter: none; } 65% { opacity: 1; } 100% { opacity: 0; transform: scale(3.8); filter: blur(8px); } }
 
-/* --- Лицевая сторона --- */
-.face-front { position: absolute; inset: 0; border-radius: 18px; overflow: hidden; box-shadow: 0 80px 120px -50px rgba(0,0,0,.9);
-  background: repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 2px, transparent 2px 6px),
-              repeating-linear-gradient(90deg, rgba(0,0,0,.06) 0 2px, transparent 2px 7px),
-              radial-gradient(120% 90% at 30% 20%, #a1304a, #761d31 55%, #5a1626); }
-.face-front::before { content: ""; position: absolute; inset: 0; border: 20px solid transparent; pointer-events: none;
-  border-image: repeating-linear-gradient(-45deg, #e8c78a 0 28px, #f6ecdc 28px 42px, transparent 42px 70px) 20; opacity: .92; }
-.label-stamp { position: absolute; left: 76px; top: 74px; padding: 12px 22px; border: 4px solid rgba(232,199,138,.8); border-radius: 10px; transform: rotate(-6deg);
-  font: 700 28px var(--font-body); letter-spacing: .22em; padding-left: calc(22px + .22em); color: rgba(232,199,138,.9); text-transform: uppercase; }
-.pstamp { position: absolute; right: 70px; top: 62px; width: 184px; height: 220px; transform: rotate(4deg); filter: drop-shadow(0 8px 10px rgba(0,0,0,.35)); }
-.postmark { position: absolute; right: 118px; top: 112px; width: 300px; height: 190px; transform: rotate(-12deg); opacity: 0; }
-.slide.visible .postmark { animation: stampIn .35s 1.4s cubic-bezier(.3,1.7,.5,1) forwards; }
-@keyframes stampIn { from { opacity: 0; transform: rotate(-12deg) scale(1.6); } to { opacity: .9; transform: rotate(-12deg) scale(1); } }
-.addr { position: absolute; left: 80px; bottom: 74px; width: 540px; }
-.addr .row { display: flex; align-items: flex-end; gap: 24px; border-bottom: 3px dotted rgba(246,236,220,.35); padding: 0 0 4px; margin-top: 22px; }
-.addr .lbl { font: 600 24px var(--font-body); letter-spacing: .2em; text-transform: uppercase; color: rgba(246,236,220,.6); padding-bottom: 14px; }
-.addr .hand { font: 700 96px/1 "Caveat", cursive; color: #fbefd9; clip-path: inset(-20% 100% -30% 0); white-space: nowrap; }
-.slide.visible .addr .hand { animation: write .9s cubic-bezier(.45,0,.55,1) forwards; }
-.slide.visible .addr .hand.w1 { animation-delay: 1.7s; }
-.slide.visible .addr .hand.w2 { animation-delay: 2.6s; font-size: 80px; }
-@keyframes write { to { clip-path: inset(-20% -5% -30% 0); } }
-
-/* --- Оборотная сторона (с клапаном и печатью) --- */
 .envelope { position: absolute; inset: 0; perspective: 2200px; }
 .env-back { position: absolute; inset: 0; border-radius: 18px; box-shadow: 0 80px 120px -50px rgba(0,0,0,.9);
   background: radial-gradient(circle, rgba(232,199,138,.22) 0 3px, transparent 4px) 0 0 / 30px 30px, radial-gradient(circle, rgba(232,199,138,.12) 0 2px, transparent 3px) 15px 15px / 30px 30px, #4a1120; }
 .letter { position: absolute; left: 50px; right: 50px; top: 40px; height: 500px; border-radius: 10px; z-index: 2;
-  background: linear-gradient(180deg, #fbf4e6, #efe1c6); color: var(--wine); display: flex; flex-direction: column; align-items: center; padding-top: 48px; gap: 6px; }
+  background: linear-gradient(180deg, #fbf4e6, #efe1c6); color: var(--wine); display: flex; flex-direction: column; align-items: center; padding-top: 48px; gap: 6px;
+  box-shadow: 0 0 0 rgba(255,220,150,0); }
 .letter::before { content: ""; position: absolute; inset: 18px; border: 2px solid rgba(169,123,60,.45); border-radius: 4px; }
 .letter .l1 { font: 600 22px var(--font-body); letter-spacing: .36em; text-transform: uppercase; color: var(--gold-lo); }
 .letter .l2 { font: 300 190px/1 var(--font-display); }
@@ -222,31 +204,45 @@ body { background: var(--night); color: var(--cream); font-family: var(--font-bo
 .flap-edge { position: absolute; inset: 0; width: 100%; height: 100%; backface-visibility: hidden; overflow: visible; }
 .flap-edge path { fill: none; stroke: var(--gold); stroke-width: 4; stroke-linejoin: round; filter: drop-shadow(0 3px 2px rgba(0,0,0,.35)); }
 
-/* --- Сургучная печать (неровный край, раскалывается на две половинки) --- */
+/* --- Сургучная печать: неровный край, при нажатии раскалывается на две половинки --- */
 .seal { position: absolute; z-index: 6; left: 50%; top: 60%; width: 230px; height: 230px; margin: -115px 0 0 -115px; border: 0; padding: 0; background: none; cursor: pointer;
-  filter: drop-shadow(0 18px 18px rgba(30,4,8,.6)); animation: sealPulse 2.4s ease-in-out infinite; }
-.seal::after { content: ""; position: absolute; inset: 14px; border-radius: 50%; border: 4px solid rgba(232,199,138,.7); animation: ring 2.4s ease-out infinite; pointer-events: none; }
+  filter: drop-shadow(0 18px 18px rgba(30,4,8,.6)); animation: sealPulse 2.4s 2.4s ease-in-out infinite; }
+.seal::after { content: ""; position: absolute; inset: 14px; border-radius: 50%; border: 4px solid rgba(232,199,138,.7); opacity: 0; animation: ring 2.4s 2.4s ease-out infinite; pointer-events: none; }
 .seal .half { position: absolute; inset: 0; }
 .seal .half svg { width: 100%; height: 100%; display: block; }
 .seal .half.l { clip-path: polygon(0 0, 53% 0, 47% 22%, 56% 44%, 45% 64%, 54% 82%, 49% 100%, 0 100%); }
 .seal .half.r { clip-path: polygon(53% 0, 100% 0, 100% 100%, 49% 100%, 54% 82%, 45% 64%, 56% 44%, 47% 22%); }
-@keyframes sealPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-@keyframes ring { 0% { transform: scale(.9); opacity: .9; } 100% { transform: scale(1.5); opacity: 0; } }
+@keyframes sealPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+@keyframes ring { 0% { transform: scale(.9); opacity: .9; } 100% { transform: scale(1.6); opacity: 0; } }
 .opened .seal { animation: none; pointer-events: none; }
 .opened .seal::after { display: none; }
-.opened .seal .half.l { animation: splitL 1s cubic-bezier(.5,0,.7,.4) forwards; }
-.opened .seal .half.r { animation: splitR 1s cubic-bezier(.5,0,.7,.4) forwards; }
-@keyframes splitL { 20% { transform: translateX(-10px) rotate(-6deg); } 100% { transform: translate(-120px, 300px) rotate(-55deg); opacity: 0; } }
-@keyframes splitR { 20% { transform: translateX(10px) rotate(6deg); } 100% { transform: translate(120px, 320px) rotate(50deg); opacity: 0; } }
-.opened .env-flap { animation: flapOpen 1s .35s cubic-bezier(.4,0,.2,1) forwards; }
-.opened .letter { animation: letterOut 1.4s 1.05s var(--ease-out-expo) forwards; }
-@keyframes flapOpen { 0% { transform: rotateX(0); z-index: 4; } 49% { z-index: 4; } 50% { z-index: 1; } 100% { transform: rotateX(180deg); z-index: 1; } }
-@keyframes letterOut { 0% { transform: translateY(0); z-index: 2; } 50% { transform: translateY(-62%); z-index: 2; } 51% { z-index: 5; } 100% { transform: translateY(-18%) scale(1.14); z-index: 5; } }
+.opened .seal .half.l { animation: splitL 1.1s cubic-bezier(.4,0,.6,1) forwards; }
+.opened .seal .half.r { animation: splitR 1.1s cubic-bezier(.4,0,.6,1) forwards; }
+@keyframes splitL { 15% { transform: translateX(-12px) rotate(-8deg); } 100% { transform: translate(-260px, 520px) rotate(-200deg) scale(.7); opacity: 0; } }
+@keyframes splitR { 15% { transform: translateX(12px) rotate(8deg); } 100% { transform: translate(280px, 560px) rotate(220deg) scale(.7); opacity: 0; } }
 
-.intro-hint { font: 600 28px var(--font-body); letter-spacing: .3em; padding-left: .3em; text-transform: uppercase; color: var(--muted); opacity: 0; transition: opacity .6s; min-height: 34px; }
-.intro-hint.show { opacity: 1; animation: breathe 2.4s 1s ease-in-out infinite; }
-@keyframes breathe { 50% { opacity: .4; } }
-.opened .intro-hint, .opened .intro-title { opacity: 0 !important; transition: opacity .5s; animation: none; }
+/* --- Вспышка золотого света из конверта --- */
+.burst { position: absolute; left: 50%; top: 40%; width: 1600px; height: 1600px; margin: -800px 0 0 -800px; z-index: 1; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle, rgba(255,240,205,.95) 0, rgba(240,205,140,.55) 10%, rgba(232,199,138,0) 40%),
+              repeating-conic-gradient(from 0deg, rgba(255,226,160,.38) 0 3deg, transparent 3deg 14deg);
+  -webkit-mask: radial-gradient(circle, #000 12%, transparent 58%); mask: radial-gradient(circle, #000 12%, transparent 58%); }
+.opened .burst { animation: burst 2.4s .35s ease-out forwards; }
+@keyframes burst { 0% { opacity: 0; transform: scale(.15) rotate(0); } 22% { opacity: 1; } 100% { opacity: 0; transform: scale(1.5) rotate(50deg); } }
+
+/* --- Клапан и письмо --- */
+.opened .env-flap { animation: flapOpen 1s .4s cubic-bezier(.4,0,.2,1) forwards; }
+.opened .letter { animation: letterOut 1.5s 1s var(--ease-out-expo) forwards; }
+@keyframes flapOpen { 0% { transform: rotateX(0); z-index: 4; } 49% { z-index: 4; } 50% { z-index: 1; } 100% { transform: rotateX(180deg); z-index: 1; } }
+@keyframes letterOut {
+  0% { transform: translateY(0); z-index: 2; }
+  45% { transform: translateY(-70%) rotate(-2deg); z-index: 2; }
+  46% { z-index: 5; }
+  100% { transform: translateY(-18%) scale(1.14) rotate(0); z-index: 5; box-shadow: 0 0 120px rgba(255,220,150,.55); } }
+
+.intro-hint { font: 600 28px var(--font-body); letter-spacing: .3em; padding-left: .3em; text-transform: uppercase; color: var(--muted); opacity: 0; min-height: 34px; }
+.slide.visible .intro-hint { animation: breathe 2.4s 2.3s ease-in-out infinite; } /* без fill-mode: до приземления конверта подсказка скрыта */
+@keyframes breathe { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+.slide.visible.opened .intro-hint, .opened .intro-title { opacity: 0 !important; transition: opacity .5s; animation: none; }
 
 /* ===========================================
    SLIDE 1 — ПРИВЕТСТВИЕ
@@ -377,11 +373,13 @@ textarea.field { height: 460px; text-align: left; padding: 36px 44px; font: 400 
 
 /* --- Карточки напитков с иконками --- */
 .drinks { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
-.drink { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; height: 300px; border-radius: 44px; cursor: pointer;
+.drink { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; height: 232px; border-radius: 44px; cursor: pointer;
   border: 3px solid rgba(232,199,138,.25); background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); color: var(--cream);
-  font: 600 44px var(--font-body); transition: transform .35s var(--spring), border-color .25s, background .25s, color .25s; }
-.drink:last-child { grid-column: 1 / -1; flex-direction: row; height: 200px; gap: 34px; }
-.drink svg { width: 130px; height: 130px; color: var(--gold); }
+  font: 600 40px var(--font-body); transition: transform .35s var(--spring), border-color .25s, background .25s, color .25s; }
+.other-wrap { width: 900px; margin-top: 26px; animation: popIn .5s var(--spring); }
+.other-wrap .field { height: 140px; font-size: 46px; }
+@keyframes popIn { from { opacity: 0; transform: translateY(-20px) scale(.96); } }
+.drink svg { width: 104px; height: 104px; color: var(--gold); }
 .drink svg * { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .drink.on { border-color: var(--gold); background: linear-gradient(180deg, #f7e2b4, var(--gold) 60%, #c99b55); color: #241806; transform: scale(1.03); }
 .drink.on svg { color: #3a2508; }
@@ -441,25 +439,7 @@ noscript { position: fixed; inset: 0; display: grid; place-items: center; paddin
       <div class="inner">
         <div class="intro-title gold-text reveal" style="--d:0">Тебе письмо</div>
         <div class="env-wrap" id="envelope" role="button" tabindex="0" aria-label="Открыть приглашение">
-          <!-- Лицевая сторона -->
-          <div class="face-front" aria-hidden="true">
-            <div class="label-stamp">Лично в руки</div>
-            <svg class="pstamp" id="pstamp" viewBox="0 0 184 220"></svg>
-            <svg class="postmark" viewBox="0 0 300 190">
-              <defs><path id="pmArc" d="M95 95m-62 0a62 62 0 1 1 124 0a62 62 0 1 1 -124 0"/></defs>
-              <g fill="none" stroke="#f6ecdc" stroke-width="3">
-                <circle cx="95" cy="95" r="80"/><circle cx="95" cy="95" r="46"/>
-                <path d="M180 62c20-12 40 12 60 0s40 12 60 0M180 86c20-12 40 12 60 0s40 12 60 0M180 110c20-12 40 12 60 0s40 12 60 0M180 134c20-12 40 12 60 0s40 12 60 0"/>
-              </g>
-              <text font-family="Golos Text, sans-serif" font-weight="700" font-size="17" letter-spacing="3" fill="#f6ecdc"><textPath href="#pmArc" id="pmText">МОСКВА • 06.12.2026 • МОСКВА •</textPath></text>
-              <text x="95" y="104" text-anchor="middle" font-family="Cormorant Garamond, serif" font-weight="600" font-size="30" fill="#f6ecdc" id="pmCenter">06·12</text>
-            </svg>
-            <div class="addr">
-              <div class="row"><span class="lbl">Кому:</span><span class="hand w1">тебе ♥</span></div>
-              <div class="row"><span class="lbl">От:</span><span class="hand w2" data-f="name">Митьен</span></div>
-            </div>
-          </div>
-          <!-- Оборотная сторона -->
+          <div class="burst" aria-hidden="true"></div>
           <div class="envelope">
             <div class="env-back"></div>
             <div class="letter"><span class="l1">Приглашение</span><span class="l2" data-f="age">46</span><span class="l3" data-f="dateShort">6 декабря</span></div>
@@ -489,9 +469,9 @@ noscript { position: fixed; inset: 0; display: grid; place-items: center; paddin
     <section class="slide s-who" data-step="who" data-info aria-label="Кто и сколько лет">
       <div class="balloons" id="balloonsWho"></div>
       <div class="inner">
-        <p class="kicker reveal" style="--d:0">У нас праздник</p>
-        <h2 class="who-name reveal" style="--d:1" data-f="name"></h2>
-        <p class="who-sub reveal" style="--d:2">празднует</p>
+        <p class="kicker reveal-down" style="--d:0">У нас праздник</p>
+        <h2 class="who-name reveal-l" style="--d:1" data-f="name"></h2>
+        <p class="who-sub reveal-r" style="--d:2">празднует</p>
         <svg class="age-svg" viewBox="0 0 960 640" role="img" aria-label="46 лет">
           <defs>
             <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3d6"/><stop offset=".45" stop-color="#e8c78a"/><stop offset="1" stop-color="#a47838"/></linearGradient>
@@ -511,9 +491,9 @@ noscript { position: fixed; inset: 0; display: grid; place-items: center; paddin
     <!-- === SLIDE 3: КОГДА === -->
     <section class="slide s-when" data-step="when" data-info aria-label="Когда">
       <div class="inner">
-        <p class="kicker reveal" style="--d:0">Когда</p>
+        <p class="kicker reveal-down" style="--d:0">Когда</p>
         <h2 class="when-date gold-text reveal-blur" style="--d:1" data-f="dateShort"></h2>
-        <p class="when-meta reveal" style="--d:3"><span data-f="weekday"></span><span data-f="timeBlock"></span></p>
+        <p class="when-meta reveal-r" style="--d:3"><span data-f="weekday"></span><span data-f="timeBlock"></span></p>
         <div class="countdown" id="countdown">
           <div class="cd reveal-pop" style="--d:5"><div class="num" id="cdD">0</div><div class="cap" id="cdDc">дней</div></div>
           <div class="cd reveal-pop" style="--d:6"><div class="num" id="cdH">0</div><div class="cap" id="cdHc">часов</div></div>
@@ -530,7 +510,7 @@ noscript { position: fixed; inset: 0; display: grid; place-items: center; paddin
     <!-- === SLIDE 4: ГДЕ === -->
     <section class="slide s-where" data-step="where" data-info aria-label="Где">
       <div class="inner">
-        <p class="kicker reveal" style="--d:0">Где</p>
+        <p class="kicker reveal-down" style="--d:0">Где</p>
         <svg class="roof" viewBox="0 0 860 420" aria-hidden="true">
           <path class="line" pathLength="1" d="M20 410H840M90 410V250L190 90H670L770 250V410M60 250H800M400 90V40H440V90"/>
           <path class="line" pathLength="1" d="M250 250V190a40 40 0 0 1 80 0V250M390 250V190a40 40 0 0 1 80 0V250M530 250V190a40 40 0 0 1 80 0V250"/>
@@ -539,8 +519,8 @@ noscript { position: fixed; inset: 0; display: grid; place-items: center; paddin
           <path class="win" style="--i:2" d="M538 248V192a32 32 0 0 1 64 0V248Z"/>
           <path class="line" pathLength="1" d="M150 410V320H230V410M630 410V320H710V410M330 410V300H530V410"/>
         </svg>
-        <h2 class="where-place reveal" style="--d:3" data-f="place"></h2>
-        <p class="where-addr reveal" style="--d:4" data-f="addressFull"></p>
+        <h2 class="where-place reveal-l" style="--d:3" data-f="place"></h2>
+        <p class="where-addr reveal-r" style="--d:4" data-f="addressFull"></p>
         <a class="btn map-btn reveal" style="--d:6" id="mapBtn" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
           Открыть в Яндекс Картах
@@ -554,8 +534,8 @@ noscript { position: fixed; inset: 0; display: grid; place-items: center; paddin
     <!-- === SLIDE 5: ВОПРОС 1 — ИМЯ === -->
     <section class="slide s-q" data-step="q-name" aria-label="Как тебя зовут">
       <div class="inner">
-        <p class="q-step reveal" style="--d:0">Вопрос 1 из 5</p>
-        <h2 class="q-title reveal" style="--d:1">Как тебя<br><em class="gold-text">зовут?</em></h2>
+        <p class="q-step reveal-down" style="--d:0">Вопрос 1 из 4</p>
+        <h2 class="q-title reveal-l" style="--d:1">Как тебя<br><em class="gold-text">зовут?</em></h2>
         <div class="q-body reveal" style="--d:3">
           <input class="field" id="fName" type="text" maxlength="80" autocomplete="name" enterkeyhint="next" placeholder="Имя и фамилия" aria-label="Имя">
           <p class="err" id="eName" role="alert"></p>
@@ -568,8 +548,8 @@ noscript { position: fixed; inset: 0; display: grid; place-items: center; paddin
     <!-- === SLIDE 6: ВОПРОС 2 — ПРИДЁШЬ? === -->
     <section class="slide s-q" data-step="q-att" aria-label="Придёшь">
       <div class="inner">
-        <p class="q-step reveal" style="--d:0">Вопрос 2 из 5</p>
-        <h2 class="q-title reveal" style="--d:1"><em class="gold-text">Придёшь?</em></h2>
+        <p class="q-step reveal-down" style="--d:0">Вопрос 2 из 4</p>
+        <h2 class="q-title reveal-l" style="--d:1"><em class="gold-text">Придёшь?</em></h2>
         <div class="q-body att" id="attBox" role="radiogroup" aria-label="Придёшь?"></div>
         <p class="err" id="eAtt" role="alert"></p>
         <div class="spacer"></div>
@@ -580,9 +560,9 @@ noscript { position: fixed; inset: 0; display: grid; place-items: center; paddin
     <!-- === SLIDE 7: ВОПРОС 3 — СКОЛЬКО ВАС === -->
     <section class="slide s-q" data-step="q-guests" aria-label="Сколько вас будет">
       <div class="inner">
-        <p class="q-step reveal" style="--d:0">Вопрос 3 из 5</p>
-        <h2 class="q-title reveal" style="--d:1">Сколько вас<br><em class="gold-text">будет?</em></h2>
-        <p class="q-hint reveal" style="--d:2">Считая тебя — например, с парой или с детьми</p>
+        <p class="q-step reveal-down" style="--d:0">Вопрос 3 из 4</p>
+        <h2 class="q-title reveal-l" style="--d:1">Сколько вас<br><em class="gold-text">будет?</em></h2>
+        <p class="q-hint reveal-r" style="--d:2">Считая тебя — например, с парой или с детьми</p>
         <div class="q-body reveal" style="--d:3">
           <div class="stepper">
             <button type="button" id="minus" aria-label="Меньше">−</button>
@@ -596,31 +576,20 @@ noscript { position: fixed; inset: 0; display: grid; place-items: center; paddin
       </div>
     </section>
 
-    <!-- === SLIDE 8: ВОПРОС 4 — НАПИТКИ === -->
+    <!-- === SLIDE 8: ВОПРОС 4 — НАПИТКИ + ОТПРАВКА === -->
     <section class="slide s-q" data-step="q-drinks" aria-label="Что будешь пить">
       <div class="inner">
-        <p class="q-step reveal" style="--d:0">Вопрос 4 из 5</p>
-        <h2 class="q-title reveal" style="--d:1">Что будешь<br><em class="gold-text">пить?</em></h2>
-        <p class="q-hint reveal" style="--d:2">Можно выбрать несколько</p>
-        <div class="q-body drinks" id="drinksBox" style="margin-top:60px"></div>
-        <div class="spacer"></div>
-        <div class="q-actions reveal" style="--d:8"><button class="btn" type="button" data-next>Далее</button></div>
-      </div>
-    </section>
-
-    <!-- === SLIDE 9: ВОПРОС 5 — КОММЕНТАРИЙ + ОТПРАВКА === -->
-    <section class="slide s-q" data-step="q-comment" aria-label="Комментарий">
-      <div class="inner">
-        <p class="q-step reveal" style="--d:0">Вопрос 5 из 5</p>
-        <h2 class="q-title reveal" style="--d:1">Пара слов<br><em class="gold-text">напоследок</em></h2>
-        <p class="q-hint reveal" style="--d:2">Пожелания, аллергии, что-то не ешь — по желанию</p>
-        <div class="q-body reveal" style="--d:3">
-          <textarea class="field" id="fComment" maxlength="500" placeholder="Например: не ем орехи 🙂" aria-label="Комментарий"></textarea>
-          <input class="hp" id="fWebsite" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <p class="err" id="eSend" role="alert"></p>
+        <p class="q-step reveal-down" style="--d:0">Вопрос 4 из 4</p>
+        <h2 class="q-title reveal-l" style="--d:1">Что будешь<br><em class="gold-text">пить?</em></h2>
+        <p class="q-hint reveal-r" style="--d:2">Меню уже готово — выбери напитки, можно несколько</p>
+        <div class="q-body drinks" id="drinksBox" style="margin-top:50px"></div>
+        <div class="other-wrap" id="otherWrap" hidden>
+          <input class="field" id="fOther" type="text" maxlength="80" enterkeyhint="done" placeholder="Например: виски, пиво, морс" aria-label="Свой вариант напитка">
         </div>
+        <input class="hp" id="fWebsite" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <p class="err" id="eSend" role="alert"></p>
         <div class="spacer"></div>
-        <div class="q-actions reveal" style="--d:4"><button class="btn" type="button" id="sendBtn">Отправить ответ</button></div>
+        <div class="q-actions reveal" style="--d:9"><button class="btn" type="button" id="sendBtn">Отправить ответ</button></div>
       </div>
     </section>
 
@@ -629,8 +598,8 @@ noscript { position: fixed; inset: 0; display: grid; place-items: center; paddin
       <div class="balloons" id="balloonsThanks"></div>
       <div class="inner">
         <svg class="th-icon" id="thIcon" viewBox="0 0 64 64" aria-hidden="true"></svg>
-        <h2 class="th-title gold-text reveal" style="--d:2" id="thTitle">Спасибо, ждём тебя!</h2>
-        <p class="th-text reveal" style="--d:3" id="thText"></p>
+        <h2 class="th-title gold-text reveal-blur" style="--d:2" id="thTitle">Спасибо, ждём тебя!</h2>
+        <p class="th-text reveal-r" style="--d:3" id="thText"></p>
         <dl class="summary reveal" style="--d:4" id="summary"></dl>
         <div class="th-actions reveal" style="--d:5">
           <button class="btn ghost" type="button" id="editBtn">Изменить ответ</button>
@@ -705,24 +674,25 @@ const ICON = {
   prosecco: '<svg viewBox="0 0 64 64"><path d="M26 6h12l-1 22a5 5 0 0 1-10 0z"/><path d="M32 33v19M25 56h14"/><circle cx="31" cy="20" r="1.2"/><circle cx="34" cy="14" r="1.2"/><circle cx="30" cy="11" r="1"/></svg>',
   champagne: '<svg viewBox="0 0 64 64"><path d="M13 22h38c0 10-8 15-19 15S13 32 13 22z"/><path d="M32 37v15M23 56h18"/><path d="M24 6l3 6M40 6l-3 6M32 3v7"/></svg>',
   wine: '<svg viewBox="0 0 64 64"><path d="M21 6h22c1 14-3 24-11 24S20 20 21 6z"/><path d="M21.6 16h20.8"/><path d="M32 30v22M23 56h18"/></svg>',
+  other: '<svg viewBox="0 0 64 64"><path d="M10 10h32L26 30z"/><path d="M26 30v20M18 54h16"/><path d="M38 50l14-14 6 6-14 14-7 1z"/><path d="M48 40l6 6"/></svg>',
   none: '<svg viewBox="0 0 64 64"><path d="M19 18h26l-3.5 38h-19z"/><path d="M38 4l-5 14"/><path d="M21 30h22"/><circle cx="46" cy="16" r="7"/><path d="M46 9v14M39 16h14"/></svg>',
   yes: '<svg viewBox="0 0 64 64"><g transform="rotate(-14 22 34)"><path d="M17 10h10l-1 17a4 4 0 0 1-8 0z"/><path d="M22 31v15M17 46h10"/></g><g transform="rotate(14 42 34)"><path d="M37 10h10l-1 17a4 4 0 0 1-8 0z"/><path d="M42 31v15M37 46h10"/></g><path d="M32 2v6M24 5l3 4M40 5l-3 4"/></svg>',
   maybe: '<svg viewBox="0 0 64 64"><path d="M18 8h28M18 56h28"/><path d="M21 8c0 13 22 15 22 24S21 43 21 56M43 8c0 13-22 15-22 24s22 11 22 24"/><path d="M27 50h10"/></svg>',
-  no: '<svg viewBox="0 0 64 64"><path d="M8 18h48v32H8z"/><path d="M8 18l24 19 24-19"/><path d="M32 31c-3-5-10-2-7 3l7 6 7-6c3-5-4-8-7-3z"/></svg>',
+  no: '<svg viewBox="0 0 64 64"><path d="M8 18h48v32H8z"/><path d="M8 18l24 19 24-19"/><path d="M8 50l18-15M56 50L38 35"/></svg>',
   tick: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
 };
 
 /* ===========================================
    FORM STATE: ответы гостя (черновик сохраняется на устройстве)
    =========================================== */
-const LS_DRAFT = "rsvp_draft_v1", LS_SENT = "rsvp_sent_v1", LS_ID = "rsvp_client_id_v1";
+const LS_DRAFT = "rsvp_draft_v2", LS_SENT = "rsvp_sent_v1", LS_ID = "rsvp_client_id_v1";
 const draft = store.get(LS_DRAFT) || {};
 const state = {
   name: draft.name || "", attending: draft.attending || "", guests: draft.guests || 1,
-  drinks: new Set(draft.drinks || []), comment: draft.comment || "",
+  drinks: new Set(draft.drinks || []), drinkOther: draft.drinkOther || "",
   sent: store.get(LS_SENT), editing: false, sending: false,
 };
-function saveDraft() { store.set(LS_DRAFT, { name: state.name, attending: state.attending, guests: state.guests, drinks: [...state.drinks], comment: state.comment }); }
+function saveDraft() { store.set(LS_DRAFT, { name: state.name, attending: state.attending, guests: state.guests, drinks: [...state.drinks], drinkOther: state.drinkOther }); }
 function clientId() {
   let id = store.get(LS_ID);
   if (!id) { id = (crypto.randomUUID ? crypto.randomUUID() : "g" + Date.now().toString(36) + Math.random().toString(36).slice(2, 12)); store.set(LS_ID, id); }
@@ -743,7 +713,7 @@ P.attending.forEach((a) => {
   b.innerHTML = ICON[a.id] || ""; b.append(a.label);
   b.addEventListener("click", () => {
     state.attending = a.id; saveDraft(); renderAtt(); $("eAtt").textContent = "";
-    setTimeout(() => deck.next(), 420); // выбор сразу ведёт дальше
+    setTimeout(() => deck.next(), 420); // выбор сразу ведёт дальше («Не смогу» — сразу отправляет ответ)
   });
   $("attBox").appendChild(b);
 });
@@ -772,18 +742,29 @@ P.drinks.forEach((d, i) => {
   b.append(d.label);
   b.addEventListener("click", () => {
     if (state.drinks.has(d.id)) state.drinks.delete(d.id);
-    else { if (d.id === "none") state.drinks.clear(); else state.drinks.delete("none"); state.drinks.add(d.id); }
+    else {
+      const alcohol = (id) => id !== "none" && id !== "other";
+      if (d.id === "none") [...state.drinks].filter(alcohol).forEach((x) => state.drinks.delete(x));
+      else if (alcohol(d.id)) state.drinks.delete("none");
+      state.drinks.add(d.id);
+    }
+    $("eSend").textContent = "";
     saveDraft(); renderDrinks();
+    if (d.id === "other" && state.drinks.has("other")) setTimeout(() => $("fOther").focus({ preventScroll: true }), 200);
   });
   $("drinksBox").appendChild(b);
 });
-function renderDrinks() { $("drinksBox").querySelectorAll(".drink").forEach((b) => { const on = state.drinks.has(b.dataset.v); b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); }); }
+function renderDrinks() {
+  $("drinksBox").querySelectorAll(".drink").forEach((b) => { const on = state.drinks.has(b.dataset.v); b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
+  $("otherWrap").hidden = !state.drinks.has("other");
+}
 renderDrinks();
 
-/* --- Вопрос 5: комментарий --- */
-const fComment = $("fComment");
-fComment.value = state.comment;
-fComment.addEventListener("input", () => { state.comment = fComment.value; saveDraft(); });
+/* --- Свой вариант напитка --- */
+const fOther = $("fOther");
+fOther.value = state.drinkOther;
+fOther.addEventListener("input", () => { state.drinkOther = fOther.value; $("eSend").textContent = ""; fOther.classList.remove("invalid"); saveDraft(); });
+fOther.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); fOther.blur(); } });
 
 /* ===========================================
    SLIDE PRESENTATION CONTROLLER
@@ -839,13 +820,11 @@ class SlidePresentation {
   nextIndex() {
     const s = this.step;
     if (s === "where" && state.sent && !state.editing) return this.idx("thanks");
-    if (s === "q-att" && state.attending === "no") return this.idx("q-comment");
-    if (s === "q-comment" || s === "thanks") return -1;
+    if (s === "q-drinks" || s === "thanks") return -1;
     return this.current + 1;
   }
   prevIndex() {
     const s = this.step;
-    if (s === "q-comment" && state.attending === "no") return this.idx("q-att");
     if (s === "thanks") return -1;
     return this.current - 1;
   }
@@ -860,7 +839,11 @@ class SlidePresentation {
     if (this.step === "q-att" && !state.attending) { $("eAtt").textContent = "Выбери один из вариантов"; return false; }
     return true;
   }
-  next() { if (!this.validate()) return; const i = this.nextIndex(); if (i >= 0) this.show(i); }
+  next() {
+    if (!this.validate()) return;
+    if (this.step === "q-att" && state.attending === "no") { submit(); return; } // «Не смогу» — сразу отправляем
+    const i = this.nextIndex(); if (i >= 0) this.show(i);
+  }
   prev() { const i = this.prevIndex(); if (i >= 1) this.show(i); }
 
   show(index) {
@@ -929,39 +912,13 @@ function onEnter(step) {
   if (step === "who") { launchBalloons($("balloonsWho"), 7); setTimeout(() => confetti({ count: 150 }), 1900); }
   if (step === "q-name" && !("ontouchstart" in window)) setTimeout(() => fName.focus({ preventScroll: true }), 700);
   if (step === "q-att") { $("eAtt").textContent = ""; renderAtt(); }
-  if (step === "q-comment") { $("eSend").textContent = ""; }
+  if (step === "q-drinks") { $("eSend").textContent = ""; renderDrinks(); }
   if (step === "thanks") { renderThanks(); }
 }
 
 /* ===========================================
    ENVELOPE: марка, печать, переворот и открытие конверта
    =========================================== */
-(function drawStamp() {
-  // Почтовая марка с зубчатым краем
-  const W = 184, H = 220, r = 7, step = 18.4;
-  let d = "M0 0";
-  for (let x = 0; x < W; x += step) d += ` H${x + step / 2 - r} a${r} ${r} 0 0 0 ${2 * r} 0`;
-  d += ` H${W}`;
-  for (let y = 0; y < H; y += step * 1.0) d += ` V${Math.min(H, y + step / 2 - r)} a${r} ${r} 0 0 0 0 ${2 * r}`;
-  d += ` V${H}`;
-  for (let x = W; x > 0; x -= step) d += ` H${x - step / 2 + r} a${r} ${r} 0 0 0 ${-2 * r} 0`;
-  d += " H0";
-  for (let y = H; y > 0; y -= step) d += ` V${Math.max(0, y - step / 2 + r)} a${r} ${r} 0 0 0 0 ${-2 * r}`;
-  d += " Z";
-  $("pstamp").innerHTML = `<path d="${d}" fill="#f6ecdc"/>
-    <rect x="16" y="16" width="152" height="188" rx="4" fill="#7c1f33"/>
-    <rect x="24" y="24" width="136" height="172" rx="2" fill="none" stroke="#e8c78a" stroke-width="2"/>
-    <path d="M44 132V104l18-26h60l18 26v28M40 104h104M84 78V66h8v12" fill="none" stroke="#e8c78a" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M66 104V95a8 8 0 0 1 16 0v9M84 104V95a8 8 0 0 1 16 0v9M102 104V95a8 8 0 0 1 16 0v9" fill="#ffe3a3"/>
-    <text x="92" y="182" text-anchor="middle" font-family="Cormorant Garamond, serif" font-weight="600" font-size="52" fill="#f6ecdc">${F.age}</text>
-    <text x="92" y="50" text-anchor="middle" font-family="Golos Text, sans-serif" font-weight="700" font-size="13" letter-spacing="3" fill="#e8c78a">ПОЧТА</text>`;
-  // Штемпель: город и дата праздника
-  const dd = P.date.split("-");
-  const city = (P.city || "").toUpperCase();
-  $("pmText").textContent = `${city} • ${dd[2]}.${dd[1]}.${dd[0]} • ${city} •`;
-  $("pmCenter").textContent = `${dd[2]}·${dd[1]}`;
-})();
-
 (function drawSeal() {
   // Сургуч с неровным краем
   const N = 30, pts = [];
@@ -983,23 +940,14 @@ function onEnter(step) {
 })();
 
 const envWrap = $("envelope");
-let flipped = false, opened = false, flipTimer = null;
-function flipEnvelope() {
-  if (flipped) return; flipped = true; clearTimeout(flipTimer);
-  envWrap.classList.add("landed");
-  if (reduced) { envWrap.classList.add("show-back", "idle"); $("introHint").classList.add("show"); return; }
-  envWrap.classList.add("flip-a");
-  setTimeout(() => { envWrap.classList.remove("flip-a"); envWrap.classList.add("show-back", "flip-b"); }, 420);
-  setTimeout(() => { envWrap.classList.remove("flip-b"); envWrap.classList.add("idle"); $("introHint").classList.add("show"); }, 1050);
-}
+let opened = false;
 function openEnvelope() {
-  if (!flipped) { flipEnvelope(); return; } // первое нажатие по лицевой стороне просто переворачивает конверт
-  if (opened || !envWrap.classList.contains("show-back")) return;
-  opened = true;
+  if (opened) return; opened = true;
   deck.slides[0].classList.add("opened");
-  const r = $("seal").getBoundingClientRect();
-  setTimeout(() => confetti({ x: r.left + r.width / 2, y: r.top + r.height / 2, count: 120, gold: true }), 200);
-  setTimeout(() => deck.show(1), reduced ? 200 : 2600);
+  const r = $("seal").getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+  setTimeout(() => confetti({ x, y, count: 150, gold: true }), 200);             // искры от печати
+  setTimeout(() => confetti({ x, y: y - r.height * 1.4, count: 90, gold: true }), 1500); // письмо вылетает
+  setTimeout(() => deck.show(1), reduced ? 200 : 3000);
 }
 $("seal").addEventListener("click", (e) => { e.stopPropagation(); openEnvelope(); });
 envWrap.addEventListener("click", openEnvelope);
@@ -1008,15 +956,22 @@ envWrap.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === 
 /* ===========================================
    SUBMIT: отправка ответа в Google-таблицу (с защитой от повторного нажатия)
    =========================================== */
-$("sendBtn").addEventListener("click", async () => {
+async function submit() {
   if (state.sending) return;
-  const btn = $("sendBtn");
-  state.sending = true; btn.disabled = true; btn.textContent = "Отправляем…"; $("eSend").textContent = "";
+  const fromAtt = deck.step === "q-att";
+  const errEl = fromAtt ? $("eAtt") : $("eSend");
   const coming = state.attending !== "no";
+  const drinks = coming ? [...state.drinks] : [];
+  const drinkOther = drinks.includes("other") ? state.drinkOther.trim() : "";
+  if (coming && !drinks.length) { errEl.textContent = "Выбери хотя бы один вариант"; return; }
+  if (drinks.includes("other") && !drinkOther) {
+    errEl.textContent = "Напиши свой вариант напитка"; fOther.classList.remove("invalid"); void fOther.offsetWidth; fOther.classList.add("invalid"); fOther.focus(); return;
+  }
+  const btn = $("sendBtn");
+  state.sending = true; btn.disabled = true; btn.textContent = "Отправляем…"; errEl.textContent = fromAtt ? "Отправляем ответ…" : "";
   const payload = {
     clientId: clientId(), name: state.name.trim(), attending: state.attending,
-    guests: coming ? state.guests : 0, drinks: coming ? [...state.drinks] : [],
-    comment: state.comment.trim(), website: $("fWebsite").value,
+    guests: coming ? state.guests : 0, drinks, drinkOther, website: $("fWebsite").value,
   };
   try {
     if (!P.scriptUrl) throw new Error("Приглашение ещё не подключено к таблице ответов");
@@ -1025,14 +980,15 @@ $("sendBtn").addEventListener("click", async () => {
     const json = await res.json().catch(() => ({}));
     if (!res.ok || !json.ok) throw new Error(json.error || "Не получилось отправить");
     state.sent = { ...payload, at: Date.now() }; delete state.sent.website; delete state.sent.clientId;
-    store.set(LS_SENT, state.sent); state.editing = false;
+    store.set(LS_SENT, state.sent); state.editing = false; errEl.textContent = "";
     deck.show(deck.idx("thanks"));
   } catch (err) {
-    $("eSend").textContent = navigator.onLine === false ? "Нет интернета. Проверь связь и нажми ещё раз." : (err.message || "Не получилось отправить, попробуй ещё раз");
+    errEl.textContent = navigator.onLine === false ? "Нет интернета. Проверь связь и попробуй ещё раз." : (err.message || "Не получилось отправить, попробуй ещё раз");
   } finally {
     state.sending = false; btn.disabled = false; btn.textContent = "Отправить ответ";
   }
-});
+}
+$("sendBtn").addEventListener("click", submit);
 
 /* ===========================================
    THANKS: экран «Спасибо»
@@ -1055,9 +1011,10 @@ function renderThanks() {
   const rows = [["Ответ", label(s.attending, P.attending)]];
   if (s.attending !== "no") {
     rows.push(["Вас будет", String(s.guests)]);
-    if (s.drinks && s.drinks.length) rows.push(["Напитки", s.drinks.map((d) => label(d, P.drinks)).join(", ")]);
+    const list = (s.drinks || []).filter((d) => d !== "other").map((d) => label(d, P.drinks));
+    if (s.drinkOther) list.push(s.drinkOther);
+    if (list.length) rows.push(["Напитки", list.join(", ")]);
   }
-  if (s.comment) rows.push(["Комментарий", s.comment]);
   rows.forEach(([k, val]) => { const dt = document.createElement("dt"); dt.textContent = k; const dd = document.createElement("dd"); dd.textContent = val; dl.append(dt, dd); });
   $("calBtn2").hidden = s.attending === "no";
   if (s.attending !== "no") { launchBalloons($("balloonsThanks"), 8, true); setTimeout(() => confetti({ count: 200 }), 500); }
@@ -1205,11 +1162,10 @@ const deck = new SlidePresentation();
 deck.slides[0].classList.add("active");
 deck.updateChrome();
 if (location.hash === "#rsvp") {
-  flipped = opened = true;
+  opened = true;
   deck.show(state.sent ? deck.idx("thanks") : deck.idx("q-name"));
 } else {
   requestAnimationFrame(() => requestAnimationFrame(() => { if (deck.current === 0) deck.slides[0].classList.add("visible"); }));
-  flipTimer = setTimeout(flipEnvelope, reduced ? 300 : 5000);
 }
 </script>
 </body>
