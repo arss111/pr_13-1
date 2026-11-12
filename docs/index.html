@@ -1,1222 +1,265 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Митьен приглашает на день рождения</title>
-<meta name="description" content="6 декабря, 13:00 · Ресторан «Мансарда». Открой, чтобы ответить на приглашение.">
+<meta name="description" content="6 декабря, ресторан «Мансарда». Ответь, пожалуйста, придёшь ли ты.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Митьен приглашает на день рождения">
+<meta property="og:title" content="Митьен приглашает на свой день рождения">
 <meta property="og:description" content="6 декабря, 13:00 · Ресторан «Мансарда». Открой, чтобы ответить на приглашение.">
 <meta property="og:image" content="og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0d0b10">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%237c1f33'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-style='italic' font-size='34' text-anchor='middle' fill='%23f3d9a4'%3E%D0%9C%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#08090d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0c11'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='34' text-anchor='middle' fill='%23e3c287'%3E46%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="config.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Manrope:wght@400;500;600&display=swap&subset=cyrillic" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
 <style>
-/* ===========================================
-   CSS CUSTOM PROPERTIES (THEME) — «Ночь в Мансарде»
-   Ночь, золото и бордо. Меняйте цвета здесь — изменится весь дизайн.
-   =========================================== */
 :root {
-  --night: #0d0b10;
-  --night-2: #18121b;
-  --cream: #f6ecdc;
-  --muted: #b3a896;
-  --gold: #e8c78a;
-  --gold-hi: #fff1cf;
-  --gold-lo: #a97b3c;
-  --wine: #7c1f33;
-  --wine-hi: #a8344c;
-  --error: #ff9b9b;
-
-  --stage-bg: transparent;
-  --slide-bg: transparent;
-
-  --font-display: "Cormorant Garamond", serif;
-  --font-body: "Golos Text", sans-serif;
-
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --spring: cubic-bezier(.34, 1.56, .64, 1);
+  --bg: #08090d; --text: #f3ede2; --muted: #a39c8f; --accent: #e3c287;
+  --line: rgba(227,194,135,.16); --line-strong: rgba(227,194,135,.45);
+  --card-bg: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  --input-bg: rgba(0,0,0,.32); --input-border: rgba(255,255,255,.1); --placeholder: #6f695f;
+  --focus: rgba(227,194,135,.16); --choice-on: rgba(227,194,135,.09);
+  --chip-on-bg: linear-gradient(180deg,#f6e3bb,#e3c287); --chip-on-text: #1b1408;
+  --btn-bg: linear-gradient(180deg,#f8e8c4,#e3c287 55%,#b98f4e); --btn-text: #1b1408;
+  --btn-shadow: 0 14px 34px -12px rgba(227,194,135,.65), inset 0 1px 0 rgba(255,255,255,.55);
+  --danger: #e38787; --radius: 22px;
+  --display: "Cormorant Garamond", Georgia, serif; --sans: "Manrope", system-ui, sans-serif;
 }
+.sky { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.sky i { position: absolute; border-radius: 50%; filter: blur(50px); animation: drift 18s ease-in-out infinite alternate; }
+.sky .g1 { width: 80vmax; height: 55vmax; left: calc(50% - 40vmax); top: -32vmax; background: radial-gradient(closest-side, rgba(227,194,135,.30), transparent); }
+.sky .g2 { width: 60vmax; height: 60vmax; right: -32vmax; top: 25vh; background: radial-gradient(closest-side, rgba(128,32,54,.55), transparent); animation-duration: 23s; }
+.sky .g3 { width: 60vmax; height: 60vmax; left: -36vmax; top: 75vh; background: radial-gradient(closest-side, rgba(110,31,48,.45), transparent); animation-duration: 27s; }
+@keyframes drift { to { transform: translate(5vw, 5vh) scale(1.12); } }
+#fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 
-/* ===========================================
-   BASE STYLES
-   =========================================== */
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-/* ===========================================
-   FIXED STAGE: MANDATORY BASE STYLES (viewport-base.css)
-   Сцена вертикальная 1080×1920 — по согласованию с заказчиком
-   (все гости смотрят с телефона). Слайды рисуются в этом размере
-   и масштабируются целиком, без перестройки.
-   =========================================== */
-html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--stage-bg, #000); }
-.deck-viewport { position: fixed; inset: 0; overflow: hidden; background: var(--stage-bg, #000); }
-.deck-stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; transform-origin: 0 0; background: var(--slide-bg, #fff); }
-.slide { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; display: block; visibility: hidden; opacity: 0; pointer-events: none; background: var(--slide-bg, #fff); }
-.slide.active, .slide.visible { visibility: visible; opacity: 1; pointer-events: auto; z-index: 1; }
-img, video, canvas, svg { max-width: 100%; max-height: 100%; }
-.deck-controls { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 1000; }
-@media print {
-  html, body { width: 1080px; height: auto; overflow: visible; background: #fff; }
-  .deck-viewport { position: static; overflow: visible; background: #fff; }
-  .deck-stage { position: static; width: auto; height: auto; transform: none !important; background: none; }
-  .slide { position: relative; display: block !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; width: 1080px; height: 1920px; break-after: page; page-break-after: always; }
-  .slide:last-child { break-after: auto; page-break-after: auto; }
-  .deck-controls { display: none !important; }
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
-}
-
-/* Браузер прокручивает контейнеры с overflow:hidden к полю ввода при фокусе —
-   overflow:clip запрещает такую прокрутку (плюс страховка в JS ниже) */
-.deck-viewport, .deck-stage, .slide, .inner { overflow: clip; }
-[hidden] { display: none !important; }
-
-/* ===========================================
-   ATMOSPHERE: фон на весь экран (за сценой)
-   Тёплые размытые свечения + канвас с золотой пылью и снегом.
-   Слайды прозрачные, поэтому поля сверху/снизу на телефоне
-   выглядят как продолжение картинки.
-   =========================================== */
-body { background: var(--night); color: var(--cream); font-family: var(--font-body); }
-.atmo { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
-.atmo i { position: absolute; border-radius: 50%; filter: blur(70px); animation: drift 18s ease-in-out infinite alternate; }
-.atmo .g1 { width: 120vmax; height: 80vmax; left: calc(50% - 60vmax); top: -50vmax; background: radial-gradient(closest-side, rgba(232,199,138,.24), transparent); }
-.atmo .g2 { width: 90vmax; height: 90vmax; right: -55vmax; top: 30vh; background: radial-gradient(closest-side, rgba(124,31,51,.55), transparent); animation-duration: 24s; }
-.atmo .g3 { width: 90vmax; height: 90vmax; left: -60vmax; bottom: -40vmax; background: radial-gradient(closest-side, rgba(124,31,51,.42), transparent); animation-duration: 29s; }
-@keyframes drift { to { transform: translate(4vw, 3vh) scale(1.12); } }
-#dust, #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-#confetti { z-index: 2000; }
-
-/* ===========================================
-   SLIDE TRANSITIONS: объёмные переходы между экранами
-   Новый экран прилетает из глубины, прошлый пролетает мимо зрителя.
-   =========================================== */
-.deck-stage { perspective: 2400px; }
-.slide { transform: translate3d(0, 70px, -760px) rotateX(9deg); filter: blur(14px);
-  transition: opacity .8s var(--ease-out-expo), visibility .8s, transform 1.15s var(--ease-out-expo), filter .9s var(--ease-out-expo); }
-.slide.past { transform: translate3d(0, -50px, 560px) rotateX(-7deg); }
-.slide.active { transform: none; filter: none; }
-
-/* ===========================================
-   ANIMATIONS: появление элементов на активном экране
-   Элементы залетают с разных сторон:
-   .reveal — снизу, .reveal-down — сверху, .reveal-l — слева, .reveal-r — справа,
-   .reveal-blur — из размытия, .reveal-pop — пружинкой. Задержка: style="--d:N" (шаг 120 мс).
-   =========================================== */
-.reveal, .reveal-down, .reveal-l, .reveal-r, .reveal-blur, .reveal-pop { opacity: 0; transition-delay: calc(var(--d, 0) * 120ms + 300ms); }
-.reveal, .reveal-down, .reveal-l, .reveal-r { transition-property: opacity, transform; transition-duration: 1.1s; transition-timing-function: var(--ease-out-expo); }
-.reveal { transform: translateY(70px); }
-.reveal-down { transform: translateY(-70px); }
-.reveal-l { transform: translateX(-180px) rotate(-5deg); }
-.reveal-r { transform: translateX(180px) rotate(5deg); }
-.reveal-blur { filter: blur(22px); transform: scale(1.12); transition-property: opacity, filter, transform; transition-duration: 1.6s; transition-timing-function: var(--ease-out-expo); }
-.reveal-pop { transform: scale(.5) rotate(-6deg); transition-property: opacity, transform; transition-duration: .9s; transition-timing-function: var(--spring); }
-.slide.visible :is(.reveal, .reveal-down, .reveal-l, .reveal-r, .reveal-blur, .reveal-pop) { opacity: 1; transform: none; filter: none; }
-
-/* ===========================================
-   TYPOGRAPHY & COMMON COMPONENTS
-   =========================================== */
-.inner { position: absolute; inset: 0; padding: 170px 90px 130px; display: flex; flex-direction: column; align-items: center; text-align: center; }
-.kicker { font: 600 26px/1 var(--font-body); letter-spacing: .36em; padding-left: .36em; text-transform: uppercase; color: var(--gold); }
-.gold-text { background: linear-gradient(175deg, var(--gold-hi) 8%, var(--gold) 48%, var(--gold-lo) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.title { font: 400 128px/1.02 var(--font-display); letter-spacing: -.01em; }
-.title em { font-style: italic; font-weight: 300; }
-.lead { font: 400 44px/1.4 var(--font-body); color: var(--muted); max-width: 860px; }
-.orn { display: flex; align-items: center; gap: 18px; color: var(--gold); }
-.orn::before, .orn::after { content: ""; width: 120px; height: 2px; background: linear-gradient(90deg, transparent, var(--gold)); }
-.orn::after { transform: scaleX(-1); }
-.orn i { width: 14px; height: 14px; border: 2px solid var(--gold); transform: rotate(45deg); }
-.spacer { flex: 1; }
-
-/* --- Кнопки (крупные, под палец) --- */
-.btn { position: relative; overflow: hidden; isolation: isolate; border: 0; cursor: pointer; text-decoration: none;
-  display: inline-flex; align-items: center; justify-content: center; gap: 20px;
-  min-height: 140px; width: 900px; border-radius: 999px; padding: 0 60px;
-  font: 700 42px/1 var(--font-body); letter-spacing: .02em; color: #241806;
-  background: linear-gradient(180deg, #fbebc6, var(--gold) 55%, var(--gold-lo));
-  box-shadow: 0 30px 60px -26px rgba(232,199,138,.7), inset 0 2px 0 rgba(255,255,255,.6);
-  transition: transform .25s, box-shadow .25s, opacity .25s; }
-.btn::after { content: ""; position: absolute; top: -40%; bottom: -40%; left: -40%; width: 30%; z-index: -1;
-  background: linear-gradient(100deg, transparent, rgba(255,255,255,.65), transparent); transform: skewX(-20deg); animation: shine 4.8s 1.4s infinite; }
-@keyframes shine { 0% { left: -40%; } 32%, 100% { left: 130%; } }
-.btn:active { transform: scale(.98); }
-.btn[disabled] { opacity: .45; cursor: default; box-shadow: none; }
-.btn[disabled]::after { display: none; }
-.btn.ghost { background: transparent; color: var(--gold); border: 3px solid rgba(232,199,138,.55); box-shadow: none; }
-.btn.ghost::after { display: none; }
-.btn svg { width: 54px; height: 54px; flex: none; }
-.link { background: none; border: 0; color: var(--muted); font: 500 34px var(--font-body); padding: 26px 40px; cursor: pointer; }
-.tap-hint { position: absolute; left: 0; right: 0; bottom: 120px; display: flex; align-items: center; justify-content: center; gap: 18px;
-  font: 500 30px var(--font-body); color: var(--muted); letter-spacing: .06em; }
-.tap-hint svg { width: 46px; height: 46px; color: var(--gold); animation: nudge 1.6s ease-in-out infinite; }
-@keyframes nudge { 50% { transform: translateX(14px); } }
-
-/* ===========================================
-   SLIDE 0 — КОНВЕРТ С СУРГУЧНОЙ ПЕЧАТЬЮ
-   Конверт прилетает и мягко покачивается. Нажатие на печать:
-   печать раскалывается → вспышка золотого света и искры → клапан распахивается →
-   письмо вылетает вверх → «камера» влетает в письмо, и начинается история.
-   =========================================== */
-.s-intro .inner { justify-content: center; gap: 80px; }
-.intro-title { font: italic 300 120px/1 var(--font-display); }
-.env-wrap { position: relative; width: 860px; height: 580px; cursor: pointer; opacity: 0; perspective: 2400px; }
-.slide.visible .env-wrap { animation: arrive 1.8s .35s var(--ease-out-expo) forwards, float 5s 2.3s ease-in-out infinite; }
-@keyframes arrive {
-  0% { opacity: 0; transform: translateY(-1350px) rotate(-26deg) scale(.7); }
-  45% { opacity: 1; }
-  70% { transform: translateY(34px) rotate(3deg) scale(1.02); }
-  85% { transform: translateY(-10px) rotate(-1.5deg); }
-  100% { opacity: 1; transform: none; } }
-@keyframes float { 0%, 100% { opacity: 1; transform: none; } 50% { opacity: 1; transform: translateY(-16px) rotate(-.8deg); } }
-/* После открытия «камера» влетает в письмо */
-.s-intro.opened .env-wrap { opacity: 1; transform-origin: 50% 290px; animation: zoomInto 1.2s 5.4s cubic-bezier(.7,0,.25,1) forwards; }
-@keyframes zoomInto { 0% { opacity: 1; transform: none; filter: none; } 65% { opacity: 1; } 100% { opacity: 0; transform: scale(3.8); filter: blur(8px); } }
-
-.envelope { position: absolute; inset: 0; perspective: 2200px; }
-.env-back { position: absolute; inset: 0; border-radius: 18px; box-shadow: 0 80px 120px -50px rgba(0,0,0,.9);
-  background: radial-gradient(circle, rgba(232,199,138,.22) 0 3px, transparent 4px) 0 0 / 30px 30px, radial-gradient(circle, rgba(232,199,138,.12) 0 2px, transparent 3px) 15px 15px / 30px 30px, #4a1120; }
-.letter { position: absolute; left: 50px; right: 50px; top: 70px; height: 200px; border-radius: 6px; z-index: 2; }
-.folded-back { position: absolute; inset: 0; border-radius: 6px; display: grid; place-items: center;
-  background: radial-gradient(circle, rgba(169,123,60,.22) 0 2px, transparent 3px) 0 0 / 22px 22px, linear-gradient(180deg, #fbf4e6, #ecdcbc);
-  box-shadow: inset 0 0 0 2px rgba(169,123,60,.35), 0 10px 30px rgba(0,0,0,.35); }
-.monogram { width: 120px; height: 120px; border-radius: 50%; display: grid; place-items: center; border: 3px solid #b98f4e; box-shadow: inset 0 0 0 7px #fbf4e6, inset 0 0 0 9px rgba(185,143,78,.6);
-  font: italic 500 74px/1 var(--font-display); color: #9c6f32; padding-bottom: 8px; }
-
-/* --- Письмо, которое вылетает и разворачивается (три створки) --- */
-.card3d { position: absolute; left: 50px; top: -210px; width: 760px; height: 200px; z-index: 8; opacity: 0; transform-style: preserve-3d; pointer-events: none; }
-.card3d .panel { position: absolute; left: 0; right: 0; transform-style: preserve-3d; }
-.card3d .mid { top: 0; height: 200px; }
-.card3d .top { bottom: 100%; height: 170px; transform-origin: 50% 100%; transform: translateZ(6px) rotateX(-180deg); }
-.card3d .bot { top: 100%; height: 170px; transform-origin: 50% 0; transform: translateZ(2px) rotateX(180deg); }
-.card3d .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: linear-gradient(180deg, #fbf4e6, #f1e4c9); color: var(--wine); }
-.card3d .top .face.front { border-radius: 6px 6px 0 0; box-shadow: inset 0 -10px 16px -12px rgba(120,80,30,.4); justify-content: flex-end; padding-bottom: 26px; gap: 14px; }
-.card3d .bot .face.front { border-radius: 0 0 6px 6px; box-shadow: inset 0 10px 16px -12px rgba(120,80,30,.4); justify-content: center; }
-.card3d .face.back { transform: rotateX(180deg); background: radial-gradient(circle, rgba(169,123,60,.22) 0 2px, transparent 3px) 0 0 / 22px 22px, linear-gradient(180deg, #fbf4e6, #ecdcbc);
-  box-shadow: inset 0 0 0 2px rgba(169,123,60,.35); border-radius: 6px; }
-.card3d .face.back { display: grid; place-items: center; }
-.card3d .mid .face { box-shadow: 0 30px 80px -20px rgba(0,0,0,.6); }
-.c-eb { font: 600 24px var(--font-body); letter-spacing: .4em; padding-left: .4em; text-transform: uppercase; color: var(--gold-lo); }
-.c-orn { display: flex; align-items: center; gap: 12px; color: var(--gold-lo); }
-.c-orn::before, .c-orn::after { content: ""; width: 90px; height: 1.5px; background: currentColor; opacity: .6; }
-.c-orn i { width: 9px; height: 9px; border: 1.5px solid currentColor; transform: rotate(45deg); }
-.c-main { font: italic 300 96px/1 var(--font-display); color: var(--wine); }
-.c-date { font: 500 34px var(--font-body); color: #3a2a20; }
-.c-place { font: italic 400 36px var(--font-display); color: #6b5440; }
-.env-front { position: absolute; inset: 0; z-index: 3; border-radius: 18px;
-  background: repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 2px, transparent 2px 6px), linear-gradient(160deg, #96293f, #731c2f 55%, #5e1626);
-  clip-path: polygon(0 0, 50% 56%, 100% 0, 100% 100%, 0 100%); }
-.env-front::after { content: ""; position: absolute; inset: 0;
-  background: linear-gradient(to top right, transparent calc(50% - 2px), rgba(232,199,138,.55) 50%, transparent calc(50% + 2px)) left bottom / 50% 100% no-repeat,
-              linear-gradient(to top left, transparent calc(50% - 2px), rgba(232,199,138,.55) 50%, transparent calc(50% + 2px)) right bottom / 50% 100% no-repeat; }
-.env-flap { position: absolute; left: 0; right: 0; top: 0; height: 60%; z-index: 4; transform-origin: top; transform-style: preserve-3d; }
-.env-flap::before, .env-flap::after { content: ""; position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 50% 100%); backface-visibility: hidden; border-radius: 18px 18px 0 0; }
-.env-flap::before { background: repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 2px, transparent 2px 6px), linear-gradient(180deg, #ad3850, #84253a); }
-.env-flap::after { background: radial-gradient(circle, rgba(232,199,138,.25) 0 3px, transparent 4px) 0 0 / 30px 30px, #5a1525; transform: rotateX(180deg); }
-.flap-edge { position: absolute; inset: 0; width: 100%; height: 100%; backface-visibility: hidden; overflow: visible; }
-.flap-edge path { fill: none; stroke: var(--gold); stroke-width: 4; stroke-linejoin: round; filter: drop-shadow(0 3px 2px rgba(0,0,0,.35)); }
-
-/* --- Сургучная печать: неровный край, при нажатии раскалывается на две половинки --- */
-.seal { position: absolute; z-index: 6; left: 50%; top: 60%; width: 230px; height: 230px; margin: -115px 0 0 -115px; border: 0; padding: 0; background: none; cursor: pointer;
-  filter: drop-shadow(0 18px 18px rgba(30,4,8,.6)); animation: sealPulse 2.4s 2.4s ease-in-out infinite; }
-.seal::after { content: ""; position: absolute; inset: 14px; border-radius: 50%; border: 4px solid rgba(232,199,138,.7); opacity: 0; animation: ring 2.4s 2.4s ease-out infinite; pointer-events: none; }
-.seal .half { position: absolute; inset: 0; }
-.seal .half svg { width: 100%; height: 100%; display: block; }
-.seal .half.l { clip-path: polygon(0 0, 53% 0, 47% 22%, 56% 44%, 45% 64%, 54% 82%, 49% 100%, 0 100%); }
-.seal .half.r { clip-path: polygon(53% 0, 100% 0, 100% 100%, 49% 100%, 54% 82%, 45% 64%, 56% 44%, 47% 22%); }
-@keyframes sealPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
-@keyframes ring { 0% { transform: scale(.9); opacity: .9; } 100% { transform: scale(1.6); opacity: 0; } }
-.opened .seal { animation: none; pointer-events: none; }
-.opened .seal::after { display: none; }
-.opened .seal .half.l { animation: splitL 1.1s cubic-bezier(.4,0,.6,1) forwards; }
-.opened .seal .half.r { animation: splitR 1.1s cubic-bezier(.4,0,.6,1) forwards; }
-@keyframes splitL { 15% { transform: translateX(-12px) rotate(-8deg); } 100% { transform: translate(-260px, 520px) rotate(-200deg) scale(.7); opacity: 0; } }
-@keyframes splitR { 15% { transform: translateX(12px) rotate(8deg); } 100% { transform: translate(280px, 560px) rotate(220deg) scale(.7); opacity: 0; } }
-
-/* --- Вспышка золотого света из конверта --- */
-.burst { position: absolute; left: 50%; top: 40%; width: 1600px; height: 1600px; margin: -800px 0 0 -800px; z-index: 1; pointer-events: none; opacity: 0;
-  background: radial-gradient(circle, rgba(255,240,205,.95) 0, rgba(240,205,140,.55) 10%, rgba(232,199,138,0) 40%),
-              repeating-conic-gradient(from 0deg, rgba(255,226,160,.38) 0 3deg, transparent 3deg 14deg);
-  -webkit-mask: radial-gradient(circle, #000 12%, transparent 58%); mask: radial-gradient(circle, #000 12%, transparent 58%); }
-.opened .burst { animation: burst 2.4s .35s ease-out forwards; }
-@keyframes burst { 0% { opacity: 0; transform: scale(.15) rotate(0); } 22% { opacity: 1; } 100% { opacity: 0; transform: scale(1.5) rotate(50deg); } }
-
-/* --- Клапан и письмо --- */
-.opened .env-flap { animation: flapOpen 1s .4s cubic-bezier(.4,0,.2,1) forwards; }
-.opened .letter { animation: letterOut 1s 1s cubic-bezier(.3,0,.3,1) forwards; }
-@keyframes letterOut { 0% { transform: translateY(0); z-index: 2; } 50% { transform: translateY(-150px); z-index: 2; } 51% { z-index: 5; } 99% { opacity: 1; } 100% { transform: translateY(-280px); z-index: 5; opacity: 0; } }
-/* Конверт падает вниз и исчезает */
-.opened .envelope { animation: envDrop 1s 2.1s cubic-bezier(.55,0,.8,.4) forwards; }
-@keyframes envDrop { to { transform: translateY(900px) rotate(10deg); opacity: 0; } }
-/* Письмо летит по дуге с поворотами и выходит в центр */
-.opened .card3d { animation: cardFly 1.7s 2s cubic-bezier(.45,.05,.3,1) forwards; }
-@keyframes cardFly {
-  0% { opacity: 1; transform: none; }
-  30% { opacity: 1; transform: translate(-110px, 10px) rotate(-11deg) rotateY(-32deg) scale(1.06); }
-  58% { opacity: 1; transform: translate(90px, 290px) rotate(8deg) rotateY(24deg) scale(1.16); }
-  80% { opacity: 1; transform: translate(-14px, 420px) rotate(-2.5deg) rotateY(-7deg) scale(1.22); }
-  100% { opacity: 1; transform: translate(0, 395px) scale(1.2); } }
-/* Створки разворачиваются: сначала верхняя, потом нижняя */
-.opened .card3d .top { animation: unfoldTop .75s 3.75s cubic-bezier(.3,1.35,.5,1) forwards; }
-.opened .card3d .bot { animation: unfoldBot .75s 4.05s cubic-bezier(.3,1.35,.5,1) forwards; }
-@keyframes unfoldTop { to { transform: translateZ(0) rotateX(0); } }
-@keyframes unfoldBot { to { transform: translateZ(0) rotateX(0); } }
-
-.intro-hint { font: 600 28px var(--font-body); letter-spacing: .3em; padding-left: .3em; text-transform: uppercase; color: var(--muted); opacity: 0; min-height: 34px; }
-.slide.visible .intro-hint { animation: breathe 2.4s 2.3s ease-in-out infinite; } /* без fill-mode: до приземления конверта подсказка скрыта */
-@keyframes breathe { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
-.slide.visible.opened .intro-hint, .opened .intro-title { opacity: 0 !important; transition: opacity .5s; animation: none; }
-
-/* ===========================================
-   SLIDE 1 — ПРИВЕТСТВИЕ
-   =========================================== */
-.s-hello .inner { justify-content: center; }
-.frame { position: absolute; inset: 70px; pointer-events: none; }
-.frame rect { fill: none; stroke: rgba(232,199,138,.5); stroke-width: 2; stroke-dasharray: 1; stroke-dashoffset: 1; }
-.slide.visible .frame rect { animation: draw 2.4s .2s cubic-bezier(.6,0,.3,1) forwards; }
-.slide.visible .frame rect.r2 { animation-delay: .6s; }
-@keyframes draw { to { stroke-dashoffset: 0; } }
-.hello { font: italic 300 270px/1 var(--font-display); white-space: nowrap; }
-.hello .ch { display: inline-block; opacity: 0; transform: translateY(.4em) rotate(8deg); filter: blur(10px); }
-.slide.visible .hello .ch { animation: chIn 1s var(--ease-out-expo) forwards; animation-delay: calc(.35s + var(--i) * 80ms); }
-@keyframes chIn { to { opacity: 1; transform: none; filter: none; } }
-.hello-lead { font: 400 64px/1.3 var(--font-display); max-width: 820px; margin-top: 40px; }
-
-/* ===========================================
-   SLIDE 2 — КТО И СКОЛЬКО ЛЕТ (шары + конфетти)
-   =========================================== */
-.s-who .inner { justify-content: center; }
-.who-name { font: 400 150px/1 var(--font-display); }
-.who-sub { font: italic 400 64px/1 var(--font-display); color: var(--muted); margin-top: 26px; }
-.age-svg { width: 960px; height: 560px; margin: 20px 0 10px; overflow: visible; }
-.age-svg text { font-family: var(--font-display); font-style: italic; font-weight: 300; font-size: 232px; }
-.age-stroke { fill: none; stroke: var(--gold); stroke-width: 2; stroke-dasharray: 900; stroke-dashoffset: 900; }
-.age-fill { opacity: 0; }
-.age-glow { opacity: 0; filter: blur(40px); }
-.slide.visible .age-stroke { animation: drawAge 2.6s .5s cubic-bezier(.6,0,.3,1) forwards, fadeOut 1s 2.6s forwards; }
-.slide.visible .age-fill { animation: fadeIn 1.4s 1.7s forwards; }
-.slide.visible .age-glow { animation: glow 3.5s 2s ease-in-out infinite alternate; }
-.age-shine { transform: translateX(-300px) skewX(-20deg); }
-.slide.visible .age-shine { animation: sweep 5s 3s cubic-bezier(.5,0,.3,1) infinite; }
-@keyframes drawAge { to { stroke-dashoffset: 0; } }
-@keyframes fadeOut { to { opacity: 0; } }
+/* ---------- HERO ---------- */
+.hero { min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 0 170px; }
+.moon { position: absolute; top: 9vh; right: 4px; width: 46px; height: 46px; border-radius: 50%;
+  box-shadow: inset -9px 3px 0 0 #f6e3bb; transform: rotate(-20deg); filter: drop-shadow(0 0 14px rgba(246,227,187,.55));
+  opacity: 0; animation: fadeIn 2.5s 2.2s forwards; }
+.eyebrow-wrap { display: flex; align-items: center; gap: 14px; }
+.eyebrow-wrap .ln { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent)); transform: scaleX(0); animation: grow 1.4s .3s forwards cubic-bezier(.2,.7,.2,1); transform-origin: right; }
+.eyebrow-wrap .ln:last-child { transform-origin: left; background: linear-gradient(270deg, transparent, var(--accent)); }
+.eyebrow { margin: 0; text-transform: uppercase; letter-spacing: .38em; font-size: 12px; color: var(--accent); opacity: 0; animation: fadeIn 1.2s .2s forwards; }
+@keyframes grow { to { transform: scaleX(1); } }
 @keyframes fadeIn { to { opacity: 1; } }
-@keyframes glow { from { opacity: .2; } to { opacity: .5; } }
-@keyframes sweep { 0% { transform: translateX(-300px) skewX(-20deg); } 35%, 100% { transform: translateX(1200px) skewX(-20deg); } }
-.who-caps { font: 600 34px var(--font-body); letter-spacing: .5em; padding-left: .5em; text-transform: uppercase; color: var(--gold); }
 
-/* --- Воздушные шары --- */
-.balloons { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
-.balloon { position: absolute; top: 1960px; left: var(--x); width: 190px; transform: scale(var(--s, 1)); opacity: .95;
-  animation: rise var(--dur) var(--delay) cubic-bezier(.3,.1,.3,1) forwards; }
-.balloon .b { width: 190px; height: 228px; border-radius: 50% 50% 47% 53% / 56% 56% 44% 44%; position: relative;
-  background: radial-gradient(circle at 30% 26%, rgba(255,255,255,.85), transparent 18%), radial-gradient(circle at 60% 70%, var(--c2), var(--c1) 75%);
-  box-shadow: inset -18px -22px 30px rgba(0,0,0,.18); animation: sway 4s ease-in-out infinite alternate; transform-origin: 50% 120%; }
-.balloon .b::after { content: ""; position: absolute; left: 50%; bottom: -16px; width: 26px; height: 20px; margin-left: -13px; background: var(--c2); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
-.balloon svg { display: block; width: 40px; height: 260px; margin: 2px auto 0; }
-.balloon path { fill: none; stroke: rgba(246,236,220,.55); stroke-width: 2.5; }
-@keyframes rise { to { transform: translateY(calc(-1 * var(--to))) scale(var(--s, 1)); } }
-@keyframes sway { from { transform: rotate(-6deg); } to { transform: rotate(6deg); } }
-.s-who .inner, .s-thanks .inner { z-index: 1; text-shadow: 0 4px 30px rgba(13,11,16,.85); }
+.age-svg { width: min(92vw, 440px); height: auto; margin: 4px 0 -6px; overflow: visible; }
+.age-svg text { font-family: var(--display); font-weight: 300; font-size: 300px; }
+.age-stroke { fill: none; stroke: #e3c287; stroke-width: 1.2; stroke-dasharray: 1400; stroke-dashoffset: 1400; }
+.age-fill { opacity: 0; }
+.age-glow { opacity: 0; filter: blur(18px); }
+.ready .age-stroke { animation: drawAge 2.4s .3s cubic-bezier(.6,0,.3,1) forwards, fadeStroke 1s 2.6s forwards; }
+.ready .age-fill { animation: fadeIn 1.6s 1.6s forwards; }
+.ready .age-glow { animation: glow 4s 2s ease-in-out infinite alternate; }
+.age-shine { transform: translateX(-260px) skewX(-20deg); }
+.ready .age-shine { animation: sweep 6s 3.2s cubic-bezier(.5,0,.3,1) infinite; }
+@keyframes drawAge { to { stroke-dashoffset: 0; } }
+@keyframes fadeStroke { to { opacity: .0; } }
+@keyframes glow { from { opacity: .18; } to { opacity: .4; } }
+@keyframes sweep { 0% { transform: translateX(-260px) skewX(-20deg); } 35%, 100% { transform: translateX(560px) skewX(-20deg); } }
 
-/* ===========================================
-   SLIDE 3 — КОГДА + ОБРАТНЫЙ ОТСЧЁТ
-   =========================================== */
-.s-when .inner { justify-content: center; }
-.when-date { font: 400 210px/1 var(--font-display); margin-top: 40px; }
-.when-meta { font: 500 52px/1.2 var(--font-body); color: var(--cream); margin-top: 30px; }
-.when-meta b { color: var(--gold); font-weight: 600; }
-.countdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; width: 900px; margin-top: 110px; }
-.cd { border-radius: 36px; padding: 44px 10px 36px; background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)); border: 2px solid rgba(232,199,138,.22); }
-.cd .num { font: 400 140px/1 var(--font-display); color: var(--gold-hi); font-variant-numeric: tabular-nums; display: inline-block; }
-.cd .num.bump { animation: bump .6s var(--ease-out-expo); }
-@keyframes bump { from { transform: translateY(-30%); opacity: 0; } }
-.cd .cap { font: 600 24px var(--font-body); letter-spacing: .24em; text-transform: uppercase; color: var(--muted); margin-top: 16px; }
-.cd-label { font: italic 400 44px var(--font-display); color: var(--muted); margin-top: 34px; }
-.cal-btn { margin-top: 70px; width: auto; min-height: 110px; font-size: 34px; padding: 0 50px; }
-.cal-btn svg { width: 44px; height: 44px; }
+.hero-title { font-family: var(--display); font-style: italic; font-size: clamp(36px, 9vw, 50px); line-height: 1.1; }
+.hero-title .ch { display: inline-block; opacity: 0; transform: translateY(.5em) rotate(6deg); filter: blur(6px); }
+.ready .hero-title .ch { animation: chIn .9s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(1.9s + var(--i) * 55ms); }
+@keyframes chIn { to { opacity: 1; transform: none; filter: none; } }
+.hero-sub { color: var(--muted); margin: 8px 0 0; opacity: 0; }
+.ready .hero-sub { animation: fadeIn 1s 2.6s forwards; }
 
-/* ===========================================
-   SLIDE 4 — ГДЕ (мансарда с горящими окнами)
-   =========================================== */
-.roof { width: 860px; height: 420px; margin: 50px 0 10px; overflow: visible; }
-.roof .line { fill: none; stroke: var(--gold); stroke-width: 3; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
-.slide.visible .roof .line { animation: draw 2.4s .4s cubic-bezier(.6,0,.3,1) forwards; }
-.roof .win { fill: #ffe3a3; opacity: 0; filter: drop-shadow(0 0 18px rgba(255,214,140,.9)); }
-.slide.visible .roof .win { animation: winOn .8s forwards, flick 6s infinite; animation-delay: calc(1.8s + var(--i) * .35s), calc(4s + var(--i) * 1.3s); }
-@keyframes winOn { to { opacity: 1; } }
-@keyframes flick { 0%, 46%, 54%, 100% { opacity: 1; } 50% { opacity: .55; } }
-.where-place { font: 400 112px/1.05 var(--font-display); }
-.where-addr { font: 500 46px/1.35 var(--font-body); color: var(--muted); margin-top: 22px; }
-.map-btn { margin-top: 60px; }
-.info-box { margin-top: 44px; width: 900px; border-radius: 32px; border: 2px dashed rgba(232,199,138,.35); padding: 30px 40px; text-align: left; display: grid; gap: 14px; }
-.info-box p { font: 400 36px/1.35 var(--font-body); }
-.info-box b { color: var(--gold); font-weight: 600; }
+.date-badge { margin-top: 30px; display: inline-flex; align-items: center; gap: 12px; padding: 13px 24px;
+  border: 1px solid var(--line-strong); border-radius: 999px; font-family: var(--display); font-size: 23px;
+  background: rgba(8,9,13,.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; transform: translateY(14px); }
+.date-badge .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
+.place-line { margin-top: 14px; color: var(--muted); font-size: 14px; letter-spacing: .06em; opacity: 0; }
+.hero .cta { margin-top: 30px; opacity: 0; transform: translateY(14px); }
+.ready .date-badge { animation: up 1s 2.7s cubic-bezier(.2,.7,.2,1) forwards; }
+.ready .place-line { animation: fadeIn 1s 3s forwards; }
+.hero.ready .cta { animation: up 1s 3.1s cubic-bezier(.2,.7,.2,1) forwards; }
+@keyframes up { to { opacity: 1; transform: none; } }
 
-/* ===========================================
-   SLIDES 5–9 — ФОРМА ОТВЕТА (по одному вопросу на экран)
-   =========================================== */
-.s-q .inner { padding-top: 180px; }
-.q-step { font: 600 26px var(--font-body); letter-spacing: .3em; padding-left: .3em; text-transform: uppercase; color: var(--gold); }
-.q-title { font: 400 130px/1.02 var(--font-display); margin-top: 40px; }
-.q-hint { font: 400 38px/1.35 var(--font-body); color: var(--muted); margin-top: 24px; }
-.q-body { width: 900px; margin-top: 80px; }
-.q-actions { width: 900px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.err { min-height: 50px; font: 500 34px var(--font-body); color: var(--error); margin-top: 22px; }
+.skyline-wrap { position: absolute; left: 50%; bottom: 0; width: 100vw; max-width: 1200px; transform: translateX(-50%); height: 150px; pointer-events: none; }
+.skyline { position: absolute; inset: 0; width: 100%; height: 100%; color: #050608; }
+.skyline .win { fill: #f1cf8c; opacity: 0; }
+.ready .skyline .win { animation: lightOn .5s forwards, flicker 7s infinite; animation-delay: var(--t), calc(var(--t) + 2s); }
+@keyframes lightOn { to { opacity: .9; } }
+@keyframes flicker { 0%, 46%, 54%, 100% { opacity: .9; } 50% { opacity: .3; } }
+.skyline .mw { fill: #fff0cf; opacity: 0; }
+.skyline .halo { fill: url(#halo); opacity: 0; }
+.ready .skyline .mw { animation: lightOn 1.2s 3.4s forwards; }
+.ready .skyline .halo { animation: halo 3s 3.6s ease-in-out infinite alternate; }
+@keyframes halo { from { opacity: .55; } to { opacity: 1; } }
+.ground { position: absolute; left: 0; right: 0; bottom: -100px; height: 100px; background: linear-gradient(#050608, rgba(5,6,8,0)); }
+.scroll-cue { position: absolute; bottom: 168px; left: 50%; transform: translateX(-50%); width: 22px; height: 34px; border: 1.5px solid var(--line-strong); border-radius: 12px; opacity: 0; }
+.scroll-cue::after { content: ""; position: absolute; left: 50%; top: 7px; width: 3px; height: 7px; margin-left: -1.5px; border-radius: 2px; background: var(--accent); animation: wheel 2s infinite; }
+.ready .scroll-cue { animation: fadeIn 1s 4s forwards; }
+@keyframes wheel { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(10px); opacity: 0; } 100% { opacity: 0; } }
 
-/* --- Поле ввода --- */
-.field { width: 100%; height: 160px; border-radius: 36px; border: 3px solid rgba(232,199,138,.3); background: rgba(0,0,0,.35);
-  color: var(--cream); font: 500 56px var(--font-body); text-align: center; padding: 0 40px; outline: none; transition: border-color .25s, box-shadow .25s; }
-.field::placeholder, textarea::placeholder { color: rgba(179,168,150,.55); }
-.field:focus, textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 10px rgba(232,199,138,.14); }
-.field.invalid { border-color: var(--error); animation: shake .4s; }
-@keyframes shake { 25% { transform: translateX(-14px); } 50% { transform: translateX(12px); } 75% { transform: translateX(-6px); } }
-textarea.field { height: 460px; text-align: left; padding: 36px 44px; font: 400 46px/1.4 var(--font-body); resize: none; }
-
-/* --- Карточки «Придёшь?» --- */
-.att { display: grid; gap: 28px; }
-.att button { display: flex; align-items: center; gap: 40px; min-height: 220px; padding: 0 56px; border-radius: 44px; cursor: pointer; text-align: left;
-  border: 3px solid rgba(232,199,138,.25); background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); color: var(--cream);
-  font: 600 56px var(--font-body); transition: transform .35s var(--spring), border-color .25s, background .25s; }
-.att button svg { width: 110px; height: 110px; flex: none; color: var(--gold); }
-.att button svg * { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-.att button.on { border-color: var(--gold); background: linear-gradient(180deg, rgba(232,199,138,.26), rgba(232,199,138,.08)); transform: scale(1.03); }
-.att button.on[data-v="no"] { border-color: var(--wine-hi); background: linear-gradient(180deg, rgba(168,52,76,.35), rgba(168,52,76,.12)); }
-
-/* --- Счётчик «−  N  +» --- */
-.stepper { display: flex; align-items: center; justify-content: center; gap: 50px; }
-.stepper button { width: 200px; height: 200px; border-radius: 50%; border: 3px solid rgba(232,199,138,.45); background: rgba(255,255,255,.04);
-  color: var(--gold); font: 300 120px/1 var(--font-display); cursor: pointer; transition: transform .2s, opacity .2s; display: grid; place-items: center; padding-bottom: 12px; }
-.stepper button:active { transform: scale(.92); }
-.stepper button:disabled { opacity: .25; cursor: default; }
-.stepper output { min-width: 240px; font: 300 300px/1 var(--font-display); text-align: center; display: inline-block; }
-.stepper output.bump { animation: popNum .45s var(--spring); }
-@keyframes popNum { from { transform: scale(.6); opacity: 0; } }
-.count-word { font: 500 46px var(--font-body); color: var(--gold); margin-top: 40px; }
-
-/* --- Карточки напитков с иконками --- */
-.drinks { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
-.drink { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; height: 232px; border-radius: 44px; cursor: pointer;
-  border: 3px solid rgba(232,199,138,.25); background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); color: var(--cream);
-  font: 600 40px var(--font-body); transition: transform .35s var(--spring), border-color .25s, background .25s, color .25s; }
-.other-wrap { width: 900px; margin-top: 26px; animation: popIn .5s var(--spring); }
-.other-wrap .field { height: 140px; font-size: 46px; }
-@keyframes popIn { from { opacity: 0; transform: translateY(-20px) scale(.96); } }
-.drink svg { width: 104px; height: 104px; color: var(--gold); }
-.drink svg * { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.drink.on { border-color: var(--gold); background: linear-gradient(180deg, #f7e2b4, var(--gold) 60%, #c99b55); color: #241806; transform: scale(1.03); }
-.drink.on svg { color: #3a2508; }
-.drink .tick { position: absolute; top: 26px; right: 26px; width: 64px; height: 64px; border-radius: 50%; background: #241806; color: var(--gold); display: grid; place-items: center;
-  transform: scale(0); transition: transform .35s var(--spring); }
-.drink .tick svg { width: 36px; height: 36px; color: var(--gold); }
-.drink.on .tick { transform: scale(1); }
-
-/* ===========================================
-   SLIDE 10 — СПАСИБО
-   =========================================== */
-.s-thanks .inner { justify-content: center; }
-.th-icon { width: 300px; height: 300px; color: var(--gold); }
-.th-icon * { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
-.slide.visible .th-icon * { animation: draw 1.6s .3s cubic-bezier(.6,0,.3,1) forwards; }
-.slide.visible .th-icon .late { animation-delay: 1.3s; }
-.th-title { font: 400 140px/1.02 var(--font-display); margin-top: 40px; }
-.th-text { font: 400 44px/1.4 var(--font-body); color: var(--cream); margin-top: 34px; max-width: 860px; }
-.summary { width: 900px; margin-top: 50px; padding: 36px 44px; border-radius: 34px; background: rgba(13,11,16,.72); border: 2px solid rgba(232,199,138,.22); backdrop-filter: blur(8px); display: grid; grid-template-columns: auto 1fr; gap: 18px 34px; text-align: left; font: 400 38px/1.35 var(--font-body); }
-.summary dt { color: var(--muted); }
-.summary dd { color: var(--cream); overflow-wrap: anywhere; }
-.th-actions { display: flex; flex-direction: column; gap: 24px; margin-top: 70px; }
-
-/* ===========================================
-   DECK CONTROLS (вне сцены): прогресс-бар и кнопка «назад»
-   =========================================== */
-.progress { position: fixed; top: max(12px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); width: min(92vw, 520px); display: flex; gap: 4px; z-index: 1000; transition: opacity .5s; }
-.progress i { flex: 1; height: 3px; border-radius: 3px; background: rgba(246,236,220,.18); overflow: hidden; position: relative; }
-.progress i::after { content: ""; position: absolute; inset: 0; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform .6s var(--ease-out-expo); }
-.progress i.done::after { transform: scaleX(1); }
-.back-btn { position: fixed; top: max(24px, calc(env(safe-area-inset-top) + 14px)); left: max(12px, env(safe-area-inset-left)); z-index: 1000; width: 44px; height: 44px; border-radius: 50%;
-  border: 1px solid rgba(232,199,138,.35); background: rgba(13,11,16,.55); color: var(--gold); display: grid; place-items: center; cursor: pointer; transition: opacity .4s; backdrop-filter: blur(6px); }
-.back-btn svg { width: 22px; height: 22px; }
-.hide { opacity: 0 !important; pointer-events: none !important; }
-.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
-noscript { position: fixed; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; font: 18px sans-serif; color: #fff; background: #0d0b10; z-index: 9999; }
+/* ---------- Секции ---------- */
+.quote { text-align: center; margin: 90px auto 0; max-width: 34ch; }
+.quote .mark { font-family: var(--display); font-size: 90px; line-height: .5; color: var(--accent); opacity: .5; display: block; height: 40px; }
+.quote p { font-family: var(--display); font-style: italic; font-size: clamp(22px, 5.4vw, 27px); line-height: 1.45; margin: 0; }
+.section-head { text-align: center; margin: 76px 0 24px; }
+.section-head .eyebrow { opacity: 1; animation: none; }
+.section-head h2 { font-family: var(--display); font-size: clamp(34px, 8vw, 44px); margin-top: 6px; }
+.section-head h2::after { content: ""; display: block; width: 60px; height: 1px; margin: 14px auto 0; background: var(--accent); transform: scaleX(0); transition: transform 1.2s .4s cubic-bezier(.2,.7,.2,1); }
+.section-head.in h2::after { transform: scaleX(1); }
+.card { position: relative; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 30px 60px -40px rgba(0,0,0,.8); }
+.card::before { content: ""; position: absolute; top: -1px; left: 18%; right: 18%; height: 1px; background: linear-gradient(90deg, transparent, #f6e3bb, transparent); transform: scaleX(0); transition: transform 1.4s .35s cubic-bezier(.2,.7,.2,1); }
+.card.in::before, .thanks::before { transform: scaleX(1); }
+.countdown .num { color: #f6e3bb; }
+.thanks.pop { animation: popIn .8s cubic-bezier(.2,.8,.2,1.2); }
+@keyframes popIn { from { opacity: 0; transform: scale(.9); } }
+footer { text-align: center; margin-top: 70px; color: var(--muted); font-size: 13px; }
+footer .sig { font-family: var(--display); font-style: italic; font-size: 30px; color: var(--accent); }
+@media (max-width: 380px) { .date-badge { font-size: 20px; padding: 11px 18px; } }
 </style>
 </head>
 <body>
-<noscript>Для приглашения нужен включённый JavaScript.</noscript>
+<div class="demo-banner" id="demoBanner" hidden>Демо-режим: ответы сохраняются только в этом браузере</div>
+<div class="sky" aria-hidden="true"><i class="g1"></i><i class="g2"></i><i class="g3"></i></div>
+<canvas id="fx" aria-hidden="true"></canvas>
 
-<!-- === ATMOSPHERE (фон на весь экран) === -->
-<div class="atmo" aria-hidden="true"><i class="g1"></i><i class="g2"></i><i class="g3"></i></div>
-<canvas id="dust" aria-hidden="true"></canvas>
+<main>
+  <section class="hero" id="hero">
+    <div class="moon" aria-hidden="true"></div>
+    <div class="eyebrow-wrap"><span class="ln"></span><p class="eyebrow">Приглашение</p><span class="ln"></span></div>
+    <svg class="age-svg" id="ageSvg" viewBox="0 0 440 280" role="img" aria-label="46">
+      <defs>
+        <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fff4d8"/><stop offset=".45" stop-color="#e3c287"/><stop offset="1" stop-color="#a47838"/>
+        </linearGradient>
+        <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+        </linearGradient>
+        <mask id="ageMask"><text x="220" y="246" text-anchor="middle" fill="#fff">46</text></mask>
+      </defs>
+      <text class="age-glow" x="220" y="246" text-anchor="middle" fill="#e3c287">46</text>
+      <text class="age-fill" x="220" y="246" text-anchor="middle" fill="url(#gold)">46</text>
+      <text class="age-stroke" x="220" y="246" text-anchor="middle">46</text>
+      <g mask="url(#ageMask)"><rect class="age-shine" x="0" y="0" width="110" height="280" fill="url(#shine)"/></g>
+    </svg>
+    <h1 class="hero-title" id="heroTitle">день рождения</h1>
+    <p class="hero-sub" id="heroSub"></p>
+    <div class="date-badge"><span id="badgeDate">6 декабря</span><span class="dot"></span><span id="badgeWeekday">воскресенье</span></div>
+    <div class="place-line" id="placeInline">Ресторан «Мансарда»</div>
+    <a class="btn cta" href="#rsvp">Ответить на приглашение</a>
+    <div class="scroll-cue" aria-hidden="true"></div>
 
-<!-- === DECK CONTROLS === -->
-<nav class="progress hide" id="progress" aria-hidden="true"></nav>
-<button class="back-btn hide" id="backBtn" type="button" aria-label="Назад">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
-</button>
-
-<div class="deck-viewport">
-  <main class="deck-stage" id="deckStage">
-
-    <!-- === SLIDE 0: КОНВЕРТ === -->
-    <section class="slide s-intro" data-step="intro" aria-label="Приглашение в конверте">
-      <div class="inner">
-        <div class="intro-title gold-text reveal" style="--d:0">Тебе письмо</div>
-        <div class="env-wrap" id="envelope" role="button" tabindex="0" aria-label="Открыть приглашение">
-          <div class="burst" aria-hidden="true"></div>
-          <div class="card3d" id="card3d" aria-hidden="true">
-            <div class="panel mid"><div class="face front"><div class="c-main">на день рождения</div></div></div>
-            <div class="panel top">
-              <div class="face front"><div class="c-eb">Приглашение</div><div class="c-orn"><i></i></div></div>
-              <div class="face back"><div class="monogram" data-f="initial">М</div></div>
-            </div>
-            <div class="panel bot">
-              <div class="face front"><div class="c-orn"><i></i></div></div>
-              <div class="face back"><div class="monogram" data-f="initial">М</div></div>
-            </div>
-          </div>
-          <div class="envelope">
-            <div class="env-back"></div>
-            <div class="letter"><div class="folded-back"><div class="monogram" data-f="initial">М</div></div></div>
-            <div class="env-front"></div>
-            <div class="env-flap"><svg class="flap-edge" viewBox="0 0 860 348" preserveAspectRatio="none" aria-hidden="true"><path d="M8 6L430 340L852 6"/></svg></div>
-            <button class="seal" id="seal" type="button" aria-label="Сломать печать и открыть приглашение"><span class="half l"></span><span class="half r"></span></button>
-          </div>
-        </div>
-        <div class="intro-hint" id="introHint">Нажми на печать</div>
-      </div>
-    </section>
-
-    <!-- === SLIDE 1: ПРИВЕТСТВИЕ === -->
-    <section class="slide s-hello" data-step="hello" data-info aria-label="Приветствие">
-      <svg class="frame" viewBox="0 0 940 1780" preserveAspectRatio="none" aria-hidden="true">
-        <rect pathLength="1" x="1" y="1" width="938" height="1778" rx="40"/>
-        <rect class="r2" pathLength="1" x="18" y="18" width="904" height="1744" rx="28"/>
+    <div class="skyline-wrap" id="skyline" aria-hidden="true">
+      <svg class="skyline" viewBox="0 0 1200 150" preserveAspectRatio="xMidYMax slice">
+        <defs><radialGradient id="halo"><stop offset="0" stop-color="#ffd98f" stop-opacity=".55"/><stop offset="1" stop-color="#ffd98f" stop-opacity="0"/></radialGradient></defs>
+        <g fill="currentColor" id="bld">
+          <rect x="0" y="86" width="70" height="64"/><rect x="60" y="60" width="58" height="90"/>
+          <rect x="112" y="94" width="80" height="56"/><polygon points="190,150 190,72 220,52 250,72 250,150"/>
+          <rect x="248" y="80" width="90" height="70"/><rect x="330" y="46" width="44" height="104"/>
+          <rect x="370" y="88" width="80" height="62"/><rect x="446" y="68" width="70" height="82"/>
+          <rect x="512" y="78" width="176" height="72"/><polygon points="500,80 534,30 666,30 700,80"/>
+          <rect x="640" y="12" width="12" height="24"/>
+          <rect x="686" y="84" width="70" height="66"/><rect x="750" y="56" width="54" height="94"/>
+          <polygon points="800,150 800,76 836,42 872,76 872,150"/><rect x="868" y="90" width="86" height="60"/>
+          <rect x="950" y="64" width="64" height="86"/><rect x="1010" y="94" width="80" height="56"/>
+          <rect x="1086" y="72" width="60" height="78"/><rect x="1140" y="88" width="60" height="62"/>
+        </g>
+        <ellipse class="halo" cx="600" cy="54" rx="120" ry="48"/>
+        <rect class="mw" x="550" y="42" width="18" height="26" rx="9"/>
+        <rect class="mw" x="591" y="42" width="18" height="26" rx="9"/>
+        <rect class="mw" x="632" y="42" width="18" height="26" rx="9"/>
+        <g id="wins"></g>
       </svg>
-      <div class="inner">
-        <h1 class="hello" id="helloWord">Привет!</h1>
-        <p class="hello-lead reveal" style="--d:5" data-f="greeting"></p>
-      </div>
-      <div class="tap-hint reveal" style="--d:9">Нажми, чтобы продолжить <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-    </section>
+      <div class="ground"></div>
+    </div>
+  </section>
 
-    <!-- === SLIDE 2: КТО И СКОЛЬКО ЛЕТ === -->
-    <section class="slide s-who" data-step="who" data-info aria-label="Приглашение на день рождения">
-      <div class="balloons" id="balloonsWho"></div>
-      <div class="inner">
-        <h2 class="who-name reveal-l" style="--d:1" data-f="name"></h2>
-        <p class="who-sub reveal-r" style="--d:2">приглашает тебя на свой</p>
-        <svg class="age-svg" viewBox="0 0 960 560" role="img" aria-label="день рождения">
-          <defs>
-            <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3d6"/><stop offset=".45" stop-color="#e8c78a"/><stop offset="1" stop-color="#a47838"/></linearGradient>
-            <linearGradient id="shineGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-            <mask id="ageMask"><text text-anchor="middle" fill="#fff"><tspan x="480" y="230">день</tspan><tspan x="480" y="480">рождения</tspan></text></mask>
-          </defs>
-          <text class="age-glow" text-anchor="middle" fill="#e8c78a"><tspan x="480" y="230">день</tspan><tspan x="480" y="480">рождения</tspan></text>
-          <text class="age-fill" text-anchor="middle" fill="url(#goldGrad)"><tspan x="480" y="230">день</tspan><tspan x="480" y="480">рождения</tspan></text>
-          <text class="age-stroke" text-anchor="middle"><tspan x="480" y="230">день</tspan><tspan x="480" y="480">рождения</tspan></text>
-          <g mask="url(#ageMask)"><rect class="age-shine" x="0" y="0" width="220" height="560" fill="url(#shineGrad)"/></g>
-        </svg>
-        <p class="who-caps reveal" style="--d:8" data-f="dateTime"></p>
-      </div>
-      <div class="tap-hint reveal" style="--d:12">Дальше <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-    </section>
+  <section class="quote reveal"><span class="mark">“</span><p id="message"></p></section>
 
-    <!-- === SLIDE 3: КОГДА === -->
-    <section class="slide s-when" data-step="when" data-info aria-label="Когда">
-      <div class="inner">
-        <p class="kicker reveal-down" style="--d:0">Когда</p>
-        <h2 class="when-date gold-text reveal-blur" style="--d:1" data-f="dateShort"></h2>
-        <p class="when-meta reveal-r" style="--d:3"><span data-f="weekday"></span><span data-f="timeBlock"></span></p>
-        <div class="countdown" id="countdown">
-          <div class="cd reveal-pop" style="--d:5"><div class="num" id="cdD">0</div><div class="cap" id="cdDc">дней</div></div>
-          <div class="cd reveal-pop" style="--d:6"><div class="num" id="cdH">0</div><div class="cap" id="cdHc">часов</div></div>
-          <div class="cd reveal-pop" style="--d:7"><div class="num" id="cdM">0</div><div class="cap" id="cdMc">минут</div></div>
-        </div>
-        <p class="cd-label reveal" style="--d:8" id="cdLabel">до праздника</p>
-        <button class="btn ghost cal-btn reveal" style="--d:9" type="button" id="calBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
-          Добавить в календарь
-        </button>
-      </div>
-    </section>
+  <div class="section-head reveal"><p class="eyebrow">Детали</p><h2>Где и когда</h2></div>
+  <section id="detailsMount"></section>
 
-    <!-- === SLIDE 4: ГДЕ === -->
-    <section class="slide s-where" data-step="where" data-info aria-label="Где">
-      <div class="inner">
-        <p class="kicker reveal-down" style="--d:0">Где</p>
-        <svg class="roof" viewBox="0 0 860 420" aria-hidden="true">
-          <path class="line" pathLength="1" d="M20 410H840M90 410V250L190 90H670L770 250V410M60 250H800M400 90V40H440V90"/>
-          <path class="line" pathLength="1" d="M250 250V190a40 40 0 0 1 80 0V250M390 250V190a40 40 0 0 1 80 0V250M530 250V190a40 40 0 0 1 80 0V250"/>
-          <path class="win" style="--i:0" d="M258 248V192a32 32 0 0 1 64 0V248Z"/>
-          <path class="win" style="--i:1" d="M398 248V192a32 32 0 0 1 64 0V248Z"/>
-          <path class="win" style="--i:2" d="M538 248V192a32 32 0 0 1 64 0V248Z"/>
-          <path class="line" pathLength="1" d="M150 410V320H230V410M630 410V320H710V410M330 410V300H530V410"/>
-        </svg>
-        <h2 class="where-place reveal-l" style="--d:3" data-f="place"></h2>
-        <p class="where-addr reveal-r" style="--d:4" data-f="addressFull"></p>
-        <a class="btn map-btn reveal" style="--d:6" id="mapBtn" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-          Открыть в Яндекс Картах
-        </a>
-        <div class="info-box reveal" style="--d:7" id="infoBox" hidden></div>
-        <div class="spacer"></div>
-        <button class="btn ghost reveal" style="--d:8" type="button" id="toRsvp">Ответить на приглашение</button>
-      </div>
-    </section>
+  <div class="section-head reveal"><p class="eyebrow">До праздника</p><h2>Осталось</h2></div>
+  <section id="countdownMount"></section>
 
-    <!-- === SLIDE 5: ВОПРОС 1 — ИМЯ === -->
-    <section class="slide s-q" data-step="q-name" aria-label="Как тебя зовут">
-      <div class="inner">
-        <p class="q-step reveal-down" style="--d:0">Вопрос 1 из 4</p>
-        <h2 class="q-title reveal-l" style="--d:1">Как тебя<br><em class="gold-text">зовут?</em></h2>
-        <div class="q-body reveal" style="--d:3">
-          <input class="field" id="fName" type="text" maxlength="80" autocomplete="name" enterkeyhint="next" placeholder="Имя и фамилия" aria-label="Имя">
-          <p class="err" id="eName" role="alert"></p>
-        </div>
-        <div class="spacer"></div>
-        <div class="q-actions reveal" style="--d:4"><button class="btn" type="button" data-next>Далее</button></div>
-      </div>
-    </section>
+  <div class="section-head reveal" id="rsvp"><p class="eyebrow">Твой ответ</p><h2 id="rsvpTitle">Ты придёшь?</h2></div>
+  <section id="rsvpMount"></section>
 
-    <!-- === SLIDE 6: ВОПРОС 2 — ПРИДЁШЬ? === -->
-    <section class="slide s-q" data-step="q-att" aria-label="Придёшь">
-      <div class="inner">
-        <p class="q-step reveal-down" style="--d:0">Вопрос 2 из 4</p>
-        <h2 class="q-title reveal-l" style="--d:1"><em class="gold-text">Придёшь?</em></h2>
-        <div class="q-body att" id="attBox" role="radiogroup" aria-label="Придёшь?"></div>
-        <p class="err" id="eAtt" role="alert"></p>
-        <div class="spacer"></div>
-        <div class="q-actions reveal" style="--d:6"><button class="btn" type="button" data-next>Далее</button></div>
-      </div>
-    </section>
+  <footer class="reveal"><div class="sig">До встречи 6 декабря!</div><p id="contactLine" hidden></p></footer>
+</main>
 
-    <!-- === SLIDE 7: ВОПРОС 3 — СКОЛЬКО ВАС === -->
-    <section class="slide s-q" data-step="q-guests" aria-label="Сколько вас будет">
-      <div class="inner">
-        <p class="q-step reveal-down" style="--d:0">Вопрос 3 из 4</p>
-        <h2 class="q-title reveal-l" style="--d:1">Сколько вас<br><em class="gold-text">будет?</em></h2>
-        <p class="q-hint reveal-r" style="--d:2">Считая тебя — например, с парой или с детьми</p>
-        <div class="q-body reveal" style="--d:3">
-          <div class="stepper">
-            <button type="button" id="minus" aria-label="Меньше">−</button>
-            <output id="count" aria-live="polite">1</output>
-            <button type="button" id="plus" aria-label="Больше">+</button>
-          </div>
-          <p class="count-word" id="countWord">только я</p>
-        </div>
-        <div class="spacer"></div>
-        <div class="q-actions reveal" style="--d:4"><button class="btn" type="button" data-next>Далее</button></div>
-      </div>
-    </section>
-
-    <!-- === SLIDE 8: ВОПРОС 4 — НАПИТКИ + ОТПРАВКА === -->
-    <section class="slide s-q" data-step="q-drinks" aria-label="Что будешь пить">
-      <div class="inner">
-        <p class="q-step reveal-down" style="--d:0">Вопрос 4 из 4</p>
-        <h2 class="q-title reveal-l" style="--d:1">Что будешь<br><em class="gold-text">пить?</em></h2>
-        <p class="q-hint reveal-r" style="--d:2" id="drinksHint">Меню уже готово — выбери напитки, можно несколько</p>
-        <div class="q-body drinks" id="drinksBox" style="margin-top:50px"></div>
-        <div class="other-wrap" id="otherWrap" hidden>
-          <input class="field" id="fOther" type="text" maxlength="80" enterkeyhint="done" placeholder="Например: виски, пиво, морс" aria-label="Свой вариант напитка">
-        </div>
-        <input class="hp" id="fWebsite" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <p class="err" id="eSend" role="alert"></p>
-        <div class="spacer"></div>
-        <div class="q-actions reveal" style="--d:9"><button class="btn" type="button" id="sendBtn">Отправить ответ</button></div>
-      </div>
-    </section>
-
-    <!-- === SLIDE 10: СПАСИБО === -->
-    <section class="slide s-thanks" data-step="thanks" aria-label="Спасибо">
-      <div class="balloons" id="balloonsThanks"></div>
-      <div class="inner">
-        <svg class="th-icon" id="thIcon" viewBox="0 0 64 64" aria-hidden="true"></svg>
-        <h2 class="th-title gold-text reveal-blur" style="--d:2" id="thTitle">Спасибо, ждём тебя!</h2>
-        <p class="th-text reveal-r" style="--d:3" id="thText"></p>
-        <dl class="summary reveal" style="--d:4" id="summary"></dl>
-        <div class="th-actions reveal" style="--d:5">
-          <button class="btn ghost" type="button" id="editBtn">Изменить ответ</button>
-          <button class="btn ghost" type="button" id="calBtn2">Добавить в календарь</button>
-        </div>
-      </div>
-    </section>
-
-  </main>
-</div>
-<canvas id="confetti" aria-hidden="true"></canvas>
-
+<script src="config.js"></script>
+<script>window.INVITE_THEME = { confetti: ["#fff4d8", "#f1d9a6", "#e3c287", "#b98f4e", "#ffffff", "#a8384f"] };</script>
+<script src="app.js"></script>
 <script>
-/* ===========================================
-   PARTY DATA
-   Все данные праздника берутся из config.js (window.PARTY).
-   Ниже — запасные значения на случай, если config.js не загрузился.
-   =========================================== */
-const P = window.PARTY || {
-  name: "Митьен", age: 46, date: "2026-12-06", time: "13:00", utcOffset: "+03:00",
-  place: "Ресторан «Мансарда»", city: "Москва", address: "ул. Лавочкина, 7А, стр. 1",
-  mapUrl: "https://yandex.ru/maps/?text=" + encodeURIComponent("Москва, ул. Лавочкина, 7А, стр. 1, Ресторан Мансарда"),
-  dressCode: "", extraInfo: "", rsvpDeadline: "", greeting: "Привет! У меня для тебя кое-что важное",
-  startIso: "2026-12-06T13:00:00+03:00", maxGuests: 10,
-  drinks: [{ id: "vodka", label: "Водка" }, { id: "prosecco", label: "Просекко" }, { id: "champagne", label: "Шампанское" }, { id: "wine", label: "Вино" }, { id: "none", label: "Не пью алкоголь" }],
-  attending: [{ id: "yes", label: "Да, буду!" }, { id: "maybe", label: "Пока не знаю" }, { id: "no", label: "К сожалению, не смогу" }],
-};
-if (!P.startIso) P.startIso = P.date + "T" + (P.time || "00:00") + ":00" + (P.utcOffset || "+03:00");
-if (!P.mapUrl) P.mapUrl = "https://yandex.ru/maps/?text=" + encodeURIComponent([P.city, P.address, (P.place || "").replace(/[«»]/g, "")].filter(Boolean).join(", "));
-P.maxGuests = P.maxGuests || 10;
-const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const $ = (id) => document.getElementById(id);
-const store = {
-  get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
-  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* приватный режим */ } },
-};
-const plural = (n, f) => { const a = Math.abs(n) % 100, b = a % 10; if (a > 10 && a < 20) return f[2]; if (b > 1 && b < 5) return f[1]; if (b === 1) return f[0]; return f[2]; };
-
-/* ===========================================
-   TEXT FILL: подставляем данные праздника в разметку
-   =========================================== */
-const noonUtc = new Date(P.date + "T12:00:00Z");
-const dateShort = noonUtc.toLocaleDateString("ru-RU", { day: "numeric", month: "long", timeZone: "UTC" });
-const weekday = noonUtc.toLocaleDateString("ru-RU", { weekday: "long", timeZone: "UTC" });
-const F = {
-  name: P.name, age: String(P.age), dateShort, weekday: weekday[0].toUpperCase() + weekday.slice(1),
-  timeBlock: P.time ? " · начало в " + P.time : "", place: P.place,
-  addressFull: [P.city, P.address].filter(Boolean).join(", "),
-  greeting: (P.greeting || "").replace(/^Привет!?\s*/, "") || "У меня для тебя кое-что важное",
-  initial: (P.name || "М").trim().charAt(0).toUpperCase(),
-  dateTime: dateShort + (P.time ? " · " + P.time : ""),
-};
-document.querySelectorAll("[data-f]").forEach((el) => { const v = F[el.dataset.f]; if (v != null) el.textContent = v; });
-document.querySelectorAll(".when-meta [data-f='timeBlock']").forEach((el) => { el.innerHTML = ""; if (P.time) { el.append(" · начало в "); const b = document.createElement("b"); b.textContent = P.time; el.append(b); } });
-$("mapBtn").href = P.mapUrl;
-(function infoBox() {
-  const items = [["Дресс-код", P.dressCode], ["Важно", P.extraInfo], ["Ответь, пожалуйста, до", P.rsvpDeadline]].filter((x) => x[1]);
-  if (!items.length) return;
-  const box = $("infoBox"); box.hidden = false;
-  items.forEach(([k, v]) => { const p = document.createElement("p"); const b = document.createElement("b"); b.textContent = k + ": "; p.append(b, document.createTextNode(v)); box.appendChild(p); });
-})();
-// «Привет!» по буквам
 (function () {
-  const h = $("helloWord"), t = h.textContent; h.textContent = ""; h.setAttribute("aria-label", t);
-  [...t].forEach((c, i) => { const s = document.createElement("span"); s.className = "ch gold-text"; s.style.setProperty("--i", i); s.textContent = c; s.setAttribute("aria-hidden", "true"); h.appendChild(s); });
-})();
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Буквы заголовка по одной
+  const t = document.getElementById("heroTitle");
+  const txt = t.textContent; t.textContent = ""; t.setAttribute("aria-label", txt);
+  [...txt].forEach((c, i) => { const s = document.createElement("span"); s.className = "ch"; s.style.setProperty("--i", i); s.textContent = c === " " ? " " : c; s.setAttribute("aria-hidden", "true"); t.appendChild(s); });
 
-/* ===========================================
-   ICONS: иконки напитков и ответов (линейные, золотые)
-   =========================================== */
-const ICON = {
-  vodka: '<svg viewBox="0 0 64 64"><path d="M27 5h10v9l5 6v36a3 3 0 0 1-3 3H25a3 3 0 0 1-3-3V20l5-6z"/><path d="M22 30h20v14H22z"/><path d="M27 9h10"/></svg>',
-  prosecco: '<svg viewBox="0 0 64 64"><path d="M26 6h12l-1 22a5 5 0 0 1-10 0z"/><path d="M32 33v19M25 56h14"/><circle cx="31" cy="20" r="1.2"/><circle cx="34" cy="14" r="1.2"/><circle cx="30" cy="11" r="1"/></svg>',
-  champagne: '<svg viewBox="0 0 64 64"><path d="M13 22h38c0 10-8 15-19 15S13 32 13 22z"/><path d="M32 37v15M23 56h18"/><path d="M24 6l3 6M40 6l-3 6M32 3v7"/></svg>',
-  wine: '<svg viewBox="0 0 64 64"><path d="M21 6h22c1 14-3 24-11 24S20 20 21 6z"/><path d="M21.6 16h20.8"/><path d="M32 30v22M23 56h18"/></svg>',
-  other: '<svg viewBox="0 0 64 64"><path d="M10 10h32L26 30z"/><path d="M26 30v20M18 54h16"/><path d="M38 50l14-14 6 6-14 14-7 1z"/><path d="M48 40l6 6"/></svg>',
-  none: '<svg viewBox="0 0 64 64"><path d="M19 18h26l-3.5 38h-19z"/><path d="M38 4l-5 14"/><path d="M21 30h22"/><circle cx="46" cy="16" r="7"/><path d="M46 9v14M39 16h14"/></svg>',
-  yes: '<svg viewBox="0 0 64 64"><g transform="rotate(-14 22 34)"><path d="M17 10h10l-1 17a4 4 0 0 1-8 0z"/><path d="M22 31v15M17 46h10"/></g><g transform="rotate(14 42 34)"><path d="M37 10h10l-1 17a4 4 0 0 1-8 0z"/><path d="M42 31v15M37 46h10"/></g><path d="M32 2v6M24 5l3 4M40 5l-3 4"/></svg>',
-  maybe: '<svg viewBox="0 0 64 64"><path d="M18 8h28M18 56h28"/><path d="M21 8c0 13 22 15 22 24S21 43 21 56M43 8c0 13-22 15-22 24s22 11 22 24"/><path d="M27 50h10"/></svg>',
-  no: '<svg viewBox="0 0 64 64"><path d="M8 18h48v32H8z"/><path d="M8 18l24 19 24-19"/><path d="M8 50l18-15M56 50L38 35"/></svg>',
-  tick: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
-};
+  // Окна в домах загораются по очереди
+  const wins = document.getElementById("wins"), NS = "http://www.w3.org/2000/svg";
+  [[72,74],[98,90],[86,110],[130,108],[160,118],[214,84],[268,96],[300,110],[344,62],[344,90],[356,120],[392,104],[420,118],[466,84],[490,110],[540,96],[600,112],[650,96],[668,124],[706,100],[730,120],[766,70],[784,100],[830,90],[846,118],[890,104],[920,120],[976,80],[992,110],[1030,108],[1060,124],[1104,90],[1120,116],[1160,104]]
+    .forEach(([x, y], i) => {
+      const r = document.createElementNS(NS, "rect");
+      r.setAttribute("class", "win"); r.setAttribute("x", x); r.setAttribute("y", y); r.setAttribute("width", 6); r.setAttribute("height", 8);
+      r.style.setProperty("--t", (0.6 + Math.random() * 2.6).toFixed(2) + "s");
+      if (Math.random() < 0.3) r.style.display = "none";
+      wins.appendChild(r);
+    });
 
-/* ===========================================
-   FORM STATE: ответы гостя (черновик сохраняется на устройстве)
-   =========================================== */
-const LS_DRAFT = "rsvp_draft_v2", LS_SENT = "rsvp_sent_v1", LS_ID = "rsvp_client_id_v1";
-const draft = store.get(LS_DRAFT) || {};
-const state = {
-  name: draft.name || "", attending: draft.attending || "", guests: draft.guests || 1,
-  drinks: new Set(draft.drinks || []), drinkOther: draft.drinkOther || "",
-  sent: store.get(LS_SENT), editing: false, sending: false,
-};
-function saveDraft() { store.set(LS_DRAFT, { name: state.name, attending: state.attending, guests: state.guests, drinks: [...state.drinks], drinkOther: state.drinkOther }); }
-function clientId() {
-  let id = store.get(LS_ID);
-  if (!id) { id = (crypto.randomUUID ? crypto.randomUUID() : "g" + Date.now().toString(36) + Math.random().toString(36).slice(2, 12)); store.set(LS_ID, id); }
-  return id;
-}
+  const start = () => document.getElementById("hero").classList.add("ready");
+  (document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]) : Promise.resolve()).then(start);
 
-/* --- Вопрос 1: имя --- */
-const fName = $("fName");
-fName.value = state.name;
-fName.addEventListener("input", () => { state.name = fName.value; fName.classList.remove("invalid"); $("eName").textContent = ""; saveDraft(); });
-fName.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); deck.next(); } });
-
-/* --- Вопрос 2: придёшь? --- */
-P.attending.forEach((a) => {
-  const b = document.createElement("button");
-  b.type = "button"; b.dataset.v = a.id; b.setAttribute("role", "radio");
-  b.className = "reveal-pop"; b.style.setProperty("--d", 3 + P.attending.indexOf(a));
-  b.innerHTML = ICON[a.id] || ""; b.append(a.label);
-  b.addEventListener("click", () => {
-    state.attending = a.id; saveDraft(); renderAtt(); $("eAtt").textContent = "";
-    setTimeout(() => deck.next(), 420); // выбор сразу ведёт дальше («Не смогу» — сразу отправляет ответ)
-  });
-  $("attBox").appendChild(b);
-});
-function renderAtt() { $("attBox").querySelectorAll("button").forEach((b) => { const on = b.dataset.v === state.attending; b.classList.toggle("on", on); b.setAttribute("aria-checked", on); }); }
-renderAtt();
-
-/* --- Вопрос 3: счётчик гостей --- */
-const MAXG = Math.max(1, P.maxGuests || 10);
-function setCount(n, anim) {
-  state.guests = Math.min(MAXG, Math.max(1, n)); saveDraft();
-  const o = $("count"); o.textContent = state.guests;
-  if (anim && !reduced) { o.classList.remove("bump"); void o.offsetWidth; o.classList.add("bump"); }
-  $("minus").disabled = state.guests <= 1; $("plus").disabled = state.guests >= MAXG;
-  $("countWord").textContent = state.guests === 1 ? "только я" : "я + " + (state.guests - 1) + " " + plural(state.guests - 1, ["гость", "гостя", "гостей"]);
-}
-$("minus").addEventListener("click", () => setCount(state.guests - 1, true));
-$("plus").addEventListener("click", () => setCount(state.guests + 1, true));
-setCount(state.guests, false);
-
-/* --- Вопрос 4: напитки (можно отметить несколько — за себя и за тех, кто придёт вместе) --- */
-P.drinks.forEach((d, i) => {
-  const b = document.createElement("button");
-  b.type = "button"; b.className = "drink reveal-pop"; b.dataset.v = d.id; b.style.setProperty("--d", 3 + i);
-  b.setAttribute("aria-pressed", "false");
-  b.innerHTML = (ICON[d.id] || "") + '<span class="tick">' + ICON.tick + "</span>";
-  b.append(d.label);
-  b.addEventListener("click", () => {
-    // Любые варианты сочетаются: если пришли вдвоём, один может пить водку, другой — шампанское или не пить вовсе
-    if (state.drinks.has(d.id)) state.drinks.delete(d.id); else state.drinks.add(d.id);
-    $("eSend").textContent = "";
-    saveDraft(); renderDrinks();
-    if (d.id === "other" && state.drinks.has("other")) setTimeout(() => $("fOther").focus({ preventScroll: true }), 200);
-  });
-  $("drinksBox").appendChild(b);
-});
-function renderDrinks() {
-  $("drinksBox").querySelectorAll(".drink").forEach((b) => { const on = state.drinks.has(b.dataset.v); b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
-  $("otherWrap").hidden = !state.drinks.has("other");
-}
-renderDrinks();
-
-/* --- Свой вариант напитка --- */
-const fOther = $("fOther");
-fOther.value = state.drinkOther;
-fOther.addEventListener("input", () => { state.drinkOther = fOther.value; $("eSend").textContent = ""; fOther.classList.remove("invalid"); saveDraft(); });
-fOther.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); fOther.blur(); } });
-
-/* ===========================================
-   SLIDE PRESENTATION CONTROLLER
-   Навигация: касание (левая треть — назад, остальное — вперёд) на
-   информационных экранах, свайп, колесо мыши, стрелки/пробел.
-   На экранах формы вперёд — только через «Далее» с проверкой.
-   =========================================== */
-class SlidePresentation {
-  constructor() {
-    this.slides = [...document.querySelectorAll(".slide")];
-    this.steps = this.slides.map((s) => s.dataset.step);
-    this.current = 0;
-    this.stage = $("deckStage");
-    this.lock = false;
-    this.buildProgress();
-    this.setupStageScale();
-    this.setupKeyboardNav();
-    this.setupTouchNav();
-    this.setupWheelNav();
-    $("backBtn").addEventListener("click", () => this.prev());
-  }
-  idx(step) { return this.steps.indexOf(step); }
-  get step() { return this.steps[this.current]; }
-
-  /* --- Масштаб сцены 1080×1920 под экран --- */
-  setupStageScale() {
-    let lastW = 0;
-    const scale = () => {
-      const w = window.innerWidth, h = window.innerHeight;
-      // Когда открыта клавиатура на телефоне, меняется только высота — не дёргаем сцену
-      const typing = /INPUT|TEXTAREA/.test((document.activeElement || {}).tagName || "");
-      if (typing && w === lastW) return;
-      lastW = w;
-      const f = Math.min(w / 1080, h / 1920);
-      this.stage.style.transform = `translate(${(w - 1080 * f) / 2}px, ${(h - 1920 * f) / 2}px) scale(${f})`;
-    };
-    scale();
-    window.addEventListener("resize", scale);
-  }
-
-  buildProgress() {
-    const p = $("progress");
-    for (let i = 1; i < this.slides.length; i++) p.appendChild(document.createElement("i"));
-  }
-  updateChrome() {
-    const bars = $("progress").children;
-    for (let i = 0; i < bars.length; i++) bars[i].classList.toggle("done", i < this.current);
-    $("progress").classList.toggle("hide", this.current === 0);
-    $("backBtn").classList.toggle("hide", this.current <= 1 || this.step === "thanks");
-  }
-
-  /* --- Логика порядка экранов --- */
-  nextIndex() {
-    const s = this.step;
-    if (s === "where" && state.sent && !state.editing) return this.idx("thanks");
-    if (s === "q-drinks" || s === "thanks") return -1;
-    return this.current + 1;
-  }
-  prevIndex() {
-    const s = this.step;
-    if (s === "thanks") return -1;
-    return this.current - 1;
-  }
-  validate() {
-    if (this.step === "q-name") {
-      const n = state.name.trim();
-      if (!n || !/\p{L}/u.test(n)) {
-        fName.classList.remove("invalid"); void fName.offsetWidth; fName.classList.add("invalid");
-        $("eName").textContent = "Напиши, пожалуйста, своё имя"; fName.focus(); return false;
+  // Параллакс
+  const sky = document.getElementById("skyline"), age = document.getElementById("ageSvg");
+  let ticking = false;
+  addEventListener("scroll", () => {
+    if (ticking || reduced) return; ticking = true;
+    requestAnimationFrame(() => {
+      const y = scrollY;
+      if (y < innerHeight * 1.2) {
+        sky.style.transform = `translateX(-50%) translateY(${y * 0.18}px)`;
+        age.style.transform = `translateY(${y * 0.32}px)`;
+        age.style.opacity = Math.max(0, 1 - y / (innerHeight * 0.8));
       }
-    }
-    if (this.step === "q-att" && !state.attending) { $("eAtt").textContent = "Выбери один из вариантов"; return false; }
-    return true;
-  }
-  next() {
-    if (!this.validate()) return;
-    if (this.step === "q-att" && state.attending === "no") { submit(); return; } // «Не смогу» — сразу отправляем
-    const i = this.nextIndex(); if (i >= 0) this.show(i);
-  }
-  prev() { const i = this.prevIndex(); if (i >= 1) this.show(i); }
-
-  show(index) {
-    if (index === this.current || index < 0 || index >= this.slides.length) return;
-    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
-    const old = this.slides[this.current];
-    old.classList.remove("active", "visible");
-    this.current = index;
-    this.slides.forEach((s, i) => s.classList.toggle("past", i < index));
-    const cur = this.slides[index];
-    cur.classList.add("active");
-    requestAnimationFrame(() => requestAnimationFrame(() => cur.classList.add("visible")));
-    this.updateChrome();
-    onEnter(this.step);
-  }
-
-  /* --- Клавиатура --- */
-  setupKeyboardNav() {
-    document.addEventListener("keydown", (e) => {
-      const tag = (e.target.tagName || "");
-      if (/INPUT|TEXTAREA/.test(tag)) return;
-      if (this.step === "intro" && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openEnvelope(); return; }
-      if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) { e.preventDefault(); if (this.current > 0) this.next(); }
-      if (["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)) { e.preventDefault(); this.prev(); }
+      ticking = false;
     });
-  }
+  }, { passive: true });
 
-  /* --- Касания и свайпы --- */
-  setupTouchNav() {
-    let sx = 0, sy = 0, st = 0;
-    const vp = document.querySelector(".deck-viewport");
-    vp.addEventListener("touchstart", (e) => { const t = e.touches[0]; sx = t.clientX; sy = t.clientY; st = Date.now(); }, { passive: true });
-    vp.addEventListener("touchend", (e) => {
-      const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
-      if (Date.now() - st > 800 || Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.3) return;
-      if (/INPUT|TEXTAREA/.test(e.target.tagName)) return;
-      if (this.step === "intro") return;
-      this.swiped = true; setTimeout(() => (this.swiped = false), 350);
-      dx < 0 ? this.next() : this.prev();
-    }, { passive: true });
-    // Касание по информационным экранам — как в сторис
-    vp.addEventListener("click", (e) => {
-      if (this.swiped) return;
-      const slide = this.slides[this.current];
-      if (!slide.hasAttribute("data-info")) return;
-      if (e.target.closest("button, a, input, textarea")) return;
-      e.clientX < window.innerWidth * 0.3 ? this.prev() : this.next();
-    });
-  }
-
-  /* --- Колесо мыши / тачпад (только информационные экраны) --- */
-  setupWheelNav() {
-    let lockUntil = 0;
-    window.addEventListener("wheel", (e) => {
-      if (!this.slides[this.current].hasAttribute("data-info")) return;
-      const now = Date.now(); if (now < lockUntil || Math.abs(e.deltaY) < 25) return;
-      lockUntil = now + 900; e.deltaY > 0 ? this.next() : this.prev();
-    }, { passive: true });
-  }
-}
-
-/* ===========================================
-   ON ENTER: что происходит при входе на экран
-   =========================================== */
-function onEnter(step) {
-  if (step === "who") { launchBalloons($("balloonsWho"), 7); setTimeout(() => confetti({ count: 150 }), 1900); }
-  if (step === "q-name" && !("ontouchstart" in window)) setTimeout(() => fName.focus({ preventScroll: true }), 700);
-  if (step === "q-att") { $("eAtt").textContent = ""; renderAtt(); }
-  if (step === "q-drinks") {
-    $("eSend").textContent = ""; renderDrinks();
-    $("drinksHint").textContent = state.guests > 1
-      ? `Вас будет ${state.guests} — отметь напитки для всех, можно несколько вариантов`
-      : "Меню уже готово — выбери напитки, можно несколько";
-  }
-  if (step === "thanks") { renderThanks(); }
-}
-
-/* ===========================================
-   ENVELOPE: марка, печать, переворот и открытие конверта
-   =========================================== */
-(function drawSeal() {
-  // Сургуч с неровным краем
-  const N = 30, pts = [];
-  for (let i = 0; i <= N; i++) {
-    const a = (i / N) * Math.PI * 2, rr = 100 + (i % 2 ? 7 : -3) + Math.sin(i * 2.3) * 4;
-    pts.push([115 + Math.cos(a) * rr, 115 + Math.sin(a) * rr]);
-  }
-  let d = `M${(pts[0][0] + pts[1][0]) / 2} ${(pts[0][1] + pts[1][1]) / 2}`;
-  for (let i = 1; i < N; i++) { const [x, y] = pts[i], [x2, y2] = pts[i + 1]; d += ` Q${x} ${y} ${(x + x2) / 2} ${(y + y2) / 2}`; }
-  d += " Z";
-  const svg = `<svg viewBox="0 0 230 230"><defs><radialGradient id="wax" cx="36%" cy="30%" r="78%"><stop offset="0" stop-color="#d9566a"/><stop offset=".5" stop-color="#9c2334"/><stop offset="1" stop-color="#560c17"/></radialGradient></defs>
-    <path d="${d}" fill="url(#wax)"/>
-    <circle cx="115" cy="115" r="74" fill="none" stroke="rgba(40,0,8,.35)" stroke-width="8"/>
-    <circle cx="113" cy="113" r="74" fill="none" stroke="rgba(255,205,170,.28)" stroke-width="2.5"/>
-    <circle cx="115" cy="115" r="60" fill="none" stroke="rgba(243,217,164,.4)" stroke-width="2" stroke-dasharray="2 7"/>
-    <text x="115" y="140" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-weight="500" font-size="120" fill="#f3d9a4" stroke="rgba(60,5,12,.35)" stroke-width="1">${F.initial}</text>
-    <ellipse cx="80" cy="62" rx="30" ry="14" fill="rgba(255,255,255,.2)" transform="rotate(-32 80 62)"/></svg>`;
-  document.querySelectorAll("#seal .half").forEach((h) => (h.innerHTML = svg));
-})();
-
-const envWrap = $("envelope");
-let opened = false;
-function openEnvelope() {
-  if (opened) return; opened = true;
-  deck.slides[0].classList.add("opened");
-  const r = $("seal").getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
-  setTimeout(() => confetti({ x, y, count: 150, gold: true }), 200);             // искры от печати
-  // Письмо развернулось — золотые искры из его центра
-  setTimeout(() => { const c = $("card3d").getBoundingClientRect(); // из верхних углов, чтобы не закрывать текст
-    confetti({ x: c.left + 30, y: c.top - 60, count: 70, gold: true }); confetti({ x: c.right - 30, y: c.top - 60, count: 70, gold: true }); }, 4300);
-  setTimeout(() => deck.show(1), reduced ? 200 : 6100);
-}
-$("seal").addEventListener("click", (e) => { e.stopPropagation(); openEnvelope(); });
-envWrap.addEventListener("click", openEnvelope);
-envWrap.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openEnvelope(); } });
-
-/* ===========================================
-   SUBMIT: отправка ответа в Google-таблицу (с защитой от повторного нажатия)
-   =========================================== */
-async function submit() {
-  if (state.sending) return;
-  const fromAtt = deck.step === "q-att";
-  const errEl = fromAtt ? $("eAtt") : $("eSend");
-  const coming = state.attending !== "no";
-  const drinks = coming ? [...state.drinks] : [];
-  const drinkOther = drinks.includes("other") ? state.drinkOther.trim() : "";
-  if (coming && !drinks.length) { errEl.textContent = "Выбери хотя бы один вариант"; return; }
-  if (drinks.includes("other") && !drinkOther) {
-    errEl.textContent = "Напиши свой вариант напитка"; fOther.classList.remove("invalid"); void fOther.offsetWidth; fOther.classList.add("invalid"); fOther.focus(); return;
-  }
-  const btn = $("sendBtn");
-  state.sending = true; btn.disabled = true; btn.textContent = "Отправляем…"; errEl.textContent = fromAtt ? "Отправляем ответ…" : "";
-  const payload = {
-    clientId: clientId(), name: state.name.trim(), attending: state.attending,
-    guests: coming ? state.guests : 0, drinks, drinkOther, website: $("fWebsite").value,
-  };
-  try {
-    if (!P.scriptUrl) throw new Error("Приглашение ещё не подключено к таблице ответов");
-    // Простой запрос без заголовка Content-Type — так Google Apps Script принимает его без лишних проверок браузера
-    const res = await fetch(P.scriptUrl, { method: "POST", body: JSON.stringify({ action: "rsvp", ...payload }) });
-    const json = await res.json().catch(() => ({}));
-    if (!res.ok || !json.ok) throw new Error(json.error || "Не получилось отправить");
-    state.sent = { ...payload, at: Date.now() }; delete state.sent.website; delete state.sent.clientId;
-    store.set(LS_SENT, state.sent); state.editing = false; errEl.textContent = "";
-    deck.show(deck.idx("thanks"));
-  } catch (err) {
-    errEl.textContent = navigator.onLine === false ? "Нет интернета. Проверь связь и попробуй ещё раз." : (err.message || "Не получилось отправить, попробуй ещё раз");
-  } finally {
-    state.sending = false; btn.disabled = false; btn.textContent = "Отправить ответ";
-  }
-}
-$("sendBtn").addEventListener("click", submit);
-
-/* ===========================================
-   THANKS: экран «Спасибо»
-   =========================================== */
-function renderThanks() {
-  const s = state.sent || {};
-  const variants = {
-    yes: ["Спасибо, ждём тебя!", `${s.name || ""}, до встречи ${dateShort}${P.time ? " в " + P.time : ""}!`],
-    maybe: ["Спасибо за ответ!", `${s.name || ""}, надеемся, что получится. Когда будешь знать точно — просто измени ответ по этой же ссылке.`],
-    no: ["Жаль, что не получится", `Спасибо за ответ, ${s.name || ""}! Будем вспоминать тебя за праздничным столом.`],
-  };
-  const v = variants[s.attending] || variants.yes;
-  $("thTitle").textContent = v[0];
-  $("thText").textContent = v[1];
-  $("thIcon").innerHTML = (ICON[s.attending] || ICON.yes).replace(/^<svg[^>]*>|<\/svg>$/g, "");
-  $("thIcon").querySelectorAll("path, circle, g > path").forEach((p) => p.setAttribute("pathLength", "1"));
-  const last = $("thIcon").lastElementChild; if (last) last.classList.add("late");
-  const dl = $("summary"); dl.innerHTML = "";
-  const label = (id, list) => (list.find((x) => x.id === id) || {}).label || id;
-  const rows = [["Ответ", label(s.attending, P.attending)]];
-  if (s.attending !== "no") {
-    rows.push(["Вас будет", String(s.guests)]);
-    const list = (s.drinks || []).filter((d) => d !== "other").map((d) => label(d, P.drinks));
-    if (s.drinkOther) list.push(s.drinkOther);
-    if (list.length) rows.push(["Напитки", list.join(", ")]);
-  }
-  rows.forEach(([k, val]) => { const dt = document.createElement("dt"); dt.textContent = k; const dd = document.createElement("dd"); dd.textContent = val; dl.append(dt, dd); });
-  $("calBtn2").hidden = s.attending === "no";
-  if (s.attending !== "no") { launchBalloons($("balloonsThanks"), 8, true); setTimeout(() => confetti({ count: 200 }), 500); }
-}
-$("editBtn").addEventListener("click", () => { state.editing = true; deck.show(deck.idx("q-name")); });
-$("toRsvp").addEventListener("click", () => deck.next());
-document.querySelectorAll("[data-next]").forEach((b) => b.addEventListener("click", () => deck.next()));
-
-/* ===========================================
-   COUNTDOWN: дни, часы, минуты до праздника
-   =========================================== */
-const start = new Date(P.startIso);
-const last = {};
-function setNum(id, v) {
-  if (last[id] === v) return; last[id] = v; const el = $(id); el.textContent = v;
-  if (!reduced) { el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump"); }
-}
-function tick() {
-  let diff = start - new Date();
-  if (diff <= 0) { $("countdown").hidden = true; $("cdLabel").textContent = "Праздник уже начался! 🎉"; return false; }
-  const d = Math.floor(diff / 864e5); diff -= d * 864e5;
-  const h = Math.floor(diff / 36e5); diff -= h * 36e5;
-  const m = Math.floor(diff / 6e4);
-  setNum("cdD", String(d)); setNum("cdH", String(h).padStart(2, "0")); setNum("cdM", String(m).padStart(2, "0"));
-  $("cdDc").textContent = plural(d, ["день", "дня", "дней"]);
-  $("cdHc").textContent = plural(h, ["час", "часа", "часов"]);
-  $("cdMc").textContent = plural(m, ["минута", "минуты", "минут"]);
-  return true;
-}
-if (tick()) setInterval(tick, 1000);
-
-/* ===========================================
-   CALENDAR: файл .ics для добавления в календарь
-   =========================================== */
-function downloadIcs() {
-  const z = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
-  const end = new Date(start.getTime() + 5 * 36e5);
-  const esc = (s) => String(s || "").replace(/([,;\\])/g, "\\$1");
-  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//birthday-invite//RU", "CALSCALE:GREGORIAN", "BEGIN:VEVENT",
-    "UID:birthday-" + P.date + "@invite", "DTSTAMP:" + z(new Date()), "DTSTART:" + z(start), "DTEND:" + z(end),
-    "SUMMARY:" + esc("День рождения — " + P.name), "LOCATION:" + esc([P.place, P.city, P.address].filter(Boolean).join(", ")),
-    "BEGIN:VALARM", "TRIGGER:-P1D", "ACTION:DISPLAY", "DESCRIPTION:" + esc("Завтра день рождения!"), "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
-  a.download = "den-rozhdeniya.ics"; document.body.appendChild(a); a.click();
-  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-}
-$("calBtn").addEventListener("click", downloadIcs);
-$("calBtn2").addEventListener("click", downloadIcs);
-
-/* ===========================================
-   EFFECTS: воздушные шары
-   =========================================== */
-const BALLOON_COLORS = [["#f6dfa6", "#c99a4c"], ["#b8394f", "#6e1a2c"], ["#fff6e6", "#d9c4a0"], ["#e8c78a", "#9c7036"], ["#9e2f45", "#561322"]];
-function launchBalloons(layer, n, edges) {
+  // Золотая пыль и снег
   if (reduced) return;
-  layer.innerHTML = "";
-  for (let i = 0; i < n; i++) {
-    const c = BALLOON_COLORS[i % BALLOON_COLORS.length];
-    const el = document.createElement("div");
-    el.className = "balloon";
-    const side = edges ? (i % 2 === 0 ? -120 + Math.random() * 150 : 900 + Math.random() * 140) // у самых краёв, чтобы не мешать тексту
-                       : (i % 2 === 0 ? -60 + Math.random() * 230 : 760 + Math.random() * 230); // левый или правый край
-    el.style.cssText = `--x:${Math.round(side)}px;--c1:${c[0]};--c2:${c[1]};--s:${(0.65 + Math.random() * 0.5).toFixed(2)};--dur:${(7 + Math.random() * 5).toFixed(1)}s;--delay:${(Math.random() * 1.6).toFixed(2)}s;--to:${2500 + Math.round(Math.random() * 500)}px`;
-    el.innerHTML = '<div class="b"></div><svg viewBox="0 0 40 260"><path d="M20 0C4 50 36 100 20 150S10 220 20 260"/></svg>';
-    layer.appendChild(el);
+  const cv = document.getElementById("fx"), ctx = cv.getContext("2d");
+  let w, h, snow, bokeh;
+  function resize() {
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    w = innerWidth; h = innerHeight; cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    snow = Array.from({ length: Math.round(Math.min(110, w * h / 9000)) }, () => ({
+      x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.7 + .3, s: Math.random() * .6 + .25, d: Math.random() * 6.3, o: Math.random() * .55 + .2 }));
+    bokeh = Array.from({ length: 12 }, () => ({
+      x: Math.random() * w, y: Math.random() * h, r: Math.random() * 26 + 10, vx: (Math.random() - .5) * .15, vy: -(Math.random() * .2 + .05), o: Math.random() * .12 + .04, p: Math.random() * 6.3 }));
   }
-}
-
-/* ===========================================
-   EFFECTS: конфетти (на весь экран, поверх сцены)
-   =========================================== */
-const cv = $("confetti"), cx = cv.getContext("2d");
-let parts = [], running = false, lastT = 0;
-function sizeCanvas(c, ctx) { const dpr = Math.min(2, devicePixelRatio || 1); c.width = innerWidth * dpr; c.height = innerHeight * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
-sizeCanvas(cv, cx); addEventListener("resize", () => sizeCanvas(cv, cx));
-const LIFE = 2400, FADE = 700; // конфетти живут не дольше 2,4 с на любом устройстве
-function confetti(o) {
-  if (reduced) return;
-  o = o || {};
-  const colors = o.gold ? ["#fff1cf", "#e8c78a", "#c99a4c", "#ffffff"] : ["#fff1cf", "#e8c78a", "#c99a4c", "#b8394f", "#ffffff", "#7c1f33"];
-  const x0 = o.x != null ? o.x : innerWidth / 2, y0 = o.y != null ? o.y : innerHeight * .55;
-  for (let i = 0; i < (o.count || 150); i++) {
-    const a = -Math.PI / 2 + (Math.random() - .5) * 2, s = Math.random() * 15 + 7;
-    parts.push({ x: x0, y: y0, vx: Math.cos(a) * s, vy: Math.sin(a) * s, w: Math.random() * 9 + 5, h: Math.random() * 5 + 3, r: Math.random() * 6, vr: (Math.random() - .5) * .35, c: colors[(Math.random() * colors.length) | 0], age: 0, round: Math.random() < .25 });
-  }
-  if (!running) { running = true; lastT = 0; requestAnimationFrame(loop); }
-}
-function loop(t) {
-  // Движение считается по реальному времени, а не по кадрам
-  const ms = lastT ? Math.min(50, t - lastT) : 16.7; lastT = t;
-  const k = ms / 16.7;
-  cx.clearRect(0, 0, innerWidth, innerHeight);
-  parts.forEach((p) => {
-    p.age += ms; p.vy += .3 * k; const drag = Math.pow(.985, k); p.vx *= drag; p.vy *= drag;
-    p.x += (p.vx + Math.sin(p.age / 150 + p.r) * .6) * k; p.y += p.vy * k; p.r += p.vr * k;
-    cx.globalAlpha = Math.max(0, 1 - Math.max(0, p.age - (LIFE - FADE)) / FADE);
-    cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c;
-    if (p.round) { cx.beginPath(); cx.arc(0, 0, p.h * .7, 0, 7); cx.fill(); } else cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h * Math.abs(Math.cos(p.age / 120 + p.r)) + .5);
-    cx.restore();
-  });
-  cx.globalAlpha = 1;
-  parts = parts.filter((p) => p.age < LIFE && p.y < innerHeight + 40);
-  if (parts.length) requestAnimationFrame(loop); else { running = false; cx.clearRect(0, 0, innerWidth, innerHeight); }
-}
-
-/* ===========================================
-   EFFECTS: золотая пыль и снег на фоне
-   =========================================== */
-(function dust() {
-  if (reduced) return;
-  const c = $("dust"), ctx = c.getContext("2d");
-  let flakes = [], bokeh = [];
-  function init() {
-    sizeCanvas(c, ctx);
-    const w = innerWidth, h = innerHeight;
-    flakes = Array.from({ length: Math.round(Math.min(90, w * h / 9000)) }, () => ({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.6 + .3, s: Math.random() * .5 + .2, d: Math.random() * 6.3, o: Math.random() * .5 + .2 }));
-    bokeh = Array.from({ length: 10 }, () => ({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 30 + 12, vy: -(Math.random() * .18 + .05), o: Math.random() * .12 + .04, p: Math.random() * 6.3 }));
-  }
-  init(); addEventListener("resize", init);
+  resize(); addEventListener("resize", resize);
   let f = 0;
-  (function frame() {
-    const w = innerWidth, h = innerHeight; ctx.clearRect(0, 0, w, h); f++;
+  (function loop() {
+    ctx.clearRect(0, 0, w, h); f++;
     bokeh.forEach((b) => {
-      b.y += b.vy; if (b.y < -50) { b.y = h + 50; b.x = Math.random() * w; }
-      const o = b.o * (.7 + .3 * Math.sin(f / 60 + b.p)), g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
-      g.addColorStop(0, `rgba(240,205,140,${o})`); g.addColorStop(1, "rgba(240,205,140,0)");
+      b.x += b.vx; b.y += b.vy; if (b.y < -40) { b.y = h + 40; b.x = Math.random() * w; }
+      const o = b.o * (0.7 + 0.3 * Math.sin(f / 60 + b.p));
+      const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+      g.addColorStop(0, `rgba(241,207,140,${o})`); g.addColorStop(1, "rgba(241,207,140,0)");
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 7); ctx.fill();
     });
-    flakes.forEach((s) => {
-      s.y += s.s; s.d += .012; s.x += Math.sin(s.d) * .3; if (s.y > h + 4) { s.y = -4; s.x = Math.random() * w; }
+    snow.forEach((s) => {
+      s.y += s.s; s.d += .012; s.x += Math.sin(s.d) * .35;
+      if (s.y > h + 4) { s.y = -4; s.x = Math.random() * w; }
       ctx.fillStyle = `rgba(250,236,210,${s.o})`; ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 7); ctx.fill();
     });
-    requestAnimationFrame(frame);
+    requestAnimationFrame(loop);
   })();
 })();
-
-/* ===========================================
-   SCROLL GUARD: сцена всегда стоит на месте
-   =========================================== */
-document.addEventListener("scroll", (e) => {
-  const t = e.target;
-  if (t && t.nodeType === 1 && (t.scrollLeft || t.scrollTop)) { t.scrollLeft = 0; t.scrollTop = 0; }
-}, true);
-
-/* ===========================================
-   START
-   =========================================== */
-const deck = new SlidePresentation();
-deck.slides[0].classList.add("active");
-deck.updateChrome();
-if (location.hash === "#rsvp") {
-  opened = true;
-  deck.show(state.sent ? deck.idx("thanks") : deck.idx("q-name"));
-} else {
-  requestAnimationFrame(() => requestAnimationFrame(() => { if (deck.current === 0) deck.slides[0].classList.add("visible"); }));
-}
 </script>
 </body>
 </html>
