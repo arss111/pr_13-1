@@ -133,7 +133,8 @@
     setText("dDate", dateText);
     setText("dWeekday", Weekday);
     setText("dTime", P.time || "Скоро");
-    setText("dTimeNote", P.time ? "Просим не опаздывать" : "Время сообщим дополнительно");
+    setText("dTimeNote", P.time ? "" : "Время сообщим дополнительно");
+    if (P.time && $("dTimeNote")) $("dTimeNote").hidden = true;
     setText("dPlace", P.place || "");
     setText("dAddress", [P.city, P.address].filter(Boolean).join(", "));
     setText("placeInline", P.place || "");
