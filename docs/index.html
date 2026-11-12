@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Приглашение на день рождения · 6 декабря</title>
+<meta name="description" content="6 декабря, ресторан «Мансарда». Ответьте, пожалуйста, придёте ли вы.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Приглашение на день рождения · 46">
+<meta property="og:description" content="6 декабря · ресторан «Мансарда». Откройте, чтобы ответить на приглашение.">
+<meta property="og:image" content="og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b0c11">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0c11'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='34' text-anchor='middle' fill='%23e3c287'%3E46%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Manrope:wght@400;500;600&display=swap&subset=cyrillic" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="demo-banner" id="demoBanner" hidden>Демо-режим: ответы сохраняются только в этом браузере. Укажите <code>scriptUrl</code> в config.js.</div>
+<canvas id="snow" aria-hidden="true"></canvas>
+
+<main>
+  <!-- ===== HERO ===== -->
+  <section class="hero" style="margin-top:0">
+    <div class="ornament"><p class="eyebrow">Приглашение</p></div>
+    <div class="age" id="age">46</div>
+    <h1 class="hero-title" id="heroTitle">день рождения</h1>
+    <p class="hero-sub" id="heroSub"></p>
+    <div class="date-badge"><span id="badgeDate">6 декабря</span><span class="dot"></span><span id="badgeWeekday">воскресенье</span></div>
+    <a class="btn" href="#rsvp">Ответить на приглашение</a>
+    <div class="scroll-hint" aria-hidden="true"></div>
+
+    <svg class="skyline" viewBox="0 0 1200 130" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <g fill="currentColor">
+        <rect x="0" y="70" width="70" height="60"/>
+        <rect x="60" y="48" width="58" height="82"/>
+        <rect x="112" y="78" width="80" height="52"/>
+        <polygon points="190,130 190,58 220,40 250,58 250,130"/>
+        <rect x="248" y="66" width="90" height="64"/>
+        <rect x="330" y="36" width="44" height="94"/>
+        <rect x="370" y="74" width="80" height="56"/>
+        <rect x="446" y="56" width="70" height="74"/>
+        <!-- мансарда -->
+        <rect x="512" y="62" width="176" height="68"/>
+        <polygon points="502,64 534,18 666,18 698,64"/>
+        <rect x="640" y="4" width="12" height="20"/>
+        <rect x="686" y="70" width="70" height="60"/>
+        <rect x="750" y="44" width="54" height="86"/>
+        <polygon points="800,130 800,62 836,30 872,62 872,130"/>
+        <rect x="868" y="76" width="86" height="54"/>
+        <rect x="950" y="52" width="64" height="78"/>
+        <rect x="1010" y="80" width="80" height="50"/>
+        <rect x="1086" y="60" width="60" height="70"/>
+        <rect x="1140" y="74" width="60" height="56"/>
+      </g>
+      <rect class="mansard-win" x="550" y="30" width="18" height="24" rx="9"/>
+      <rect class="mansard-win" x="591" y="30" width="18" height="24" rx="9"/>
+      <rect class="mansard-win" x="632" y="30" width="18" height="24" rx="9"/>
+      <rect class="win" x="72" y="60" width="6" height="8"/>
+      <rect class="win" x="98" y="76" width="6" height="8"/>
+      <rect class="win" x="214" y="68" width="6" height="8"/>
+      <rect class="win" x="268" y="80" width="6" height="8"/>
+      <rect class="win" x="344" y="50" width="6" height="8"/>
+      <rect class="win" x="344" y="78" width="6" height="8"/>
+      <rect class="win" x="466" y="70" width="6" height="8"/>
+      <rect class="win" x="540" y="80" width="6" height="8"/>
+      <rect class="win" x="600" y="96" width="6" height="8"/>
+      <rect class="win" x="650" y="80" width="6" height="8"/>
+      <rect class="win" x="766" y="58" width="6" height="8"/>
+      <rect class="win" x="830" y="74" width="6" height="8"/>
+      <rect class="win" x="902" y="90" width="6" height="8"/>
+      <rect class="win" x="976" y="66" width="6" height="8"/>
+      <rect class="win" x="1104" y="74" width="6" height="8"/>
+    </svg>
+  </section>
+
+  <!-- ===== MESSAGE + DETAILS ===== -->
+  <section>
+    <p class="message" id="message"></p>
+  </section>
+
+  <div class="section-head"><p class="eyebrow">Детали</p><h2>Где и когда</h2></div>
+  <section class="details">
+    <div class="card detail">
+      <span class="label">Дата</span>
+      <span class="value" id="dDate">6 декабря</span>
+      <span class="note" id="dWeekday"></span>
+    </div>
+    <div class="card detail">
+      <span class="label">Начало</span>
+      <span class="value" id="dTime">—</span>
+      <span class="note" id="dTimeNote"></span>
+    </div>
+    <div class="card detail wide">
+      <span class="label">Место</span>
+      <span class="value" id="dPlace">Ресторан «Мансарда»</span>
+      <span class="note" id="dAddress"></span>
+      <div class="actions">
+        <a class="btn btn-ghost btn-sm" id="mapLink" target="_blank" rel="noopener">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          Открыть на карте
+        </a>
+        <button class="btn btn-ghost btn-sm" id="calBtn" type="button">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+          В календарь
+        </button>
+      </div>
+    </div>
+    <div class="card detail wide" id="dressCard" hidden>
+      <span class="label">Дресс-код</span>
+      <span class="value" id="dDress"></span>
+    </div>
+  </section>
+
+  <div class="section-head"><p class="eyebrow">До праздника</p><h2>Осталось</h2></div>
+  <section class="countdown" id="countdown">
+    <div class="card unit"><div class="num" id="cdD">0</div><div class="cap">дней</div></div>
+    <div class="card unit"><div class="num" id="cdH">0</div><div class="cap">часов</div></div>
+    <div class="card unit"><div class="num" id="cdM">0</div><div class="cap">минут</div></div>
+    <div class="card unit"><div class="num" id="cdS">0</div><div class="cap">секунд</div></div>
+  </section>
+
+  <!-- ===== RSVP ===== -->
+  <div class="section-head" id="rsvp"><p class="eyebrow">Ваш ответ</p><h2>Вы придёте?</h2></div>
+
+  <section class="card form-card" id="formCard">
+    <form id="rsvpForm" novalidate>
+      <div class="field">
+        <label class="label" for="name">Как вас зовут? <span class="req">*</span></label>
+        <input type="text" id="name" name="name" autocomplete="name" placeholder="Имя и фамилия" maxlength="100">
+        <div class="error-text" id="nameErr" hidden>Пожалуйста, представьтесь</div>
+      </div>
+
+      <div class="field">
+        <span class="label">Сможете прийти? <span class="req">*</span></span>
+        <div class="choices" role="radiogroup">
+          <label class="choice"><input type="radio" name="attending" value="Да"><span>Да, с радостью приду<i class="emoji">🥂</i></span></label>
+          <label class="choice"><input type="radio" name="attending" value="Пока не знаю"><span>Пока не знаю точно<i class="emoji">🤔</i></span></label>
+          <label class="choice"><input type="radio" name="attending" value="Нет"><span>К сожалению, не смогу<i class="emoji">💌</i></span></label>
+        </div>
+        <div class="error-text" id="attErr" hidden>Выберите вариант</div>
+      </div>
+
+      <div class="collapsible closed" id="comingBlock">
+        <div class="field">
+          <span class="label">Сколько вас будет?</span>
+          <div class="stepper-row">
+            <div class="stepper">
+              <button type="button" id="minus" aria-label="Меньше">−</button>
+              <output id="count" aria-live="polite">1</output>
+              <button type="button" id="plus" aria-label="Больше">+</button>
+            </div>
+            <span class="muted" id="countWord">только я</span>
+          </div>
+        </div>
+
+        <div class="collapsible closed" id="companionsBlock">
+          <div class="field">
+            <label class="label" for="companions">С кем вы придёте?</label>
+            <input type="text" id="companions" name="companions" placeholder="Например: жена Анна, сын Миша" maxlength="300">
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="label">Что предпочитаете пить?</span>
+          <p class="hint">Можно выбрать несколько вариантов</p>
+          <div class="chips" id="drinks"></div>
+          <div class="collapsible closed" id="otherBlock" style="margin-top:10px">
+            <input type="text" id="drinkOther" placeholder="Ваш вариант" maxlength="200">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="food">Пожелания по еде</label>
+          <p class="hint">Аллергии, вегетарианство, что-то не едите</p>
+          <input type="text" id="food" name="food" placeholder="Необязательно" maxlength="500">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label" for="wish">Пара слов имениннику</label>
+        <textarea id="wish" name="wish" placeholder="Необязательно — но очень приятно 🙂" maxlength="1000"></textarea>
+      </div>
+
+      <button class="btn btn-block" type="submit" id="submitBtn">Отправить ответ</button>
+      <div class="form-error" id="formErr" hidden></div>
+      <p class="form-note" id="deadlineNote"></p>
+    </form>
+  </section>
+
+  <section class="card thanks" id="thanks" hidden>
+    <div class="big" id="thanksEmoji">🥂</div>
+    <h2 id="thanksTitle">Спасибо!</h2>
+    <p id="thanksText"></p>
+    <dl class="summary" id="summary"></dl>
+    <div class="row">
+      <button class="btn btn-ghost" type="button" id="editBtn">Изменить ответ</button>
+      <button class="btn btn-ghost" type="button" id="calBtn2">Добавить в календарь</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="sig">До встречи 6 декабря!</div>
+    <p id="contactLine" hidden></p>
+  </footer>
+</main>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

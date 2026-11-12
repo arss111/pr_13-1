@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Гости · статистика</title>
+<meta name="theme-color" content="#0b0c11">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0c11'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='34' text-anchor='middle' fill='%23e3c287'%3E46%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500;600&display=swap&subset=cyrillic" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="admin-wrap">
+
+  <section class="card login" id="login" hidden>
+    <p class="eyebrow">Только для организатора</p>
+    <h1>Статистика гостей</h1>
+    <p>Введите пароль (ADMIN_KEY из Apps Script)</p>
+    <form id="loginForm">
+      <input type="text" id="key" autocomplete="off" placeholder="Пароль">
+      <button class="btn btn-block" type="submit">Войти</button>
+      <div class="form-error" id="loginErr" hidden></div>
+    </form>
+  </section>
+
+  <div id="dash" hidden>
+    <div class="admin-top">
+      <div>
+        <p class="eyebrow" id="evtLine">6 декабря · Мансарда</p>
+        <h1>Кто придёт</h1>
+      </div>
+      <div class="tools">
+        <button class="btn btn-ghost btn-sm" id="refresh" type="button">↻ Обновить</button>
+        <button class="btn btn-ghost btn-sm" id="csv" type="button">Скачать CSV</button>
+        <a class="btn btn-ghost btn-sm" id="sheetLink" target="_blank" rel="noopener" hidden>Google-таблица</a>
+        <button class="btn btn-ghost btn-sm" id="logout" type="button">Выйти</button>
+      </div>
+    </div>
+    <p class="empty" id="updated" style="margin:0 0 14px"></p>
+    <div class="demo-banner" id="demoNote" hidden style="border-radius:12px;margin-bottom:14px">Демо-режим: показаны ответы, сохранённые в этом браузере.</div>
+
+    <section class="kpis" style="margin-top:0">
+      <div class="card kpi"><div class="num" id="kGuests">0</div><div class="cap">гостей придут</div><div class="sub" id="kGuestsSub"></div></div>
+      <div class="card kpi"><div class="num" id="kMaybe">0</div><div class="cap">под вопросом</div><div class="sub" id="kMaybeSub"></div></div>
+      <div class="card kpi"><div class="num" id="kNo">0</div><div class="cap">не смогут</div></div>
+      <div class="card kpi"><div class="num" id="kTotal">0</div><div class="cap">всего ответов</div></div>
+    </section>
+
+    <section class="grid-2">
+      <div class="card panel">
+        <h3>Напитки</h3>
+        <p class="empty" style="margin:-8px 0 14px">Сколько человек выбрали (среди тех, кто придёт или пока не знает)</p>
+        <div class="bars" id="drinkBars"></div>
+        <ul class="notes" id="drinkOther" style="margin-top:14px"></ul>
+      </div>
+      <div class="card panel">
+        <h3>Еда и аллергии</h3>
+        <ul class="notes" id="foodNotes"></ul>
+      </div>
+    </section>
+
+    <section class="card panel">
+      <h3>Все ответы</h3>
+      <div class="filters" id="filters">
+        <button class="btn btn-sm" data-f="all" type="button">Все</button>
+        <button class="btn btn-ghost btn-sm" data-f="Да" type="button">Придут</button>
+        <button class="btn btn-ghost btn-sm" data-f="Пока не знаю" type="button">Не знают</button>
+        <button class="btn btn-ghost btn-sm" data-f="Нет" type="button">Не придут</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Имя</th><th>Ответ</th><th>Гостей</th><th>С кем</th><th>Напитки</th><th>Еда</th><th>Когда</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card panel">
+      <h3>Пожелания имениннику</h3>
+      <ul class="notes" id="wishes"></ul>
+    </section>
+  </div>
+</main>
+
+<script src="config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
