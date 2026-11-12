@@ -168,7 +168,7 @@ body { background: var(--night); color: var(--cream); font-family: var(--font-bo
    =========================================== */
 .s-intro .inner { justify-content: center; gap: 80px; }
 .intro-title { font: italic 300 120px/1 var(--font-display); }
-.env-wrap { position: relative; width: 860px; height: 580px; cursor: pointer; opacity: 0; }
+.env-wrap { position: relative; width: 860px; height: 580px; cursor: pointer; opacity: 0; perspective: 2400px; }
 .slide.visible .env-wrap { animation: arrive 1.8s .35s var(--ease-out-expo) forwards, float 5s 2.3s ease-in-out infinite; }
 @keyframes arrive {
   0% { opacity: 0; transform: translateY(-1350px) rotate(-26deg) scale(.7); }
@@ -178,19 +178,40 @@ body { background: var(--night); color: var(--cream); font-family: var(--font-bo
   100% { opacity: 1; transform: none; } }
 @keyframes float { 0%, 100% { opacity: 1; transform: none; } 50% { opacity: 1; transform: translateY(-16px) rotate(-.8deg); } }
 /* После открытия «камера» влетает в письмо */
-.s-intro.opened .env-wrap { opacity: 1; transform-origin: 50% 200px; animation: zoomInto 1.3s 2s cubic-bezier(.7,0,.25,1) forwards; }
+.s-intro.opened .env-wrap { opacity: 1; transform-origin: 50% 290px; animation: zoomInto 1.2s 5.4s cubic-bezier(.7,0,.25,1) forwards; }
 @keyframes zoomInto { 0% { opacity: 1; transform: none; filter: none; } 65% { opacity: 1; } 100% { opacity: 0; transform: scale(3.8); filter: blur(8px); } }
 
 .envelope { position: absolute; inset: 0; perspective: 2200px; }
 .env-back { position: absolute; inset: 0; border-radius: 18px; box-shadow: 0 80px 120px -50px rgba(0,0,0,.9);
   background: radial-gradient(circle, rgba(232,199,138,.22) 0 3px, transparent 4px) 0 0 / 30px 30px, radial-gradient(circle, rgba(232,199,138,.12) 0 2px, transparent 3px) 15px 15px / 30px 30px, #4a1120; }
-.letter { position: absolute; left: 50px; right: 50px; top: 40px; height: 500px; border-radius: 10px; z-index: 2;
-  background: linear-gradient(180deg, #fbf4e6, #efe1c6); color: var(--wine); display: flex; flex-direction: column; align-items: center; padding-top: 48px; gap: 6px;
-  box-shadow: 0 0 0 rgba(255,220,150,0); }
-.letter::before { content: ""; position: absolute; inset: 18px; border: 2px solid rgba(169,123,60,.45); border-radius: 4px; }
-.letter .l1 { font: 600 22px var(--font-body); letter-spacing: .36em; text-transform: uppercase; color: var(--gold-lo); }
-.letter .l2 { font: italic 300 112px/.95 var(--font-display); text-align: center; margin: 22px 0 14px; }
-.letter .l3 { font: italic 400 46px var(--font-display); color: #3a2a20; }
+.letter { position: absolute; left: 50px; right: 50px; top: 70px; height: 200px; border-radius: 6px; z-index: 2; }
+.folded-back { position: absolute; inset: 0; border-radius: 6px; display: grid; place-items: center;
+  background: radial-gradient(circle, rgba(169,123,60,.22) 0 2px, transparent 3px) 0 0 / 22px 22px, linear-gradient(180deg, #fbf4e6, #ecdcbc);
+  box-shadow: inset 0 0 0 2px rgba(169,123,60,.35), 0 10px 30px rgba(0,0,0,.35); }
+.monogram { width: 120px; height: 120px; border-radius: 50%; display: grid; place-items: center; border: 3px solid #b98f4e; box-shadow: inset 0 0 0 7px #fbf4e6, inset 0 0 0 9px rgba(185,143,78,.6);
+  font: italic 500 74px/1 var(--font-display); color: #9c6f32; padding-bottom: 8px; }
+
+/* --- Письмо, которое вылетает и разворачивается (три створки) --- */
+.card3d { position: absolute; left: 50px; top: -210px; width: 760px; height: 200px; z-index: 8; opacity: 0; transform-style: preserve-3d; pointer-events: none; }
+.card3d .panel { position: absolute; left: 0; right: 0; transform-style: preserve-3d; }
+.card3d .mid { top: 0; height: 200px; }
+.card3d .top { bottom: 100%; height: 170px; transform-origin: 50% 100%; transform: translateZ(6px) rotateX(-180deg); }
+.card3d .bot { top: 100%; height: 170px; transform-origin: 50% 0; transform: translateZ(2px) rotateX(180deg); }
+.card3d .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, #fbf4e6, #f1e4c9); color: var(--wine); }
+.card3d .top .face.front { border-radius: 6px 6px 0 0; box-shadow: inset 0 -10px 16px -12px rgba(120,80,30,.4); justify-content: flex-end; padding-bottom: 26px; gap: 14px; }
+.card3d .bot .face.front { border-radius: 0 0 6px 6px; box-shadow: inset 0 10px 16px -12px rgba(120,80,30,.4); justify-content: flex-start; padding-top: 24px; gap: 8px; }
+.card3d .face.back { transform: rotateX(180deg); background: radial-gradient(circle, rgba(169,123,60,.22) 0 2px, transparent 3px) 0 0 / 22px 22px, linear-gradient(180deg, #fbf4e6, #ecdcbc);
+  box-shadow: inset 0 0 0 2px rgba(169,123,60,.35); border-radius: 6px; }
+.card3d .face.back { display: grid; place-items: center; }
+.card3d .mid .face { box-shadow: 0 30px 80px -20px rgba(0,0,0,.6); }
+.c-eb { font: 600 24px var(--font-body); letter-spacing: .4em; padding-left: .4em; text-transform: uppercase; color: var(--gold-lo); }
+.c-orn { display: flex; align-items: center; gap: 12px; color: var(--gold-lo); }
+.c-orn::before, .c-orn::after { content: ""; width: 90px; height: 1.5px; background: currentColor; opacity: .6; }
+.c-orn i { width: 9px; height: 9px; border: 1.5px solid currentColor; transform: rotate(45deg); }
+.c-main { font: italic 300 96px/1 var(--font-display); color: var(--wine); }
+.c-date { font: 500 34px var(--font-body); color: #3a2a20; }
+.c-place { font: italic 400 36px var(--font-display); color: #6b5440; }
 .env-front { position: absolute; inset: 0; z-index: 3; border-radius: 18px;
   background: repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 2px, transparent 2px 6px), linear-gradient(160deg, #96293f, #731c2f 55%, #5e1626);
   clip-path: polygon(0 0, 50% 56%, 100% 0, 100% 100%, 0 100%); }
@@ -231,13 +252,24 @@ body { background: var(--night); color: var(--cream); font-family: var(--font-bo
 
 /* --- Клапан и письмо --- */
 .opened .env-flap { animation: flapOpen 1s .4s cubic-bezier(.4,0,.2,1) forwards; }
-.opened .letter { animation: letterOut 1.5s 1s var(--ease-out-expo) forwards; }
-@keyframes flapOpen { 0% { transform: rotateX(0); z-index: 4; } 49% { z-index: 4; } 50% { z-index: 1; } 100% { transform: rotateX(180deg); z-index: 1; } }
-@keyframes letterOut {
-  0% { transform: translateY(0); z-index: 2; }
-  45% { transform: translateY(-70%) rotate(-2deg); z-index: 2; }
-  46% { z-index: 5; }
-  100% { transform: translateY(-18%) scale(1.14) rotate(0); z-index: 5; box-shadow: 0 0 120px rgba(255,220,150,.55); } }
+.opened .letter { animation: letterOut 1s 1s cubic-bezier(.3,0,.3,1) forwards; }
+@keyframes letterOut { 0% { transform: translateY(0); z-index: 2; } 50% { transform: translateY(-150px); z-index: 2; } 51% { z-index: 5; } 99% { opacity: 1; } 100% { transform: translateY(-280px); z-index: 5; opacity: 0; } }
+/* Конверт падает вниз и исчезает */
+.opened .envelope { animation: envDrop 1s 2.1s cubic-bezier(.55,0,.8,.4) forwards; }
+@keyframes envDrop { to { transform: translateY(900px) rotate(10deg); opacity: 0; } }
+/* Письмо летит по дуге с поворотами и выходит в центр */
+.opened .card3d { animation: cardFly 1.7s 2s cubic-bezier(.45,.05,.3,1) forwards; }
+@keyframes cardFly {
+  0% { opacity: 1; transform: none; }
+  30% { opacity: 1; transform: translate(-110px, 10px) rotate(-11deg) rotateY(-32deg) scale(1.06); }
+  58% { opacity: 1; transform: translate(90px, 290px) rotate(8deg) rotateY(24deg) scale(1.16); }
+  80% { opacity: 1; transform: translate(-14px, 420px) rotate(-2.5deg) rotateY(-7deg) scale(1.22); }
+  100% { opacity: 1; transform: translate(0, 395px) scale(1.2); } }
+/* Створки разворачиваются: сначала верхняя, потом нижняя */
+.opened .card3d .top { animation: unfoldTop .75s 3.75s cubic-bezier(.3,1.35,.5,1) forwards; }
+.opened .card3d .bot { animation: unfoldBot .75s 4.05s cubic-bezier(.3,1.35,.5,1) forwards; }
+@keyframes unfoldTop { to { transform: translateZ(0) rotateX(0); } }
+@keyframes unfoldBot { to { transform: translateZ(0) rotateX(0); } }
 
 .intro-hint { font: 600 28px var(--font-body); letter-spacing: .3em; padding-left: .3em; text-transform: uppercase; color: var(--muted); opacity: 0; min-height: 34px; }
 .slide.visible .intro-hint { animation: breathe 2.4s 2.3s ease-in-out infinite; } /* без fill-mode: до приземления конверта подсказка скрыта */
@@ -440,9 +472,20 @@ noscript { position: fixed; inset: 0; display: grid; place-items: center; paddin
         <div class="intro-title gold-text reveal" style="--d:0">Тебе письмо</div>
         <div class="env-wrap" id="envelope" role="button" tabindex="0" aria-label="Открыть приглашение">
           <div class="burst" aria-hidden="true"></div>
+          <div class="card3d" id="card3d" aria-hidden="true">
+            <div class="panel mid"><div class="face front"><div class="c-main">на день рождения</div></div></div>
+            <div class="panel top">
+              <div class="face front"><div class="c-eb">Приглашение</div><div class="c-orn"><i></i></div></div>
+              <div class="face back"><div class="monogram" data-f="initial">М</div></div>
+            </div>
+            <div class="panel bot">
+              <div class="face front"><div class="c-date" data-f="dateTime">6 декабря · 13:00</div><div class="c-place" data-f="place">Ресторан «Мансарда»</div></div>
+              <div class="face back"><div class="monogram" data-f="initial">М</div></div>
+            </div>
+          </div>
           <div class="envelope">
             <div class="env-back"></div>
-            <div class="letter"><span class="l1">Приглашение</span><span class="l2">на день<br>рождения</span><span class="l3" data-f="dateShort">6 декабря</span></div>
+            <div class="letter"><div class="folded-back"><div class="monogram" data-f="initial">М</div></div></div>
             <div class="env-front"></div>
             <div class="env-flap"><svg class="flap-edge" viewBox="0 0 860 348" preserveAspectRatio="none" aria-hidden="true"><path d="M8 6L430 340L852 6"/></svg></div>
             <button class="seal" id="seal" type="button" aria-label="Сломать печать и открыть приглашение"><span class="half l"></span><span class="half r"></span></button>
@@ -946,8 +989,10 @@ function openEnvelope() {
   deck.slides[0].classList.add("opened");
   const r = $("seal").getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
   setTimeout(() => confetti({ x, y, count: 150, gold: true }), 200);             // искры от печати
-  setTimeout(() => confetti({ x, y: y - r.height * 1.4, count: 90, gold: true }), 1500); // письмо вылетает
-  setTimeout(() => deck.show(1), reduced ? 200 : 3000);
+  // Письмо развернулось — золотые искры из его центра
+  setTimeout(() => { const c = $("card3d").getBoundingClientRect(); // из верхних углов, чтобы не закрывать текст
+    confetti({ x: c.left + 30, y: c.top - 60, count: 70, gold: true }); confetti({ x: c.right - 30, y: c.top - 60, count: 70, gold: true }); }, 4300);
+  setTimeout(() => deck.show(1), reduced ? 200 : 6100);
 }
 $("seal").addEventListener("click", (e) => { e.stopPropagation(); openEnvelope(); });
 envWrap.addEventListener("click", openEnvelope);
