@@ -1,26 +1,22 @@
 /**
- * Приём ответов на приглашение → Google-таблица.
- *
- * 1. Создайте Google-таблицу → Расширения → Apps Script.
- * 2. Вставьте этот код вместо содержимого Code.gs.
- * 3. ПОМЕНЯЙТЕ ADMIN_KEY на свой пароль (его вы будете вводить на странице статистики).
- * 4. Развернуть → Новое развертывание → Веб-приложение:
- *      Выполнять как: «Я», Доступ: «Все» → Развернуть → скопируйте URL.
+ * ============================================================
+ *  Приём ответов на приглашение → Google-таблица
+ *  + данные для админки (по паролю) + удаление ответа.
+ * ============================================================
+ *  Как поставить — см. ИНСТРУКЦИЯ.md, шаг 1.
+ *  ОБЯЗАТЕЛЬНО поменяйте пароль ниже на свой.
  */
 
-const ADMIN_KEY = 'поменяйте-этот-пароль';
-const SHEET_NAME = 'Ответы';
-const HEADERS = [
-  'id', 'Дата ответа', 'Имя', 'Придёт', 'Кол-во гостей', 'Спутники',
-  'Напитки', 'Свой вариант напитка', 'Еда / аллергии', 'Пожелание', 'Обновлено',
-];
-const KEYS = [
-  'id', 'date', 'name', 'attending', 'guests', 'companions',
-  'drinks', 'drinkOther', 'food', 'wish', 'updated',
-];
-const ALLOWED_ATTENDING = ['Да', 'Пока не знаю', 'Нет'];
+const ADMIN_PASSWORD = 'поменяйте-этот-пароль';
 
-function getSheet_() {
+// ------------------------------------------------------------
+const SHEET_NAME = 'Ответы';
+const HEADERS = ['id', 'Дата ответа', 'Имя', 'Придёт?', 'Сколько человек', 'Напитки', 'Комментарий', 'Изменён'];
+const ATTENDING = { yes: 'Да', maybe: 'Пока не знаю', no: 'Нет' };
+const DRINKS = { vodka: 'Водка', prosecco: 'Просекко', champagne: 'Шампанское', wine: 'Вино', none: 'Не пью алкоголь' };
+const MAX_GUESTS = 10;
+
+function sheet_() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sh = ss.getSheetByName(SHEET_NAME);
   if (!sh) sh = ss.insertSheet(SHEET_NAME);
@@ -33,79 +29,138 @@ function getSheet_() {
   return sh;
 }
 
-// Обрезает строку и не даёт превратить её в формулу таблицы.
-function clean_(v, max) {
-  let s = String(v == null ? '' : v).trim().slice(0, max);
-  if (/^[=+\-@]/.test(s)) s = "'" + s;
+function json_(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
+
+/** Чистим текст: убираем управляющие символы, лишние пробелы, обрезаем длину, защищаем от формул */
+function clean_(v, max, multiline) {
+  let s = typeof v === 'string' ? v : '';
+  s = s.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F​-‏‪-‮⁦-⁩]/g, '');
+  s = multiline ? s.replace(/\r\n?/g, '\n').replace(/\n{3,}/g, '\n\n') : s.replace(/\s+/g, ' ');
+  s = s.trim().slice(0, max);
+  if (/^[=+\-@]/.test(s)) s = "'" + s; // чтобы таблица не приняла текст за формулу
   return s;
 }
 
-function json_(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
+/** Проверка ответа гостя. Возвращает { ok, row } или { ok:false, error } */
+function validate_(d) {
+  const id = typeof d.clientId === 'string' ? d.clientId : '';
+  if (!/^[A-Za-z0-9-]{8,64}$/.test(id)) return { ok: false, error: 'Некорректный идентификатор ответа' };
+
+  const name = clean_(d.name, 80, false);
+  if (!name || !/[A-Za-zА-Яа-яЁё]/.test(name)) return { ok: false, error: 'Напиши, пожалуйста, своё имя' };
+
+  const att = ATTENDING[d.attending];
+  if (!att) return { ok: false, error: 'Выбери, придёшь ли ты' };
+  const coming = d.attending !== 'no';
+
+  let guests = 0;
+  if (coming) {
+    guests = Number(d.guests);
+    if (!(guests % 1 === 0 && guests >= 1 && guests <= MAX_GUESTS)) return { ok: false, error: 'Количество гостей — от 1 до ' + MAX_GUESTS };
+  }
+
+  let drinks = [];
+  if (coming) {
+    const raw = Array.isArray(d.drinks) ? d.drinks.slice(0, 10) : [];
+    for (let i = 0; i < raw.length; i++) {
+      if (!DRINKS[raw[i]]) return { ok: false, error: 'Неизвестный напиток' };
+      if (drinks.indexOf(raw[i]) < 0) drinks.push(raw[i]);
+    }
+    if (drinks.indexOf('none') >= 0) drinks = ['none']; // «Не пью алкоголь» исключает остальное
+    const order = Object.keys(DRINKS);
+    drinks.sort(function (a, b) { return order.indexOf(a) - order.indexOf(b); });
+  }
+
+  const comment = clean_(d.comment, 500, true);
+  return {
+    ok: true,
+    id: id,
+    row: [id, null, name, att, guests, drinks.map(function (x) { return DRINKS[x]; }).join(', '), comment, null],
+  };
 }
 
+function findRow_(sh, id) {
+  const last = sh.getLastRow();
+  if (last < 2) return -1;
+  const ids = sh.getRange(2, 1, last - 1, 1).getValues();
+  for (let i = 0; i < ids.length; i++) if (String(ids[i][0]) === id) return i + 2;
+  return -1;
+}
+
+/** Все запросы на запись приходят сюда */
 function doPost(e) {
+  let d;
+  try {
+    d = JSON.parse((e && e.postData && e.postData.contents) || '{}');
+  } catch (err) {
+    return json_({ ok: false, error: 'Некорректные данные' });
+  }
+  if (!d || typeof d !== 'object') return json_({ ok: false, error: 'Пустой запрос' });
+
   const lock = LockService.getScriptLock();
   lock.waitLock(15000);
   try {
-    const d = JSON.parse(e.postData.contents);
-    const attending = ALLOWED_ATTENDING.indexOf(d.attending) >= 0 ? d.attending : '';
-    const name = clean_(d.name, 100);
-    if (!name || !attending) return json_({ ok: false, error: 'Не заполнены имя или ответ' });
+    // --- Удаление ответа из админки ---
+    if (d.action === 'delete') {
+      if (d.key !== ADMIN_PASSWORD) return json_({ ok: false, error: 'forbidden' });
+      const sh = sheet_();
+      const r = findRow_(sh, String(d.id || ''));
+      if (r > 0) sh.deleteRow(r);
+      return json_({ ok: true, deleted: r > 0 });
+    }
 
-    const id = clean_(d.id, 64) || Utilities.getUuid();
-    let guests = parseInt(d.guests, 10);
-    if (!(guests >= 0 && guests <= 20)) guests = attending === 'Нет' ? 0 : 1;
-    const drinks = (Array.isArray(d.drinks) ? d.drinks : [])
-      .slice(0, 20).map(function (x) { return clean_(x, 60); }).filter(String).join(', ');
+    // --- Ответ гостя ---
+    if (typeof d.website === 'string' && d.website.trim() !== '') return json_({ ok: true }); // ловушка для ботов
+    const v = validate_(d);
+    if (!v.ok) return json_({ ok: false, error: v.error });
+
+    const sh = sheet_();
     const now = new Date();
-
-    const sh = getSheet_();
-    const last = sh.getLastRow();
-    let rowIndex = -1;
-    if (last > 1) {
-      const ids = sh.getRange(2, 1, last - 1, 1).getValues();
-      for (let i = 0; i < ids.length; i++) {
-        if (String(ids[i][0]) === id) { rowIndex = i + 2; break; }
-      }
+    const r = findRow_(sh, v.id);
+    if (r > 0) {
+      v.row[1] = sh.getRange(r, 2).getValue(); // дата первого ответа сохраняется
+      v.row[7] = now;
+      sh.getRange(r, 1, 1, v.row.length).setValues([v.row]);
+      return json_({ ok: true, updated: true });
     }
-
-    const row = [
-      id, now, name, attending, guests, clean_(d.companions, 300),
-      drinks, clean_(d.drinkOther, 200), clean_(d.food, 500), clean_(d.wish, 1000), now,
-    ];
-
-    if (rowIndex > 0) {
-      row[1] = sh.getRange(rowIndex, 2).getValue(); // сохраняем дату первого ответа
-      sh.getRange(rowIndex, 1, 1, row.length).setValues([row]);
-    } else {
-      sh.appendRow(row);
-    }
-    return json_({ ok: true, id: id });
+    v.row[1] = now;
+    v.row[7] = '';
+    sh.appendRow(v.row);
+    return json_({ ok: true, updated: false });
   } catch (err) {
-    return json_({ ok: false, error: String(err) });
+    return json_({ ok: false, error: 'Не получилось сохранить, попробуй ещё раз' });
   } finally {
     lock.releaseLock();
   }
 }
 
+/** Данные для админки: только с правильным паролем */
 function doGet(e) {
-  const key = e && e.parameter ? e.parameter.key : '';
-  if (key !== ADMIN_KEY) return json_({ ok: false, error: 'forbidden' });
+  const key = (e && e.parameter && e.parameter.key) || '';
+  if (key !== ADMIN_PASSWORD) return json_({ ok: false, error: 'forbidden' });
 
-  const sh = getSheet_();
+  const attBack = {}; Object.keys(ATTENDING).forEach(function (k) { attBack[ATTENDING[k]] = k; });
+  const drinkBack = {}; Object.keys(DRINKS).forEach(function (k) { drinkBack[DRINKS[k]] = k; });
+
+  const sh = sheet_();
   const last = sh.getLastRow();
   const rows = [];
   if (last > 1) {
-    const values = sh.getRange(2, 1, last - 1, KEYS.length).getValues();
-    values.forEach(function (r) {
-      const o = {};
-      KEYS.forEach(function (k, i) {
-        const v = r[i];
-        o[k] = v instanceof Date ? v.toISOString() : v;
+    sh.getRange(2, 1, last - 1, HEADERS.length).getValues().forEach(function (r) {
+      if (!r[0]) return;
+      const iso = function (v) { return v instanceof Date ? v.toISOString() : (v ? String(v) : ''); };
+      rows.push({
+        id: String(r[0]),
+        created: iso(r[1]),
+        name: String(r[2]),
+        attending: attBack[r[3]] || 'yes',
+        guests: Number(r[4]) || 0,
+        drinks: String(r[5] || '').split(',').map(function (s) { return drinkBack[s.trim()]; }).filter(Boolean),
+        comment: String(r[6] || ''),
+        updated: iso(r[7]) || iso(r[1]),
       });
-      rows.push(o);
     });
   }
   return json_({ ok: true, rows: rows });

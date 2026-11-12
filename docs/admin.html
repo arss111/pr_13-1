@@ -1,91 +1,353 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="robots" content="noindex">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
 <title>Гости · статистика</title>
-<meta name="theme-color" content="#0b0c11">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0c11'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='34' text-anchor='middle' fill='%23e3c287'%3E46%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#0d0b10">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%237c1f33'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='28' text-anchor='middle' fill='%23f3d9a4'%3E46%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500;600&display=swap&subset=cyrillic" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* === ТЕМА: та же ночь, золото и бордо, что и в приглашении === */
+:root {
+  --bg: #0d0b10; --card: rgba(255,255,255,.045); --line: rgba(232,199,138,.18);
+  --text: #f4ecdf; --muted: #a59c8e; --gold: #e8c78a; --gold-2: #b98f4e;
+  --yes: #9bd3a3; --maybe: #e8c78a; --no: #e48f8f;
+  --serif: "Cormorant Garamond", Georgia, serif; --sans: "Golos Text", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: radial-gradient(60rem 40rem at 50% -10%, rgba(232,199,138,.12), transparent 60%), radial-gradient(40rem 30rem at 110% 30%, rgba(142,43,64,.25), transparent 60%), var(--bg);
+  background-attachment: fixed; color: var(--text); font: 15px/1.5 var(--sans); min-height: 100vh; }
+main { max-width: 1120px; margin: 0 auto; padding: 20px 16px 60px; }
+h1, h2 { font-family: var(--serif); font-weight: 500; margin: 0; }
+h1 { font-size: 34px; line-height: 1.1; }
+h2 { font-size: 24px; margin-bottom: 12px; }
+.gold { color: var(--gold); font-style: italic; }
+.eyebrow { margin: 0 0 6px; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+.muted { color: var(--muted); }
+.small { font-size: 13px; margin: -6px 0 14px; }
+[hidden] { display: none !important; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 20px; }
+
+/* === КНОПКИ === */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 0; cursor: pointer; text-decoration: none;
+  min-height: 48px; padding: 0 22px; border-radius: 999px; font: 600 15px var(--sans); color: #1d150a; background: linear-gradient(180deg, #f8e6bf, var(--gold) 55%, var(--gold-2)); }
+.btn:disabled { opacity: .55; cursor: default; }
+.btn.ghost { background: transparent; color: var(--gold); border: 1px solid rgba(232,199,138,.45); }
+.btn.sm { min-height: 42px; padding: 0 16px; font-size: 14px; }
+
+/* === ВХОД === */
+.login { max-width: 420px; margin: 16vh auto 0; text-align: center; display: grid; gap: 14px; padding: 32px 24px; }
+.login input { height: 54px; border-radius: 14px; border: 1px solid rgba(255,255,255,.14); background: rgba(0,0,0,.35); color: var(--text); font: 17px var(--sans); text-align: center; outline: none; }
+.login input:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(232,199,138,.15); }
+.login .btn { min-height: 54px; font-size: 16px; }
+.error { color: var(--no); margin: 0; }
+
+/* === ШАПКА === */
+.top { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: flex-end; margin: 8px 0 18px; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* === КАРТОЧКИ СВОДКИ === */
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.kpi .num { font: 500 46px/1 var(--serif); font-variant-numeric: lining-nums tabular-nums; }
+.kpi .cap { color: var(--muted); font-size: 14px; margin-top: 6px; }
+.kpi .sub { color: var(--muted); font-size: 12px; margin-top: 4px; opacity: .85; }
+.kpi.hero { background: linear-gradient(160deg, rgba(232,199,138,.18), rgba(142,43,64,.18)); border-color: rgba(232,199,138,.4); }
+.kpi.hero .num { font-size: 64px; color: var(--gold); }
+.c-yes { color: var(--yes); } .c-maybe { color: var(--maybe); } .c-no { color: var(--no); }
+
+/* === ДИАГРАММЫ === */
+.charts { display: grid; grid-template-columns: 1fr 1.6fr; gap: 12px; margin-top: 12px; }
+.donut { display: flex; align-items: center; gap: 22px; }
+.donut svg { width: 170px; height: 170px; flex: none; }
+.ring-bg { fill: none; stroke: rgba(255,255,255,.07); stroke-width: 22; }
+.ring { fill: none; stroke-width: 22; }
+.ring.yes { stroke: var(--yes); } .ring.maybe { stroke: var(--maybe); } .ring.no { stroke: var(--no); }
+.donut-num { font: 500 40px var(--serif); font-variant-numeric: lining-nums; fill: var(--text); text-anchor: middle; }
+.donut-cap { font: 12px var(--sans); fill: var(--muted); text-anchor: middle; }
+.legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 15px; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 4px; margin-right: 6px; vertical-align: -1px; }
+.legend i.yes { background: var(--yes); } .legend i.maybe { background: var(--maybe); } .legend i.no { background: var(--no); }
+.legend b { margin-left: 6px; }
+.bars { display: grid; gap: 14px; }
+.bar-row { display: grid; grid-template-columns: 130px 1fr auto; gap: 12px; align-items: center; }
+.bar-label { font-size: 14px; }
+.bar-track { height: 12px; border-radius: 99px; background: rgba(255,255,255,.07); overflow: hidden; }
+.bar-fill { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--gold-2), var(--gold)); transition: width .6s; }
+.bar-val { font-variant-numeric: tabular-nums; min-width: 3ch; text-align: right; font-weight: 600; }
+.bar-val small { color: var(--muted); font-weight: 400; }
+
+/* === ТАБЛИЦА === */
+.list { margin-top: 12px; }
+.list-head { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; }
+.list-head h2 { margin: 0; }
+.search { height: 44px; min-width: 220px; border-radius: 12px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.3); color: var(--text); padding: 0 14px; font: 15px var(--sans); outline: none; }
+.search:focus { border-color: var(--gold); }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 6px; }
+.chip { min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(232,199,138,.35); background: transparent; color: var(--text); font: 500 14px var(--sans); cursor: pointer; }
+.chip.on { background: var(--gold); color: #1d150a; border-color: var(--gold); }
+.tbl { width: 100%; border-collapse: collapse; margin-top: 6px; }
+.tbl th, .tbl td { text-align: left; padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,.07); vertical-align: top; font-size: 14px; }
+.tbl th { color: var(--muted); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+.tbl .name { font-weight: 600; }
+.tbl .comment { max-width: 280px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.tbl .when { white-space: nowrap; color: var(--muted); }
+.tag { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.tag.yes { background: rgba(155,211,163,.15); color: var(--yes); }
+.tag.maybe { background: rgba(232,199,138,.15); color: var(--maybe); }
+.tag.no { background: rgba(228,143,143,.14); color: var(--no); }
+.del { min-height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid rgba(228,143,143,.4); background: transparent; color: var(--no); font: 500 13px var(--sans); cursor: pointer; }
+.empty { color: var(--muted); padding: 24px 0 8px; text-align: center; }
+.status { color: var(--muted); font-size: 13px; margin: -8px 0 14px; }
+
+/* === ТЕЛЕФОН === */
+@media (max-width: 760px) {
+  h1 { font-size: 28px; }
+  .kpis { grid-template-columns: 1fr 1fr; }
+  .kpi.hero { grid-column: 1 / -1; }
+  .charts { grid-template-columns: 1fr; }
+  .tools { width: 100%; }
+  .tools .btn { flex: 1 1 auto; }
+  .search { width: 100%; min-width: 0; }
+  .tbl thead { display: none; }
+  .tbl, .tbl tbody, .tbl tr, .tbl td { display: block; width: 100%; }
+  .tbl tr { border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; margin-bottom: 10px; background: rgba(0,0,0,.18); }
+  .tbl td { border: 0; padding: 4px 0; display: grid; grid-template-columns: 110px 1fr; gap: 8px; }
+  .tbl td::before { content: attr(data-l); color: var(--muted); font-size: 12px; padding-top: 2px; }
+  .tbl td.name { font-size: 17px; }
+  .tbl td.act { display: block; padding-top: 8px; }
+  .tbl td.act::before { content: none; }
+  .del { width: 100%; min-height: 42px; }
+  .tbl .comment { max-width: none; }
+  .bar-row { grid-template-columns: 110px 1fr auto; }
+}
+@media (max-width: 380px) { .donut { flex-direction: column; } }
+</style>
 </head>
 <body>
-<main class="admin-wrap">
-
-  <section class="card login" id="login" hidden>
+<main>
+  <!-- === ВХОД === -->
+  <form class="card login" id="login" hidden>
     <p class="eyebrow">Только для организатора</p>
-    <h1>Статистика гостей</h1>
-    <p>Введите пароль (ADMIN_KEY из Apps Script)</p>
-    <form id="loginForm">
-      <input type="text" id="key" autocomplete="off" placeholder="Пароль">
-      <button class="btn btn-block" type="submit">Войти</button>
-      <div class="form-error" id="loginErr" hidden></div>
-    </form>
-  </section>
+    <h1 id="loginTitle">Гости</h1>
+    <p class="muted">Введите пароль, чтобы увидеть ответы гостей</p>
+    <input type="password" id="pwd" autocomplete="current-password" placeholder="Пароль" aria-label="Пароль">
+    <button class="btn" type="submit" id="loginBtn">Войти</button>
+    <p class="error" id="loginErr" hidden></p>
+  </form>
 
+  <!-- === ПАНЕЛЬ === -->
   <div id="dash" hidden>
-    <div class="admin-top">
+    <header class="top">
       <div>
-        <p class="eyebrow" id="evtLine">6 декабря · Мансарда</p>
-        <h1>Кто придёт</h1>
+        <p class="eyebrow" id="evtLine"></p>
+        <h1>Гости <span class="gold" id="titleName"></span></h1>
       </div>
       <div class="tools">
-        <button class="btn btn-ghost btn-sm" id="refresh" type="button">↻ Обновить</button>
-        <button class="btn btn-ghost btn-sm" id="csv" type="button">Скачать CSV</button>
-        <a class="btn btn-ghost btn-sm" id="sheetLink" target="_blank" rel="noopener" hidden>Google-таблица</a>
-        <button class="btn btn-ghost btn-sm" id="logout" type="button">Выйти</button>
+        <button class="btn ghost sm" id="refresh" type="button">↻ Обновить</button>
+        <button class="btn ghost sm" id="csv" type="button">⬇ Скачать Excel (CSV)</button>
+        <button class="btn ghost sm" id="logout" type="button">Выйти</button>
       </div>
-    </div>
-    <p class="empty" id="updated" style="margin:0 0 14px"></p>
-    <div class="demo-banner" id="demoNote" hidden style="border-radius:12px;margin-bottom:14px">Демо-режим: показаны ответы, сохранённые в этом браузере.</div>
+    </header>
+    <p class="status" id="status"></p>
 
-    <section class="kpis" style="margin-top:0">
-      <div class="card kpi"><div class="num" id="kGuests">0</div><div class="cap">гостей придут</div><div class="sub" id="kGuestsSub"></div></div>
-      <div class="card kpi"><div class="num" id="kMaybe">0</div><div class="cap">под вопросом</div><div class="sub" id="kMaybeSub"></div></div>
-      <div class="card kpi"><div class="num" id="kNo">0</div><div class="cap">не смогут</div></div>
-      <div class="card kpi"><div class="num" id="kTotal">0</div><div class="cap">всего ответов</div></div>
+    <section class="kpis">
+      <div class="card kpi hero"><div class="num" id="kGuests">0</div><div class="cap" id="kGuestsCap">человек придут</div><div class="sub" id="kGuestsSub"></div></div>
+      <div class="card kpi"><div class="num c-yes" id="kYes">0</div><div class="cap">ответили «Да»</div></div>
+      <div class="card kpi"><div class="num c-maybe" id="kMaybe">0</div><div class="cap">«Пока не знаю»</div></div>
+      <div class="card kpi"><div class="num c-no" id="kNo">0</div><div class="cap">ответили «Нет»</div></div>
     </section>
 
-    <section class="grid-2">
-      <div class="card panel">
-        <h3>Напитки</h3>
-        <p class="empty" style="margin:-8px 0 14px">Сколько человек выбрали (среди тех, кто придёт или пока не знает)</p>
-        <div class="bars" id="drinkBars"></div>
-        <ul class="notes" id="drinkOther" style="margin-top:14px"></ul>
-      </div>
-      <div class="card panel">
-        <h3>Еда и аллергии</h3>
-        <ul class="notes" id="foodNotes"></ul>
+    <section class="charts">
+      <div class="card"><h2>Ответы</h2><div class="donut" id="donut"></div></div>
+      <div class="card">
+        <h2>Напитки</h2>
+        <p class="muted small">Сколько гостей выбрали (среди «Да» и «Пока не знаю»)</p>
+        <div class="bars" id="bars"></div>
       </div>
     </section>
 
-    <section class="card panel">
-      <h3>Все ответы</h3>
+    <section class="card list">
+      <div class="list-head">
+        <h2>Все ответы <span class="muted" id="countAll"></span></h2>
+        <input class="search" id="search" placeholder="Поиск по имени" aria-label="Поиск по имени">
+      </div>
       <div class="filters" id="filters">
-        <button class="btn btn-sm" data-f="all" type="button">Все</button>
-        <button class="btn btn-ghost btn-sm" data-f="Да" type="button">Придут</button>
-        <button class="btn btn-ghost btn-sm" data-f="Пока не знаю" type="button">Не знают</button>
-        <button class="btn btn-ghost btn-sm" data-f="Нет" type="button">Не придут</button>
+        <button class="chip on" data-f="all" type="button">Все</button>
+        <button class="chip" data-f="yes" type="button">Придут</button>
+        <button class="chip" data-f="maybe" type="button">Не знают</button>
+        <button class="chip" data-f="no" type="button">Не придут</button>
       </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Имя</th><th>Ответ</th><th>Гостей</th><th>С кем</th><th>Напитки</th><th>Еда</th><th>Когда</th></tr></thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="card panel">
-      <h3>Пожелания имениннику</h3>
-      <ul class="notes" id="wishes"></ul>
+      <table class="tbl" id="tbl">
+        <thead><tr><th>Имя</th><th>Ответ</th><th>Человек</th><th>Напитки</th><th>Комментарий</th><th>Когда ответил</th><th></th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <p class="empty" id="empty" hidden></p>
     </section>
   </div>
 </main>
 
 <script src="config.js"></script>
-<script src="admin.js"></script>
+<script>
+(function () {
+  "use strict";
+  const P = window.PARTY || {};
+  const $ = (id) => document.getElementById(id);
+  const LS_KEY = "admin_key_v1";
+  const store = {
+    get() { try { return localStorage.getItem(LS_KEY) || ""; } catch (e) { return ""; } },
+    set(v) { try { localStorage.setItem(LS_KEY, v); } catch (e) {} },
+    del() { try { localStorage.removeItem(LS_KEY); } catch (e) {} },
+  };
+  const ATT = { yes: ["Придёт", "yes"], maybe: ["Не знает", "maybe"], no: ["Не придёт", "no"] };
+  const drinkLabel = Object.fromEntries((P.drinks || []).map((d) => [d.id, d.label]));
+  const plural = (n, f) => { const a = Math.abs(n) % 100, b = a % 10; if (a > 10 && a < 20) return f[2]; if (b > 1 && b < 5) return f[1]; if (b === 1) return f[0]; return f[2]; };
+  const fmt = (iso) => { const d = new Date(iso); return isNaN(d) ? "" : d.toLocaleString("ru-RU", { timeZone: "Europe/Moscow", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }); };
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  let rows = [], filter = "all", key = store.get();
+
+  const dateText = P.date ? new Date(P.date + "T12:00:00Z").toLocaleDateString("ru-RU", { day: "numeric", month: "long", timeZone: "UTC" }) : "";
+  $("loginTitle").textContent = (P.name ? P.name + " · " : "") + (P.age || "");
+  $("titleName").textContent = (P.name || "") + (P.age ? " · " + P.age : "");
+  $("evtLine").textContent = [dateText, P.time, P.place].filter(Boolean).join(" · ");
+
+  /* === ВХОД / ЗАГРУЗКА === */
+  function showLogin(msg) {
+    $("dash").hidden = true; $("login").hidden = false;
+    $("loginErr").hidden = !msg; $("loginErr").textContent = msg || "";
+    setTimeout(() => $("pwd").focus(), 50);
+  }
+  async function load(fromLogin) {
+    if (!P.scriptUrl) return showLogin("Сайт ещё не подключён к таблице: впишите scriptUrl в config.js");
+    if (!key) return showLogin();
+    $("refresh").disabled = true; $("loginBtn").disabled = true;
+    try {
+      const res = await fetch(P.scriptUrl + "?key=" + encodeURIComponent(key) + "&t=" + Date.now());
+      const json = await res.json();
+      if (!json.ok) { store.del(); key = ""; return showLogin(json.error === "forbidden" ? "Неверный пароль" : json.error); }
+      rows = json.rows || [];
+      if (fromLogin) store.set(key);
+      render();
+    } catch (e) {
+      if ($("dash").hidden) showLogin("Не удалось связаться с таблицей. Проверьте интернет.");
+      else $("status").textContent = "Не удалось обновить — проверьте интернет.";
+    } finally {
+      $("refresh").disabled = false; $("loginBtn").disabled = false;
+    }
+  }
+
+  /* === ОТРИСОВКА === */
+  function render() {
+    $("login").hidden = true; $("dash").hidden = false;
+    $("status").textContent = "Обновлено в " + new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
+    const yes = rows.filter((r) => r.attending === "yes"), maybe = rows.filter((r) => r.attending === "maybe"), no = rows.filter((r) => r.attending === "no");
+    const sum = (a) => a.reduce((s, r) => s + (r.guests || 0), 0);
+    const gYes = sum(yes), gMaybe = sum(maybe);
+    $("kGuests").textContent = gYes;
+    $("kGuestsCap").textContent = plural(gYes, ["человек придёт", "человека придут", "человек придут"]);
+    $("kGuestsSub").textContent = gMaybe ? "и ещё до " + gMaybe + " — под вопросом" : "сумма людей из ответов «Да»";
+    $("kYes").textContent = yes.length; $("kMaybe").textContent = maybe.length; $("kNo").textContent = no.length;
+    $("countAll").textContent = "(" + rows.length + ")";
+    donut(yes.length, maybe.length, no.length);
+
+    const coming = rows.filter((r) => r.attending !== "no");
+    const stats = (P.drinks || []).map((d) => { const c = coming.filter((r) => r.drinks.includes(d.id)); return { label: d.label, n: c.length, people: sum(c) }; });
+    const max = Math.max(1, ...stats.map((s) => s.n));
+    const bars = $("bars"); bars.innerHTML = "";
+    stats.forEach((s) => {
+      const row = el("div", "bar-row"), track = el("span", "bar-track"), fill = el("span", "bar-fill"), val = el("span", "bar-val", String(s.n));
+      fill.style.width = (s.n / max) * 100 + "%"; track.appendChild(fill);
+      if (s.people > s.n) val.appendChild(el("small", null, " · " + s.people + " чел."));
+      row.append(el("span", "bar-label", s.label), track, val); bars.appendChild(row);
+    });
+    table();
+  }
+
+  function donut(y, m, n) {
+    const total = y + m + n, R = 70, C = 2 * Math.PI * R, NS = "http://www.w3.org/2000/svg";
+    const box = $("donut"); box.innerHTML = "";
+    const svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", "0 0 180 180"); svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", "Да: " + y + ", не знаю: " + m + ", нет: " + n);
+    const circle = (cls, len, off) => { const c = document.createElementNS(NS, "circle"); c.setAttribute("cx", 90); c.setAttribute("cy", 90); c.setAttribute("r", R); c.setAttribute("class", cls);
+      if (len != null) { c.setAttribute("stroke-dasharray", len + " " + (C - len)); c.setAttribute("stroke-dashoffset", -off); c.setAttribute("transform", "rotate(-90 90 90)"); } svg.appendChild(c); };
+    circle("ring-bg");
+    let off = 0;
+    if (total) [[y, "ring yes"], [m, "ring maybe"], [n, "ring no"]].forEach(([v, cls]) => { const len = (v / total) * C; if (len) circle(cls, len, off); off += len; });
+    const t1 = document.createElementNS(NS, "text"); t1.setAttribute("x", 90); t1.setAttribute("y", 96); t1.setAttribute("class", "donut-num"); t1.textContent = total;
+    const t2 = document.createElementNS(NS, "text"); t2.setAttribute("x", 90); t2.setAttribute("y", 118); t2.setAttribute("class", "donut-cap"); t2.textContent = plural(total, ["ответ", "ответа", "ответов"]);
+    svg.append(t1, t2);
+    const ul = el("ul", "legend");
+    [["yes", "Да", y], ["maybe", "Не знаю", m], ["no", "Нет", n]].forEach(([c, l, v]) => { const li = el("li"); li.append(el("i", c), document.createTextNode(l + " "), el("b", null, String(v))); ul.appendChild(li); });
+    box.append(svg, ul);
+  }
+
+  function table() {
+    const q = $("search").value.trim().toLowerCase();
+    const list = rows.filter((r) => (filter === "all" || r.attending === filter) && r.name.toLowerCase().includes(q))
+      .sort((a, b) => new Date(b.updated || b.created) - new Date(a.updated || a.created));
+    const tb = $("tbody"); tb.innerHTML = "";
+    $("tbl").hidden = !list.length; $("empty").hidden = !!list.length;
+    $("empty").textContent = rows.length ? "Ничего не найдено" : "Пока никто не ответил. Отправьте ссылку гостям!";
+    list.forEach((r) => {
+      const tr = el("tr");
+      const td = (label, cls, text) => { const c = el("td", cls, text); c.dataset.l = label; tr.appendChild(c); return c; };
+      td("Имя", "name", r.name);
+      const a = ATT[r.attending] || ATT.yes; td("Ответ").appendChild(el("span", "tag " + a[1], a[0]));
+      td("Человек", null, r.attending === "no" ? "—" : String(r.guests));
+      td("Напитки", null, r.drinks.map((d) => drinkLabel[d] || d).join(", ") || "—");
+      td("Комментарий", "comment", r.comment || "—");
+      const w = td("Когда", "when", fmt(r.updated || r.created));
+      if (r.updated && r.created && r.updated !== r.created) w.appendChild(el("small", "muted", " (изменён)"));
+      const act = el("td", "act"); const del = el("button", "del", "Удалить"); del.type = "button";
+      del.addEventListener("click", () => remove(r, del)); act.appendChild(del); tr.appendChild(act);
+      tb.appendChild(tr);
+    });
+  }
+
+  /* === УДАЛЕНИЕ === */
+  async function remove(r, btn) {
+    if (!confirm("Удалить ответ «" + r.name + "»? Это действие нельзя отменить.")) return;
+    btn.disabled = true; btn.textContent = "…";
+    try {
+      const res = await fetch(P.scriptUrl, { method: "POST", body: JSON.stringify({ action: "delete", key, id: r.id }) });
+      const json = await res.json();
+      if (!json.ok) throw new Error(json.error);
+      rows = rows.filter((x) => x.id !== r.id); render();
+    } catch (e) {
+      alert("Не получилось удалить. Обновите страницу и попробуйте ещё раз.");
+      btn.disabled = false; btn.textContent = "Удалить";
+    }
+  }
+
+  /* === ВЫГРУЗКА В EXCEL (CSV с BOM и «;» — Excel открывает сразу с кириллицей) === */
+  function csv() {
+    const cell = (v) => { let s = String(v == null ? "" : v); if (/^[=+\-@\t\r]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""') + '"'; };
+    const head = ["Имя", "Ответ", "Сколько человек", "Напитки", "Комментарий", "Когда ответил"];
+    const lines = [head.map(cell).join(";")].concat(rows.map((r) => [r.name, (ATT[r.attending] || ATT.yes)[0], r.attending === "no" ? 0 : r.guests,
+      r.drinks.map((d) => drinkLabel[d] || d).join(", "), r.comment, fmt(r.updated || r.created)].map(cell).join(";")));
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" }));
+    a.download = "otvety-gostey.csv"; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  }
+
+  /* === СОБЫТИЯ === */
+  $("login").addEventListener("submit", (e) => { e.preventDefault(); key = $("pwd").value.trim(); if (key) load(true); });
+  $("refresh").addEventListener("click", () => load());
+  $("csv").addEventListener("click", csv);
+  $("logout").addEventListener("click", () => { store.del(); key = ""; rows = []; $("pwd").value = ""; showLogin(); });
+  $("search").addEventListener("input", table);
+  $("filters").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-f]"); if (!b) return;
+    filter = b.dataset.f; [...$("filters").children].forEach((x) => x.classList.toggle("on", x === b)); table();
+  });
+  setInterval(() => { if (!$("dash").hidden && !document.hidden) load(); }, 60000);
+  load();
+})();
+</script>
 </body>
 </html>
