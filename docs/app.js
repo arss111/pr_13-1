@@ -69,18 +69,18 @@
       <div class="card form-card reveal" id="formCard">
         <form id="rsvpForm" novalidate>
           <div class="field">
-            <label class="field-label" for="name">Как вас зовут? <span class="req">*</span></label>
+            <label class="field-label" for="name">Как тебя зовут? <span class="req">*</span></label>
             <input type="text" id="name" autocomplete="name" placeholder="Имя и фамилия" maxlength="100">
-            <div class="error-text" id="nameErr" hidden>Пожалуйста, представьтесь</div>
+            <div class="error-text" id="nameErr" hidden>Пожалуйста, представься</div>
           </div>
           <div class="field">
-            <span class="field-label">Сможете прийти? <span class="req">*</span></span>
+            <span class="field-label">Сможешь прийти? <span class="req">*</span></span>
             <div class="choices" role="radiogroup">
               <label class="choice"><input type="radio" name="attending" value="Да"><span><span>Да, с радостью приду<small>Уже предвкушаю</small></span></span></label>
               <label class="choice"><input type="radio" name="attending" value="Пока не знаю"><span><span>Пока не знаю точно<small>Отвечу позже по этой же ссылке</small></span></span></label>
               <label class="choice"><input type="radio" name="attending" value="Нет"><span><span>К сожалению, не смогу<small>Но мысленно буду с вами</small></span></span></label>
             </div>
-            <div class="error-text" id="attErr" hidden>Выберите вариант</div>
+            <div class="error-text" id="attErr" hidden>Выбери вариант</div>
           </div>
           <div class="collapsible closed" id="comingBlock">
             <div class="field">
@@ -96,19 +96,19 @@
             </div>
             <div class="collapsible closed" id="companionsBlock">
               <div class="field">
-                <label class="field-label" for="companions">С кем вы придёте?</label>
+                <label class="field-label" for="companions">С кем ты придёшь?</label>
                 <input type="text" id="companions" placeholder="Например: жена Анна, сын Миша" maxlength="300">
               </div>
             </div>
             <div class="field">
-              <span class="field-label">Что предпочитаете пить?</span>
+              <span class="field-label">Что предпочитаешь пить?</span>
               <p class="hint">Можно выбрать несколько вариантов</p>
               <div class="chips" id="drinks"></div>
               <div class="collapsible closed" id="otherBlock"><div style="padding-top:10px"><input type="text" id="drinkOther" placeholder="Ваш вариант" maxlength="200"></div></div>
             </div>
             <div class="field">
               <label class="field-label" for="food">Пожелания по еде</label>
-              <p class="hint">Аллергии, вегетарианство, что-то не едите</p>
+              <p class="hint">Аллергии, вегетарианство, что-то не ешь</p>
               <input type="text" id="food" placeholder="Необязательно" maxlength="500">
             </div>
           </div>
@@ -155,7 +155,7 @@
     if ($("mapLink")) $("mapLink").href = C.mapUrl ||
       "https://yandex.ru/maps/?text=" + encodeURIComponent([C.place, C.address].filter(Boolean).join(", "));
     if (C.dressCode && $("dressCard")) { setText("dDress", C.dressCode); $("dressCard").hidden = false; }
-    if (C.rsvpDeadline) setText("deadlineNote", `Пожалуйста, ответьте до ${C.rsvpDeadline}. Ответ можно будет изменить.`);
+    if (C.rsvpDeadline) setText("deadlineNote", `Пожалуйста, ответь до ${C.rsvpDeadline}. Ответ можно будет изменить.`);
     if (C.contact && $("contactLine")) { $("contactLine").hidden = false; $("contactLine").textContent = "Вопросы: " + C.contact; }
     if (!C.scriptUrl && $("demoBanner")) $("demoBanner").hidden = false;
     document.title = (C.name ? C.name + " · " : "") + "Приглашение на день рождения · " + dateText;
@@ -341,7 +341,7 @@
       showThanks(d, true);
     } catch (err) {
       $("formErr").hidden = false;
-      $("formErr").textContent = "Не получилось отправить. Проверьте интернет и попробуйте ещё раз.";
+      $("formErr").textContent = "Не получилось отправить. Проверь интернет и попробуй ещё раз.";
       console.error(err);
     } finally {
       btn.disabled = false; btn.textContent = "Отправить ответ";
@@ -350,9 +350,9 @@
 
   function showThanks(d, animate) {
     const t = {
-      "Да": ["Ура, ждём вас!", `Спасибо, ${d.name}! Очень рады, что вы будете с нами ${dateText}.`],
-      "Пока не знаю": ["Спасибо за ответ!", `${d.name}, надеемся, что получится. Когда будете знать точно, просто измените ответ по этой же ссылке.`],
-      "Нет": ["Жаль, что не получится", `Спасибо, что ответили, ${d.name}! Будем вспоминать вас за праздничным столом.`],
+      "Да": ["Ура, ждём тебя!", `Спасибо, ${d.name}! Очень рады, что ты будешь с нами ${dateText}.`],
+      "Пока не знаю": ["Спасибо за ответ!", `${d.name}, надеемся, что получится. Когда будешь знать точно, просто измени ответ по этой же ссылке.`],
+      "Нет": ["Жаль, что не получится", `Спасибо за ответ, ${d.name}! Будем вспоминать тебя за праздничным столом.`],
     }[d.attending];
     $("thanksIcon").innerHTML = THANKS_ICON[d.attending] || "";
     $("thanksTitle").textContent = t[0];
@@ -404,7 +404,7 @@
     $("thanks").hidden = true;
     $("formCard").hidden = false;
     $("formCard").classList.add("in");
-    setText("rsvpTitle", "Вы придёте?");
+    setText("rsvpTitle", "Ты придёшь?");
     const saved = store.get(LS_ANSWER);
     if (saved) prefill(saved);
     $("rsvp").scrollIntoView({ behavior: "smooth" });
