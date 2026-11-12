@@ -48,7 +48,7 @@
     m.innerHTML = `
       <div class="details">
         <div class="card detail reveal"><span class="label">Дата</span><span class="value" id="dDate"></span><span class="note" id="dWeekday"></span></div>
-        <div class="card detail reveal" style="--d:1"><span class="label">Начало</span><span class="value" id="dTime"></span><span class="note" id="dTimeNote"></span></div>
+        <div class="card detail time-card reveal" style="--d:1"><span class="label">Начало</span><span class="value" id="dTime"></span><span class="note" id="dTimeNote"></span></div>
         <div class="card detail wide reveal" style="--d:2"><span class="label">Место</span><span class="value" id="dPlace"></span><span class="note" id="dAddress"></span>
           <div class="actions">
             <a class="btn btn-ghost btn-sm" id="mapLink" target="_blank" rel="noopener">${ICON.pin}Открыть в Яндекс Картах</a>
