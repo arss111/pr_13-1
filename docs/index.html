@@ -200,7 +200,7 @@ body { background: var(--night); color: var(--cream); font-family: var(--font-bo
 .card3d .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;
   background: linear-gradient(180deg, #fbf4e6, #f1e4c9); color: var(--wine); }
 .card3d .top .face.front { border-radius: 6px 6px 0 0; box-shadow: inset 0 -10px 16px -12px rgba(120,80,30,.4); justify-content: flex-end; padding-bottom: 26px; gap: 14px; }
-.card3d .bot .face.front { border-radius: 0 0 6px 6px; box-shadow: inset 0 10px 16px -12px rgba(120,80,30,.4); justify-content: flex-start; padding-top: 24px; gap: 8px; }
+.card3d .bot .face.front { border-radius: 0 0 6px 6px; box-shadow: inset 0 10px 16px -12px rgba(120,80,30,.4); justify-content: center; }
 .card3d .face.back { transform: rotateX(180deg); background: radial-gradient(circle, rgba(169,123,60,.22) 0 2px, transparent 3px) 0 0 / 22px 22px, linear-gradient(180deg, #fbf4e6, #ecdcbc);
   box-shadow: inset 0 0 0 2px rgba(169,123,60,.35); border-radius: 6px; }
 .card3d .face.back { display: grid; place-items: center; }
@@ -479,7 +479,7 @@ noscript { position: fixed; inset: 0; display: grid; place-items: center; paddin
               <div class="face back"><div class="monogram" data-f="initial">М</div></div>
             </div>
             <div class="panel bot">
-              <div class="face front"><div class="c-date" data-f="dateTime">6 декабря · 13:00</div><div class="c-place" data-f="place">Ресторан «Мансарда»</div></div>
+              <div class="face front"><div class="c-orn"><i></i></div></div>
               <div class="face back"><div class="monogram" data-f="initial">М</div></div>
             </div>
           </div>
