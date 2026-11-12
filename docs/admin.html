@@ -172,7 +172,7 @@ h2 { font-size: 24px; margin-bottom: 12px; }
       <div class="card"><h2>Ответы</h2><div class="donut" id="donut"></div></div>
       <div class="card">
         <h2>Напитки</h2>
-        <p class="muted small">Сколько гостей выбрали (среди «Да» и «Пока не знаю»)</p>
+        <p class="muted small">Сколько ответов отметили напиток (среди «Да» и «Пока не знаю»). Если пришли вдвоём, в одном ответе могут быть напитки за обоих.</p>
         <div class="bars" id="bars"></div>
         <ul class="others" id="others"></ul>
       </div>
@@ -268,7 +268,6 @@ h2 { font-size: 24px; margin-bottom: 12px; }
     stats.forEach((s) => {
       const row = el("div", "bar-row"), track = el("span", "bar-track"), fill = el("span", "bar-fill"), val = el("span", "bar-val", String(s.n));
       fill.style.width = (s.n / max) * 100 + "%"; track.appendChild(fill);
-      if (s.people > s.n) val.appendChild(el("small", null, " · " + s.people + " чел."));
       row.append(el("span", "bar-label", s.label), track, val); bars.appendChild(row);
     });
     const ol = $("others"); ol.innerHTML = "";

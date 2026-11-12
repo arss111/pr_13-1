@@ -14,7 +14,6 @@ const SHEET_NAME = 'Ответы';
 const HEADERS = ['id', 'Дата ответа', 'Имя', 'Придёт?', 'Сколько человек', 'Напитки', 'Свой вариант напитка', 'Изменён'];
 const ATTENDING = { yes: 'Да', maybe: 'Пока не знаю', no: 'Нет' };
 const DRINKS = { vodka: 'Водка', prosecco: 'Просекко', champagne: 'Шампанское', wine: 'Вино', other: 'Свой вариант', none: 'Не пью алкоголь' };
-const ALCOHOL = ['vodka', 'prosecco', 'champagne', 'wine'];
 const MAX_GUESTS = 10;
 
 function sheet_() {
@@ -69,8 +68,7 @@ function validate_(d) {
       if (!DRINKS[raw[i]]) return { ok: false, error: 'Неизвестный напиток' };
       if (drinks.indexOf(raw[i]) < 0) drinks.push(raw[i]);
     }
-    // «Не пью алкоголь» исключает алкогольные напитки (свой вариант оставляем — это может быть морс или сок)
-    if (drinks.indexOf('none') >= 0) drinks = drinks.filter(function (x) { return ALCOHOL.indexOf(x) < 0; });
+    // Можно отметить несколько вариантов в любом сочетании (за себя и за тех, кто придёт вместе)
     if (!drinks.length) return { ok: false, error: 'Выбери хотя бы один напиток' };
     const order = Object.keys(DRINKS);
     drinks.sort(function (a, b) { return order.indexOf(a) - order.indexOf(b); });

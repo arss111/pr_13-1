@@ -581,7 +581,7 @@ noscript { position: fixed; inset: 0; display: grid; place-items: center; paddin
       <div class="inner">
         <p class="q-step reveal-down" style="--d:0">Вопрос 4 из 4</p>
         <h2 class="q-title reveal-l" style="--d:1">Что будешь<br><em class="gold-text">пить?</em></h2>
-        <p class="q-hint reveal-r" style="--d:2">Меню уже готово — выбери напитки, можно несколько</p>
+        <p class="q-hint reveal-r" style="--d:2" id="drinksHint">Меню уже готово — выбери напитки, можно несколько</p>
         <div class="q-body drinks" id="drinksBox" style="margin-top:50px"></div>
         <div class="other-wrap" id="otherWrap" hidden>
           <input class="field" id="fOther" type="text" maxlength="80" enterkeyhint="done" placeholder="Например: виски, пиво, морс" aria-label="Свой вариант напитка">
@@ -733,7 +733,7 @@ $("minus").addEventListener("click", () => setCount(state.guests - 1, true));
 $("plus").addEventListener("click", () => setCount(state.guests + 1, true));
 setCount(state.guests, false);
 
-/* --- Вопрос 4: напитки (несколько; «Не пью алкоголь» — исключающий) --- */
+/* --- Вопрос 4: напитки (можно отметить несколько — за себя и за тех, кто придёт вместе) --- */
 P.drinks.forEach((d, i) => {
   const b = document.createElement("button");
   b.type = "button"; b.className = "drink reveal-pop"; b.dataset.v = d.id; b.style.setProperty("--d", 3 + i);
@@ -741,13 +741,8 @@ P.drinks.forEach((d, i) => {
   b.innerHTML = (ICON[d.id] || "") + '<span class="tick">' + ICON.tick + "</span>";
   b.append(d.label);
   b.addEventListener("click", () => {
-    if (state.drinks.has(d.id)) state.drinks.delete(d.id);
-    else {
-      const alcohol = (id) => id !== "none" && id !== "other";
-      if (d.id === "none") [...state.drinks].filter(alcohol).forEach((x) => state.drinks.delete(x));
-      else if (alcohol(d.id)) state.drinks.delete("none");
-      state.drinks.add(d.id);
-    }
+    // Любые варианты сочетаются: если пришли вдвоём, один может пить водку, другой — шампанское или не пить вовсе
+    if (state.drinks.has(d.id)) state.drinks.delete(d.id); else state.drinks.add(d.id);
     $("eSend").textContent = "";
     saveDraft(); renderDrinks();
     if (d.id === "other" && state.drinks.has("other")) setTimeout(() => $("fOther").focus({ preventScroll: true }), 200);
@@ -912,7 +907,12 @@ function onEnter(step) {
   if (step === "who") { launchBalloons($("balloonsWho"), 7); setTimeout(() => confetti({ count: 150 }), 1900); }
   if (step === "q-name" && !("ontouchstart" in window)) setTimeout(() => fName.focus({ preventScroll: true }), 700);
   if (step === "q-att") { $("eAtt").textContent = ""; renderAtt(); }
-  if (step === "q-drinks") { $("eSend").textContent = ""; renderDrinks(); }
+  if (step === "q-drinks") {
+    $("eSend").textContent = ""; renderDrinks();
+    $("drinksHint").textContent = state.guests > 1
+      ? `Вас будет ${state.guests} — отметь напитки для всех, можно несколько вариантов`
+      : "Меню уже готово — выбери напитки, можно несколько";
+  }
   if (step === "thanks") { renderThanks(); }
 }
 
