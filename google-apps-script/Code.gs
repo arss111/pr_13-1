@@ -13,7 +13,12 @@ const ADMIN_PASSWORD = 'поменяйте-этот-пароль';
 const SHEET_NAME = 'Ответы';
 const HEADERS = ['id', 'Дата ответа', 'Имя', 'Придёт?', 'Сколько человек', 'Напитки', 'Свой вариант напитка', 'Изменён'];
 const ATTENDING = { yes: 'Да', maybe: 'Пока не знаю', no: 'Нет' };
-const DRINKS = { vodka: 'Водка', prosecco: 'Просекко', champagne: 'Шампанское', wine: 'Вино', other: 'Свой вариант', none: 'Не пью алкоголь' };
+// Должно совпадать с вариантами в docs/config.js
+const DRINKS = {
+  prosecco: 'Шампанское: просекко', sparkling_sweet: 'Шампанское: сладкое',
+  wine_dry: 'Вино: сухое', wine_sweet: 'Вино: сладкое',
+  vodka: 'Водка', other: 'Свой вариант', none: 'Не пью алкоголь',
+};
 const MAX_GUESTS = 10;
 
 function sheet_() {

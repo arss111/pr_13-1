@@ -33,12 +33,13 @@ window.PARTY = {
   // Максимум в счётчике «Сколько вас будет» (включая самого гостя)
   maxGuests: 10,
 
-  // Варианты напитков. id не меняйте после начала сбора ответов, подписи — можно.
+  // Напитки. id не меняйте после начала сбора ответов, подписи — можно.
+  // Если меняете список, поправьте и DRINKS в google-apps-script/Code.gs.
   drinks: [
+    // При выборе раскрывается уточнение (можно отметить оба)
+    { id: "champagne", label: "Шампанское", options: [{ id: "prosecco", label: "Просекко" }, { id: "sparkling_sweet", label: "Сладкое" }] },
+    { id: "wine", label: "Вино", options: [{ id: "wine_dry", label: "Сухое" }, { id: "wine_sweet", label: "Сладкое" }] },
     { id: "vodka", label: "Водка" },
-    { id: "prosecco", label: "Просекко" },
-    { id: "champagne", label: "Шампанское" },
-    { id: "wine", label: "Вино" },
     { id: "other", label: "Свой вариант" }, // гость вписывает свой напиток
     { id: "none", label: "Не пью алкоголь" },
   ],

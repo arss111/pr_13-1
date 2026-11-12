@@ -181,3 +181,12 @@ input:focus, textarea:focus { outline: none; border-color: var(--accent); box-sh
 .time-card .value { flex: 1; display: flex; align-items: center; justify-content: center; padding-bottom: 10px;
   font-size: clamp(48px, 15vw, 64px); line-height: 1; font-weight: 400; font-variant-numeric: lining-nums; letter-spacing: .01em;
   color: #f6e3bb; text-shadow: 0 0 28px rgba(227,194,135,.35); }
+
+/* Уточнения к напитку: шампанское — просекко/сладкое, вино — сухое/сладкое */
+.sub-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; padding: 12px; border-radius: 16px;
+  border: 1px solid var(--line-strong); background: rgba(227,194,135,.05); }
+.sub-title { grid-column: 1 / -1; font-weight: 600; font-size: 14px; color: var(--accent); }
+.subchip { width: 100%; min-height: 46px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text);
+  font: 600 14px var(--sans); cursor: pointer; transition: all .25s cubic-bezier(.2,.7,.2,1.4); }
+.subchip.on { border-color: var(--accent); background: var(--chip-on-bg); color: var(--chip-on-text); transform: scale(1.04); }
+.subchip:focus-visible { outline: none; box-shadow: 0 0 0 4px var(--focus); }

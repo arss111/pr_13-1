@@ -22,6 +22,10 @@
   const Weekday = weekday[0].toUpperCase() + weekday.slice(1);
   const mapUrl = P.mapUrl || "https://yandex.ru/maps/?text=" + encodeURIComponent([P.city, P.address, (P.place || "").replace(/[«»]/g, "")].filter(Boolean).join(", "));
   const DRINKS = P.drinks || [], ATT = P.attending || [];
+  // Плоский список конечных вариантов: «Шампанское: просекко», «Вино: сухое» и т.д.
+  const FLAT = DRINKS.flatMap((d) => d.options
+    ? d.options.map((o) => ({ id: o.id, label: d.label + ": " + o.label.toLowerCase(), parent: d.id }))
+    : [{ id: d.id, label: d.label }]);
   const label = (id, list) => (list.find((x) => x.id === id) || {}).label || id;
 
   const ICON = {
@@ -100,6 +104,7 @@
               <span class="field-label">Предпочтения по напиткам</span>
               <p class="hint" id="drinksHint">Меню уже готово. Можно выбрать несколько вариантов</p>
               <div class="drinks" id="drinks"></div>
+              ${DRINKS.filter((d) => d.options).map((d) => `<div class="collapsible closed" id="sub_${d.id}"><div class="sub-row"><span class="sub-title">${d.label} — какое?</span>${d.options.map((o) => `<button type="button" class="subchip" data-v="${o.id}" aria-pressed="false">${o.label}</button>`).join("")}</div></div>`).join("")}
               <div class="collapsible closed" id="otherBlock"><div style="padding-top:10px"><input type="text" id="drinkOther" placeholder="Напиши свой вариант: например, виски или морс" maxlength="80"></div></div>
               <div class="error-text" id="drinkErr" hidden></div>
             </div>
@@ -211,16 +216,24 @@
       b.append(d.label);
       b.addEventListener("click", () => {
         // Любые варианты сочетаются: если пришли вдвоём, один может пить водку, другой — шампанское
-        drinks.has(d.id) ? drinks.delete(d.id) : drinks.add(d.id);
+        if (drinks.has(d.id)) { drinks.delete(d.id); (d.options || []).forEach((o) => drinks.delete(o.id)); }
+        else drinks.add(d.id);
         $("drinkErr").hidden = true;
         renderDrinks();
         if (d.id === "other" && drinks.has("other")) setTimeout(() => $("drinkOther").focus({ preventScroll: true }), 120);
       });
       box.appendChild(b);
     });
+    // Уточнения: шампанское — просекко/сладкое, вино — сухое/сладкое
+    document.querySelectorAll(".subchip").forEach((c) => c.addEventListener("click", () => {
+      drinks.has(c.dataset.v) ? drinks.delete(c.dataset.v) : drinks.add(c.dataset.v);
+      $("drinkErr").hidden = true; renderDrinks();
+    }));
   }
   function renderDrinks() {
     document.querySelectorAll("#drinks .drink").forEach((b) => { const on = drinks.has(b.dataset.v); b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
+    document.querySelectorAll(".subchip").forEach((c) => { const on = drinks.has(c.dataset.v); c.classList.toggle("on", on); c.setAttribute("aria-pressed", on); });
+    DRINKS.filter((d) => d.options).forEach((d) => toggle($("sub_" + d.id), drinks.has(d.id)));
     toggle($("otherBlock"), drinks.has("other"));
   }
 
@@ -251,7 +264,7 @@
 
   function collect() {
     const attending = attendingValue(), coming = attending && attending !== "no";
-    const list = coming ? DRINKS.map((d) => d.id).filter((id) => drinks.has(id)) : [];
+    const list = coming ? FLAT.filter((f) => drinks.has(f.id) && (!f.parent || drinks.has(f.parent))).map((f) => f.id) : [];
     return {
       clientId: clientId(), name: $("name").value.trim(), attending,
       guests: coming ? count : 0, drinks: list,
@@ -268,7 +281,9 @@
     $("attErr").hidden = !!d.attending; if (!d.attending) first = first || document.querySelector('input[name="attending"]');
     if (d.attending && d.attending !== "no") {
       let msg = "";
-      if (!d.drinks.length) msg = "Выбери хотя бы один вариант";
+      const unclear = DRINKS.find((x) => x.options && drinks.has(x.id) && !x.options.some((o) => drinks.has(o.id)));
+      if (unclear) msg = `${unclear.label}: выбери ${unclear.options.map((o) => o.label.toLowerCase()).join(" или ")}`;
+      else if (!d.drinks.length) msg = "Выбери хотя бы один вариант";
       else if (d.drinks.includes("other") && !d.drinkOther) msg = "Напиши свой вариант напитка";
       $("drinkErr").hidden = !msg; $("drinkErr").textContent = msg;
       if (msg) first = first || (d.drinks.includes("other") ? $("drinkOther") : $("drinks"));
@@ -313,7 +328,7 @@
     const rows = [["Ответ", label(s.attending, ATT)]];
     if (s.attending !== "no") {
       rows.push(["Вас будет", String(s.guests)]);
-      const list = (s.drinks || []).filter((x) => x !== "other").map((x) => label(x, DRINKS));
+      const list = (s.drinks || []).filter((x) => x !== "other").map((x) => label(x, FLAT));
       if (s.drinkOther) list.push(s.drinkOther);
       if (list.length) rows.push(["Напитки", list.join(", ")]);
     }
@@ -334,7 +349,7 @@
     $("name").value = s.name || "";
     const r = document.querySelector(`input[name="attending"][value="${s.attending}"]`); if (r) r.checked = true;
     setCount(s.guests || 1);
-    drinks.clear(); (s.drinks || []).forEach((x) => drinks.add(x));
+    drinks.clear(); (s.drinks || []).forEach((x) => { drinks.add(x); const f = FLAT.find((y) => y.id === x); if (f && f.parent) drinks.add(f.parent); });
     $("drinkOther").value = s.drinkOther || "";
     onAttendingChange(); renderDrinks();
     $("thanks").hidden = true; $("formCard").hidden = false; $("formCard").classList.add("in");
