@@ -63,7 +63,7 @@
 @keyframes glow { from { opacity: .18; } to { opacity: .4; } }
 @keyframes sweep { 0% { transform: translateX(-260px) skewX(-20deg); } 35%, 100% { transform: translateX(560px) skewX(-20deg); } }
 
-.hero-title { font-family: var(--display); font-style: italic; font-size: clamp(36px, 9vw, 50px); line-height: 1.1; }
+.hero-title { font-family: var(--display); font-style: italic; font-size: clamp(36px, 9vw, 50px); line-height: 1.1; margin-top: 44px; }
 .hero-title .ch { display: inline-block; opacity: 0; transform: translateY(.5em) rotate(6deg); filter: blur(6px); }
 .ready .hero-title .ch { animation: chIn .9s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(1.9s + var(--i) * 55ms); }
 @keyframes chIn { to { opacity: 1; transform: none; filter: none; } }
@@ -78,7 +78,7 @@
 .hero .cta { margin-top: 30px; opacity: 0; transform: translateY(14px); }
 .ready .date-badge { animation: up 1s 2.7s cubic-bezier(.2,.7,.2,1) forwards; }
 .ready .place-line { animation: fadeIn 1s 3s forwards; }
-.hero.ready .cta { animation: up 1s 3.1s cubic-bezier(.2,.7,.2,1) forwards; }
+.hero.ready .cta { animation: up 1s 2.8s cubic-bezier(.2,.7,.2,1) forwards; }
 @keyframes up { to { opacity: 1; transform: none; } }
 
 .skyline-wrap { position: absolute; left: 50%; bottom: 0; width: 100vw; max-width: 1200px; transform: translateX(-50%); height: 150px; pointer-events: none; }
@@ -144,10 +144,7 @@ footer .sig { font-family: var(--display); font-style: italic; font-size: 30px; 
     </svg>
     <h1 class="hero-title" id="heroTitle">день рождения</h1>
     <p class="hero-sub" id="heroSub"></p>
-    <div class="date-badge"><span id="badgeDate">6 декабря</span><span class="dot"></span><span id="badgeWeekday">воскресенье</span></div>
-    <div class="place-line" id="placeInline">Ресторан «Мансарда»</div>
     <a class="btn cta" href="#rsvp">Ответить на приглашение</a>
-    <div class="scroll-cue" aria-hidden="true"></div>
 
     <div class="skyline-wrap" id="skyline" aria-hidden="true">
       <svg class="skyline" viewBox="0 0 1200 150" preserveAspectRatio="xMidYMax slice">
