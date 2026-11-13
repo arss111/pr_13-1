@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Гости · статистика</title>
 <meta name="theme-color" content="#0d0b10">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%237c1f33'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-style='italic' font-size='34' text-anchor='middle' fill='%23f3d9a4'%3E%D0%9C%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%237c1f33'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='28' text-anchor='middle' fill='%23f3d9a4'%3E46%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -25,13 +25,15 @@ body { background: radial-gradient(60rem 40rem at 50% -10%, rgba(232,199,138,.12
 main { max-width: 1120px; margin: 0 auto; padding: 20px 16px 60px; }
 h1, h2 { font-family: var(--serif); font-weight: 500; margin: 0; }
 h1 { font-size: 34px; line-height: 1.1; }
-h2 { font-size: 24px; margin-bottom: 12px; }
+h2 { font-size: 26px; margin-bottom: 4px; }
 .gold { color: var(--gold); font-style: italic; }
 .eyebrow { margin: 0 0 6px; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
 .muted { color: var(--muted); }
-.small { font-size: 13px; margin: -6px 0 14px; }
+.small { font-size: 13px; margin: 0 0 14px; }
 [hidden] { display: none !important; }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 20px; }
+section { margin-top: 12px; }
+.sec-title { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; margin: 34px 4px 12px; }
 
 /* === КНОПКИ === */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 0; cursor: pointer; text-decoration: none;
@@ -48,8 +50,9 @@ h2 { font-size: 24px; margin-bottom: 12px; }
 .error { color: var(--no); margin: 0; }
 
 /* === ШАПКА === */
-.top { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: flex-end; margin: 8px 0 18px; }
+.top { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: flex-end; margin: 8px 0 14px; }
 .tools { display: flex; flex-wrap: wrap; gap: 8px; }
+.status { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
 
 /* === КАРТОЧКИ СВОДКИ === */
 .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
@@ -61,54 +64,69 @@ h2 { font-size: 24px; margin-bottom: 12px; }
 .c-yes { color: var(--yes); } .c-maybe { color: var(--maybe); } .c-no { color: var(--no); }
 
 /* === ДИАГРАММЫ === */
-.charts { display: grid; grid-template-columns: 1fr 1.6fr; gap: 12px; margin-top: 12px; }
+.charts { display: grid; grid-template-columns: 1fr 1.4fr; gap: 12px; }
 .donut { display: flex; align-items: center; gap: 22px; }
-.donut svg { width: 170px; height: 170px; flex: none; }
-.ring-bg { fill: none; stroke: rgba(255,255,255,.07); stroke-width: 22; }
-.ring { fill: none; stroke-width: 22; }
-.ring.yes { stroke: var(--yes); } .ring.maybe { stroke: var(--maybe); } .ring.no { stroke: var(--no); }
-.donut-num { font: 500 40px var(--serif); font-variant-numeric: lining-nums; fill: var(--text); text-anchor: middle; }
+.donut svg { width: 180px; height: 180px; flex: none; }
+.ring-bg { fill: none; stroke: rgba(255,255,255,.07); stroke-width: 24; }
+.ring { fill: none; stroke-width: 24; transition: stroke-dasharray .6s; }
+.donut-num { font: 500 40px var(--serif); fill: var(--text); text-anchor: middle; font-variant-numeric: lining-nums; }
 .donut-cap { font: 12px var(--sans); fill: var(--muted); text-anchor: middle; }
-.legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 15px; }
-.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 4px; margin-right: 6px; vertical-align: -1px; }
-.legend i.yes { background: var(--yes); } .legend i.maybe { background: var(--maybe); } .legend i.no { background: var(--no); }
-.legend b { margin-left: 6px; }
-.bars { display: grid; gap: 14px; }
-.bar-row { display: grid; grid-template-columns: 130px 1fr auto; gap: 12px; align-items: center; }
-.bar-label { font-size: 14px; }
-.bar-track { height: 12px; border-radius: 99px; background: rgba(255,255,255,.07); overflow: hidden; }
-.bar-fill { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--gold-2), var(--gold)); transition: width .6s; }
-.bar-val { font-variant-numeric: tabular-nums; min-width: 3ch; text-align: right; font-weight: 600; }
-.bar-val small { color: var(--muted); font-weight: 400; }
+.legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; font-size: 14px; flex: 1; min-width: 0; }
+.legend li { display: grid; grid-template-columns: 12px 1fr auto; gap: 8px; align-items: center; }
+.legend i { width: 12px; height: 12px; border-radius: 4px; }
+.legend b { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.legend b small { color: var(--muted); font-weight: 400; }
+.note { color: var(--muted); font-size: 12.5px; margin: 12px 0 0; line-height: 1.45; }
+.others { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 6px; }
+.others li { padding: 8px 12px; border-radius: 10px; background: rgba(0,0,0,.22); font-size: 14px; }
+.others li b { color: var(--gold); font-weight: 600; }
 
-/* === ТАБЛИЦА === */
-.list { margin-top: 12px; }
+/* === РАСЧЁТ ЗАКУПКИ === */
+.calc-head { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.toggle { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: var(--muted); user-select: none; }
+.toggle input { width: 20px; height: 20px; accent-color: var(--gold); }
+.calc { width: 100%; border-collapse: collapse; font-size: 14px; }
+.calc th, .calc td { text-align: left; padding: 12px 8px; border-bottom: 1px solid rgba(255,255,255,.07); vertical-align: middle; }
+.calc th { color: var(--muted); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+.calc td.n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.calc .bottles { font: 500 26px/1 var(--serif); color: var(--gold); font-variant-numeric: lining-nums; }
+.calc .bottles small { font: 13px var(--sans); color: var(--muted); }
+.calc .nm { display: inline-flex; align-items: center; gap: 8px; }
+.calc .dot { flex: none; width: 10px; height: 10px; border-radius: 3px; }
+.calc tfoot td { border-bottom: 0; font-weight: 600; padding-top: 16px; }
+.norm { display: inline-flex; align-items: center; gap: 6px; }
+.norm input { width: 70px; height: 38px; border-radius: 10px; border: 1px solid rgba(255,255,255,.14); background: rgba(0,0,0,.3); color: var(--text); font: 600 15px var(--sans); text-align: center; outline: none; }
+.norm input:focus { border-color: var(--gold); }
+.reserve { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
+.reserve input { width: 64px; height: 38px; border-radius: 10px; border: 1px solid rgba(255,255,255,.14); background: rgba(0,0,0,.3); color: var(--text); font: 600 15px var(--sans); text-align: center; }
+
+/* === СПИСОК ГОСТЕЙ === */
 .list-head { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; }
-.list-head h2 { margin: 0; }
-.search { height: 44px; min-width: 220px; border-radius: 12px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.3); color: var(--text); padding: 0 14px; font: 15px var(--sans); outline: none; }
+.search { height: 44px; min-width: 240px; border-radius: 12px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.3); color: var(--text); padding: 0 14px; font: 15px var(--sans); outline: none; }
 .search:focus { border-color: var(--gold); }
-.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 6px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(232,199,138,.35); background: transparent; color: var(--text); font: 500 14px var(--sans); cursor: pointer; }
 .chip.on { background: var(--gold); color: #1d150a; border-color: var(--gold); }
-.tbl { width: 100%; border-collapse: collapse; margin-top: 6px; }
-.tbl th, .tbl td { text-align: left; padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,.07); vertical-align: top; font-size: 14px; }
-.tbl th { color: var(--muted); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
-.tbl .name { font-weight: 600; }
-.tbl .comment { max-width: 280px; white-space: pre-wrap; overflow-wrap: anywhere; }
-.tbl .when { white-space: nowrap; color: var(--muted); }
-.tag { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.guests { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; margin-top: 14px; }
+.guest { position: relative; padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 12px; }
+.guest.no { opacity: .72; }
+.g-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.g-name { font: 600 18px/1.25 var(--sans); overflow-wrap: anywhere; }
+.g-when { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.tag { display: inline-block; padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 600; white-space: nowrap; }
 .tag.yes { background: rgba(155,211,163,.15); color: var(--yes); }
 .tag.maybe { background: rgba(232,199,138,.15); color: var(--maybe); }
 .tag.no { background: rgba(228,143,143,.14); color: var(--no); }
-.del { min-height: 36px; padding: 0 12px; border-radius: 10px; border: 1px solid rgba(228,143,143,.4); background: transparent; color: var(--no); font: 500 13px var(--sans); cursor: pointer; }
+.g-people { display: flex; align-items: center; gap: 10px; }
+.g-people .big { font: 500 34px/1 var(--serif); color: var(--gold); font-variant-numeric: lining-nums; }
+.g-people span { color: var(--muted); font-size: 13px; }
+.g-drinks { display: flex; flex-wrap: wrap; gap: 6px; }
+.dchip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 99px; font-size: 13px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); }
+.dchip i { width: 8px; height: 8px; border-radius: 50%; }
+.dchip.own { border-color: rgba(232,199,138,.4); color: var(--gold); font-style: italic; }
+.g-foot { display: flex; justify-content: flex-end; margin-top: auto; }
+.del { min-height: 34px; padding: 0 12px; border-radius: 10px; border: 1px solid rgba(228,143,143,.35); background: transparent; color: var(--no); font: 500 13px var(--sans); cursor: pointer; }
 .empty { color: var(--muted); padding: 24px 0 8px; text-align: center; }
-.others { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 8px; }
-.others:empty { display: none; }
-.others li { padding: 10px 14px; border-radius: 12px; background: rgba(0,0,0,.22); font-size: 14px; }
-.others li b { color: var(--gold); font-weight: 600; }
-.others .t { color: var(--muted); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; background: none; padding: 0 2px; }
-.tbl .other { color: var(--gold); font-style: italic; }
-.status { color: var(--muted); font-size: 13px; margin: -8px 0 14px; }
 
 /* === ТЕЛЕФОН === */
 @media (max-width: 760px) {
@@ -119,19 +137,11 @@ h2 { font-size: 24px; margin-bottom: 12px; }
   .tools { width: 100%; }
   .tools .btn { flex: 1 1 auto; }
   .search { width: 100%; min-width: 0; }
-  .tbl thead { display: none; }
-  .tbl, .tbl tbody, .tbl tr, .tbl td { display: block; width: 100%; }
-  .tbl tr { border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; margin-bottom: 10px; background: rgba(0,0,0,.18); }
-  .tbl td { border: 0; padding: 4px 0; display: grid; grid-template-columns: 110px 1fr; gap: 8px; }
-  .tbl td::before { content: attr(data-l); color: var(--muted); font-size: 12px; padding-top: 2px; }
-  .tbl td.name { font-size: 17px; }
-  .tbl td.act { display: block; padding-top: 8px; }
-  .tbl td.act::before { content: none; }
-  .del { width: 100%; min-height: 42px; }
-  .tbl .comment { max-width: none; }
-  .bar-row { grid-template-columns: 110px 1fr auto; }
+  .guests { grid-template-columns: 1fr; }
+  .calc .hide-m { display: none; }
+  .calc th, .calc td { padding: 10px 4px; }
 }
-@media (max-width: 380px) { .donut { flex-direction: column; } }
+@media (max-width: 420px) { .donut { flex-direction: column; align-items: stretch; } .donut svg { align-self: center; } }
 </style>
 </head>
 <body>
@@ -161,6 +171,7 @@ h2 { font-size: 24px; margin-bottom: 12px; }
     </header>
     <p class="status" id="status"></p>
 
+    <!-- Сводка -->
     <section class="kpis">
       <div class="card kpi hero"><div class="num" id="kGuests">0</div><div class="cap" id="kGuestsCap">человек придут</div><div class="sub" id="kGuestsSub"></div></div>
       <div class="card kpi"><div class="num c-yes" id="kYes">0</div><div class="cap">ответили «Да»</div></div>
@@ -168,31 +179,45 @@ h2 { font-size: 24px; margin-bottom: 12px; }
       <div class="card kpi"><div class="num c-no" id="kNo">0</div><div class="cap">ответили «Нет»</div></div>
     </section>
 
+    <!-- Диаграммы -->
     <section class="charts">
-      <div class="card"><h2>Ответы</h2><div class="donut" id="donut"></div></div>
+      <div class="card"><h2>Ответы</h2><p class="muted small">Сколько ответов каждого вида</p><div class="donut" id="donutAnswers"></div></div>
       <div class="card">
-        <h2>Напитки</h2>
-        <p class="muted small">Сколько ответов отметили напиток (среди «Да» и «Пока не знаю»). Если пришли вдвоём, в одном ответе могут быть напитки за обоих.</p>
-        <div class="bars" id="bars"></div>
+        <h2>Кто что пьёт</h2>
+        <p class="muted small">Примерное число людей на каждый напиток (среди тех, кто ответил «Да»)</p>
+        <div class="donut" id="donutDrinks"></div>
         <ul class="others" id="others"></ul>
       </div>
     </section>
 
-    <section class="card list">
+    <!-- Расчёт закупки -->
+    <div class="sec-title"><h2>Сколько закупить</h2></div>
+    <section class="card">
+      <div class="calc-head">
+        <label class="toggle"><input type="checkbox" id="incMaybe"> Учитывать «Пока не знаю»</label>
+        <span class="reserve">Запас <input type="number" id="reserve" min="0" max="100" step="5" value="10"> %</span>
+      </div>
+      <table class="calc">
+        <thead><tr><th>Напиток</th><th>Пьющих ≈</th><th>Норма, л/чел</th><th class="hide-m">Всего, л</th><th>Бутылок</th></tr></thead>
+        <tbody id="calcBody"></tbody>
+        <tfoot id="calcFoot"></tfoot>
+      </table>
+      <p class="note">Как считается: если в ответе несколько напитков, люди из этого ответа делятся поровну между ними (пара «водка + шампанское» = 1 человек на водку и 1 на шампанское). Нормы — на застолье ~4–5 часов для гостей 40–50 лет: водка 0,3 л (≈ 6 рюмок по 50 мл), вино 0,5 л (≈ 3–4 бокала), игристое 0,4 л (≈ 3 бокала). Нормы можно поменять — они сохранятся на этом устройстве. «Свой вариант» в расчёт не входит — смотрите список выше.</p>
+    </section>
+
+    <!-- Список гостей -->
+    <div class="sec-title"><h2>Список гостей <span class="muted" id="countAll"></span></h2></div>
+    <section class="card">
       <div class="list-head">
-        <h2>Все ответы <span class="muted" id="countAll"></span></h2>
+        <div class="filters" id="filters">
+          <button class="chip on" data-f="all" type="button">Все</button>
+          <button class="chip" data-f="yes" type="button">Придут</button>
+          <button class="chip" data-f="maybe" type="button">Не знают</button>
+          <button class="chip" data-f="no" type="button">Не придут</button>
+        </div>
         <input class="search" id="search" placeholder="Поиск по имени" aria-label="Поиск по имени">
       </div>
-      <div class="filters" id="filters">
-        <button class="chip on" data-f="all" type="button">Все</button>
-        <button class="chip" data-f="yes" type="button">Придут</button>
-        <button class="chip" data-f="maybe" type="button">Не знают</button>
-        <button class="chip" data-f="no" type="button">Не придут</button>
-      </div>
-      <table class="tbl" id="tbl">
-        <thead><tr><th>Имя</th><th>Ответ</th><th>Человек</th><th>Напитки</th><th>Свой вариант</th><th>Когда ответил</th><th></th></tr></thead>
-        <tbody id="tbody"></tbody>
-      </table>
+      <div class="guests" id="guests"></div>
       <p class="empty" id="empty" hidden></p>
     </section>
   </div>
@@ -204,20 +229,32 @@ h2 { font-size: 24px; margin-bottom: 12px; }
   "use strict";
   const P = window.PARTY || {};
   const $ = (id) => document.getElementById(id);
-  const LS_KEY = "admin_key_v1";
-  const store = {
-    get() { try { return localStorage.getItem(LS_KEY) || ""; } catch (e) { return ""; } },
-    set(v) { try { localStorage.setItem(LS_KEY, v); } catch (e) {} },
-    del() { try { localStorage.removeItem(LS_KEY); } catch (e) {} },
+  const LS_KEY = "admin_key_v1", LS_NORMS = "admin_norms_v1";
+  const ls = {
+    get(k) { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+    del(k) { try { localStorage.removeItem(k); } catch (e) {} },
   };
   const ATT = { yes: ["Придёт", "yes"], maybe: ["Не знает", "maybe"], no: ["Не придёт", "no"] };
   // Плоский список вариантов напитков: «Шампанское: просекко», «Вино: сухое» и т.д.
-  const FLAT = (P.drinks || []).flatMap((d) => d.options ? d.options.map((o) => ({ id: o.id, label: d.label + ": " + o.label.toLowerCase() })) : [{ id: d.id, label: d.label }]);
+  const FLAT = (P.drinks || []).flatMap((d) => d.options
+    ? d.options.map((o) => ({ id: o.id, label: d.label + ": " + o.label.toLowerCase(), group: d.id }))
+    : [{ id: d.id, label: d.label, group: d.id }]);
   const drinkLabel = Object.fromEntries(FLAT.map((d) => [d.id, d.label]));
+  const groupOf = Object.fromEntries(FLAT.map((d) => [d.id, d.group]));
+  // Цвета напитков для диаграммы и плашек
+  const COLORS = { prosecco: "#e8c78a", sparkling_sweet: "#f6e1b0", wine_dry: "#9c2c46", wine_sweet: "#d4728a", vodka: "#9cb8d6", other: "#9bd3a3", none: "#8a8276" };
+  const color = (id) => COLORS[id] || "#c9b38a";
+  // Нормы на одного пьющего (литры) и объём бутылки; ключ — группа напитка
+  const DEFAULT_NORMS = { champagne: { l: 0.4, bottle: 0.75, name: "игристое" }, wine: { l: 0.5, bottle: 0.75, name: "вино" }, vodka: { l: 0.3, bottle: 0.5, name: "водка" } };
+  let norms = JSON.parse(JSON.stringify(DEFAULT_NORMS));
+  try { const saved = JSON.parse(ls.get(LS_NORMS) || "{}"); Object.keys(saved).forEach((g) => { if (norms[g] && saved[g] > 0) norms[g].l = saved[g]; }); } catch (e) {}
+
   const plural = (n, f) => { const a = Math.abs(n) % 100, b = a % 10; if (a > 10 && a < 20) return f[2]; if (b > 1 && b < 5) return f[1]; if (b === 1) return f[0]; return f[2]; };
   const fmt = (iso) => { const d = new Date(iso); return isNaN(d) ? "" : d.toLocaleString("ru-RU", { timeZone: "Europe/Moscow", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }); };
+  const num = (x, d = 1) => (Math.round(x * 10 ** d) / 10 ** d).toLocaleString("ru-RU");
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
-  let rows = [], filter = "all", key = store.get();
+  let rows = [], filter = "all", key = ls.get(LS_KEY);
 
   const dateText = P.date ? new Date(P.date + "T12:00:00Z").toLocaleDateString("ru-RU", { day: "numeric", month: "long", timeZone: "UTC" }) : "";
   $("loginTitle").textContent = "День рождения" + (P.name ? " · " + P.name : "");
@@ -237,9 +274,9 @@ h2 { font-size: 24px; margin-bottom: 12px; }
     try {
       const res = await fetch(P.scriptUrl + "?key=" + encodeURIComponent(key) + "&t=" + Date.now());
       const json = await res.json();
-      if (!json.ok) { store.del(); key = ""; return showLogin(json.error === "forbidden" ? "Неверный пароль" : json.error); }
-      rows = json.rows || [];
-      if (fromLogin) store.set(key);
+      if (!json.ok) { ls.del(LS_KEY); key = ""; return showLogin(json.error === "forbidden" ? "Неверный пароль" : json.error); }
+      rows = (json.rows || []).map((r) => ({ ...r, drinks: r.drinks || [] }));
+      if (fromLogin) ls.set(LS_KEY, key);
       render();
     } catch (e) {
       if ($("dash").hidden) showLogin("Не удалось связаться с таблицей. Проверьте интернет.");
@@ -247,6 +284,21 @@ h2 { font-size: 24px; margin-bottom: 12px; }
     } finally {
       $("refresh").disabled = false; $("loginBtn").disabled = false;
     }
+  }
+
+  /* === РАСПРЕДЕЛЕНИЕ ЛЮДЕЙ ПО НАПИТКАМ ===
+     Люди из одного ответа делятся поровну между выбранными видами напитков,
+     а внутри вида (шампанское, вино) — поровну между уточнениями. */
+  function allocate(list) {
+    const res = {}; FLAT.forEach((f) => (res[f.id] = 0));
+    list.forEach((r) => {
+      const n = r.guests || 0; if (!n) return;
+      const groups = {};
+      r.drinks.forEach((id) => { if (!groupOf[id]) return; (groups[groupOf[id]] = groups[groupOf[id]] || []).push(id); });
+      const gk = Object.keys(groups); if (!gk.length) return;
+      gk.forEach((g) => groups[g].forEach((id) => (res[id] += n / gk.length / groups[g].length)));
+    });
+    return res;
   }
 
   /* === ОТРИСОВКА === */
@@ -261,64 +313,109 @@ h2 { font-size: 24px; margin-bottom: 12px; }
     $("kGuestsSub").textContent = gMaybe ? "и ещё до " + gMaybe + " — под вопросом" : "сумма людей из ответов «Да»";
     $("kYes").textContent = yes.length; $("kMaybe").textContent = maybe.length; $("kNo").textContent = no.length;
     $("countAll").textContent = "(" + rows.length + ")";
-    donut(yes.length, maybe.length, no.length);
 
-    const coming = rows.filter((r) => r.attending !== "no");
-    const stats = FLAT.map((d) => { const c = coming.filter((r) => r.drinks.includes(d.id)); return { label: d.label, n: c.length, people: sum(c) }; });
-    const max = Math.max(1, ...stats.map((s) => s.n));
-    const bars = $("bars"); bars.innerHTML = "";
-    stats.forEach((s) => {
-      const row = el("div", "bar-row"), track = el("span", "bar-track"), fill = el("span", "bar-fill"), val = el("span", "bar-val", String(s.n));
-      fill.style.width = (s.n / max) * 100 + "%"; track.appendChild(fill);
-      row.append(el("span", "bar-label", s.label), track, val); bars.appendChild(row);
-    });
+    donut($("donutAnswers"), [
+      { label: "Да", v: yes.length, c: "var(--yes)" }, { label: "Не знаю", v: maybe.length, c: "var(--maybe)" }, { label: "Нет", v: no.length, c: "var(--no)" },
+    ], rows.length, plural(rows.length, ["ответ", "ответа", "ответов"]), false);
+
+    const alloc = allocate(yes);
+    const parts = FLAT.map((f) => ({ label: f.label, v: alloc[f.id], c: color(f.id) })).filter((p) => p.v > 0);
+    donut($("donutDrinks"), parts, gYes, plural(gYes, ["человек", "человека", "человек"]), true);
+
     const ol = $("others"); ol.innerHTML = "";
-    const custom = coming.filter((r) => r.drinkOther);
-    if (custom.length) {
-      ol.appendChild(el("li", "t", "Свои варианты гостей"));
-      custom.forEach((r) => { const li = el("li"); li.append(el("b", null, r.name + ": "), document.createTextNode(r.drinkOther)); ol.appendChild(li); });
-    }
-    table();
+    rows.filter((r) => r.attending !== "no" && r.drinkOther).forEach((r) => {
+      const li = el("li"); li.append(el("b", null, "Свой вариант — " + r.name + ": "), document.createTextNode(r.drinkOther)); ol.appendChild(li);
+    });
+
+    calc();
+    guests();
   }
 
-  function donut(y, m, n) {
-    const total = y + m + n, R = 70, C = 2 * Math.PI * R, NS = "http://www.w3.org/2000/svg";
-    const box = $("donut"); box.innerHTML = "";
+  /* --- Кольцевая диаграмма --- */
+  function donut(box, parts, total, cap, showPct) {
+    const R = 70, C = 2 * Math.PI * R, NS = "http://www.w3.org/2000/svg";
+    box.innerHTML = "";
     const svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", "0 0 180 180"); svg.setAttribute("role", "img");
-    svg.setAttribute("aria-label", "Да: " + y + ", не знаю: " + m + ", нет: " + n);
-    const circle = (cls, len, off) => { const c = document.createElementNS(NS, "circle"); c.setAttribute("cx", 90); c.setAttribute("cy", 90); c.setAttribute("r", R); c.setAttribute("class", cls);
-      if (len != null) { c.setAttribute("stroke-dasharray", len + " " + (C - len)); c.setAttribute("stroke-dashoffset", -off); c.setAttribute("transform", "rotate(-90 90 90)"); } svg.appendChild(c); };
+    svg.setAttribute("aria-label", parts.map((p) => p.label + ": " + num(p.v)).join(", "));
+    const circle = (cls, len, off, c) => { const k = document.createElementNS(NS, "circle"); k.setAttribute("cx", 90); k.setAttribute("cy", 90); k.setAttribute("r", R); k.setAttribute("class", cls);
+      if (len != null) { k.setAttribute("stroke-dasharray", Math.max(0, len - 1.5) + " " + (C - Math.max(0, len - 1.5))); k.setAttribute("stroke-dashoffset", -off); k.setAttribute("transform", "rotate(-90 90 90)"); k.style.stroke = c; }
+      svg.appendChild(k); };
     circle("ring-bg");
+    const sumV = parts.reduce((s, p) => s + p.v, 0);
     let off = 0;
-    if (total) [[y, "ring yes"], [m, "ring maybe"], [n, "ring no"]].forEach(([v, cls]) => { const len = (v / total) * C; if (len) circle(cls, len, off); off += len; });
+    if (sumV) parts.forEach((p) => { const len = (p.v / sumV) * C; if (len) circle("ring", len, off, p.c); off += len; });
     const t1 = document.createElementNS(NS, "text"); t1.setAttribute("x", 90); t1.setAttribute("y", 96); t1.setAttribute("class", "donut-num"); t1.textContent = total;
-    const t2 = document.createElementNS(NS, "text"); t2.setAttribute("x", 90); t2.setAttribute("y", 118); t2.setAttribute("class", "donut-cap"); t2.textContent = plural(total, ["ответ", "ответа", "ответов"]);
+    const t2 = document.createElementNS(NS, "text"); t2.setAttribute("x", 90); t2.setAttribute("y", 118); t2.setAttribute("class", "donut-cap"); t2.textContent = cap;
     svg.append(t1, t2);
     const ul = el("ul", "legend");
-    [["yes", "Да", y], ["maybe", "Не знаю", m], ["no", "Нет", n]].forEach(([c, l, v]) => { const li = el("li"); li.append(el("i", c), document.createTextNode(l + " "), el("b", null, String(v))); ul.appendChild(li); });
+    if (!parts.length) ul.appendChild(el("li", "muted", "Пока нет данных"));
+    parts.forEach((p) => {
+      const li = el("li"); const i = el("i"); i.style.background = p.c;
+      const b = el("b", null, showPct ? "≈ " + num(p.v) : String(p.v));
+      if (showPct && sumV) b.appendChild(el("small", null, " · " + Math.round((p.v / sumV) * 100) + "%"));
+      li.append(i, el("span", null, p.label), b); ul.appendChild(li);
+    });
     box.append(svg, ul);
   }
 
-  function table() {
+  /* --- Расчёт закупки алкоголя --- */
+  function calc() {
+    const reserve = Math.max(0, Number($("reserve").value) || 0) / 100;
+    const list = rows.filter((r) => r.attending === "yes" || ($("incMaybe").checked && r.attending === "maybe"));
+    const alloc = allocate(list);
+    const body = $("calcBody"); body.innerHTML = "";
+    let totalL = 0, totalB = 0;
+    FLAT.filter((f) => norms[f.group]).forEach((f) => {
+      const people = alloc[f.id], nm = norms[f.group];
+      const litres = people * nm.l * (1 + reserve);
+      const bottles = people > 0 ? Math.ceil(litres / nm.bottle - 1e-9) : 0;
+      totalL += litres; totalB += bottles;
+      const tr = el("tr");
+      const name = el("td"); const nm2 = el("span", "nm"); const dot = el("span", "dot"); dot.style.background = color(f.id); nm2.append(dot, el("span", null, f.label)); name.appendChild(nm2);
+      const normTd = el("td");
+      const wrap = el("span", "norm"); const inp = el("input"); inp.type = "number"; inp.step = "0.05"; inp.min = "0"; inp.value = nm.l; inp.setAttribute("aria-label", "Норма, литров на человека: " + f.label);
+      inp.addEventListener("change", () => { const v = parseFloat(String(inp.value).replace(",", ".")); if (v >= 0) { norms[f.group].l = v; saveNorms(); calc(); } });
+      wrap.append(inp); normTd.appendChild(wrap);
+      const bt = el("td", "n"); const big = el("span", "bottles", String(bottles)); bt.append(big, el("small", null, " × " + num(nm.bottle, 2) + " л"));
+      tr.append(name, el("td", "n", "≈ " + num(people)), normTd, el("td", "n hide-m", num(litres)), bt);
+      body.appendChild(tr);
+    });
+    const coming = list.reduce((s, r) => s + (r.guests || 0), 0);
+    const nonDrink = allocate(list).none || 0;
+    const foot = $("calcFoot"); foot.innerHTML = "";
+    const tr = el("tr"); tr.append(el("td", null, "Итого алкоголя"), el("td"), el("td"), el("td", "n hide-m", num(totalL) + " л"), el("td", "n", totalB + " " + plural(totalB, ["бутылка", "бутылки", "бутылок"])));
+    foot.appendChild(tr);
+    const tr2 = el("tr"); const td2 = el("td"); td2.colSpan = 5; td2.className = "muted";
+    td2.textContent = `Всего гостей в расчёте: ${coming}. Не пьют алкоголь ≈ ${num(nonDrink)} — для них и для всех остальных стоит предусмотреть воду, соки и морс (ориентир ≈ 1 л на гостя, всего ≈ ${coming} л).`;
+    td2.style.fontWeight = "400"; tr2.appendChild(td2); foot.appendChild(tr2);
+  }
+  function saveNorms() { const o = {}; Object.keys(norms).forEach((g) => (o[g] = norms[g].l)); ls.set(LS_NORMS, JSON.stringify(o)); }
+
+  /* --- Карточки гостей --- */
+  function guests() {
     const q = $("search").value.trim().toLowerCase();
     const list = rows.filter((r) => (filter === "all" || r.attending === filter) && r.name.toLowerCase().includes(q))
-      .sort((a, b) => new Date(b.updated || b.created) - new Date(a.updated || a.created));
-    const tb = $("tbody"); tb.innerHTML = "";
-    $("tbl").hidden = !list.length; $("empty").hidden = !!list.length;
+      .sort((a, b) => ({ yes: 0, maybe: 1, no: 2 }[a.attending] - { yes: 0, maybe: 1, no: 2 }[b.attending]) || a.name.localeCompare(b.name, "ru"));
+    const box = $("guests"); box.innerHTML = "";
+    $("empty").hidden = !!list.length;
     $("empty").textContent = rows.length ? "Ничего не найдено" : "Пока никто не ответил. Отправьте ссылку гостям!";
     list.forEach((r) => {
-      const tr = el("tr");
-      const td = (label, cls, text) => { const c = el("td", cls, text); c.dataset.l = label; tr.appendChild(c); return c; };
-      td("Имя", "name", r.name);
-      const a = ATT[r.attending] || ATT.yes; td("Ответ").appendChild(el("span", "tag " + a[1], a[0]));
-      td("Человек", null, r.attending === "no" ? "—" : String(r.guests));
-      td("Напитки", null, r.drinks.filter((d) => d !== "other").map((d) => drinkLabel[d] || d).join(", ") || "—");
-      td("Свой вариант", "other", r.drinkOther || "—");
-      const w = td("Когда", "when", fmt(r.updated || r.created));
-      if (r.updated && r.created && r.updated !== r.created) w.appendChild(el("small", "muted", " (изменён)"));
-      const act = el("td", "act"); const del = el("button", "del", "Удалить"); del.type = "button";
-      del.addEventListener("click", () => remove(r, del)); act.appendChild(del); tr.appendChild(act);
-      tb.appendChild(tr);
+      const a = ATT[r.attending] || ATT.yes;
+      const card = el("div", "card guest " + a[1]);
+      const top = el("div", "g-top"); const nm = el("div"); nm.append(el("div", "g-name", r.name), el("div", "g-when", "ответил " + fmt(r.updated || r.created) + (r.updated && r.created && r.updated !== r.created ? " · изменён" : "")));
+      top.append(nm, el("span", "tag " + a[1], a[0])); card.appendChild(top);
+      if (r.attending !== "no") {
+        const pp = el("div", "g-people"); pp.append(el("span", "big", String(r.guests)), el("span", null, r.guests === 1 ? "человек — только сам(а)" : plural(r.guests, ["человек", "человека", "человек"]) + " — вместе с гостями"));
+        card.appendChild(pp);
+        const dr = el("div", "g-drinks");
+        r.drinks.filter((d) => d !== "other").forEach((d) => { const c = el("span", "dchip"); const i = el("i"); i.style.background = color(d); c.append(i, document.createTextNode(drinkLabel[d] || d)); dr.appendChild(c); });
+        if (r.drinkOther) dr.appendChild(el("span", "dchip own", "свой вариант: " + r.drinkOther));
+        if (!dr.children.length) dr.appendChild(el("span", "muted", "напитки не указаны"));
+        card.appendChild(dr);
+      }
+      const foot = el("div", "g-foot"); const del = el("button", "del", "Удалить"); del.type = "button";
+      del.addEventListener("click", () => remove(r, del)); foot.appendChild(del); card.appendChild(foot);
+      box.appendChild(card);
     });
   }
 
@@ -353,13 +450,15 @@ h2 { font-size: 24px; margin-bottom: 12px; }
   $("login").addEventListener("submit", (e) => { e.preventDefault(); key = $("pwd").value.trim(); if (key) load(true); });
   $("refresh").addEventListener("click", () => load());
   $("csv").addEventListener("click", csv);
-  $("logout").addEventListener("click", () => { store.del(); key = ""; rows = []; $("pwd").value = ""; showLogin(); });
-  $("search").addEventListener("input", table);
+  $("logout").addEventListener("click", () => { ls.del(LS_KEY); key = ""; rows = []; $("pwd").value = ""; showLogin(); });
+  $("search").addEventListener("input", guests);
+  $("incMaybe").addEventListener("change", calc);
+  $("reserve").addEventListener("input", calc);
   $("filters").addEventListener("click", (e) => {
     const b = e.target.closest("[data-f]"); if (!b) return;
-    filter = b.dataset.f; [...$("filters").children].forEach((x) => x.classList.toggle("on", x === b)); table();
+    filter = b.dataset.f; [...$("filters").children].forEach((x) => x.classList.toggle("on", x === b)); guests();
   });
-  setInterval(() => { if (!$("dash").hidden && !document.hidden) load(); }, 60000);
+  setInterval(() => { if (!$("dash").hidden && !document.hidden && !document.activeElement.matches("input")) load(); }, 60000);
   load();
 })();
 </script>
