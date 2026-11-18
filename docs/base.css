@@ -190,3 +190,6 @@ input:focus, textarea:focus { outline: none; border-color: var(--accent); box-sh
   font: 600 14px var(--sans); cursor: pointer; transition: all .25s cubic-bezier(.2,.7,.2,1.4); }
 .subchip.on { border-color: var(--accent); background: var(--chip-on-bg); color: var(--chip-on-text); transform: scale(1.04); }
 .subchip:focus-visible { outline: none; box-shadow: 0 0 0 4px var(--focus); }
+
+/* При переходе по кнопке заголовок раздела не прилипает к верхнему краю */
+.section-head { scroll-margin-top: 48px; }
