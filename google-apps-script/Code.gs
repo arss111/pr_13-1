@@ -41,7 +41,7 @@ function json_(obj) {
 /** Чистим текст: убираем управляющие символы, лишние пробелы, обрезаем длину, защищаем от формул */
 function clean_(v, max, multiline) {
   let s = typeof v === 'string' ? v : '';
-  s = s.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F​-‏‪-‮⁦-⁩]/g, '');
+  s = s.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F\u200B-\u200F\u202A-\u202E\u2066-\u2069]/g, '');
   s = multiline ? s.replace(/\r\n?/g, '\n').replace(/\n{3,}/g, '\n\n') : s.replace(/\s+/g, ' ');
   s = s.trim().slice(0, max);
   if (/^[=+\-@]/.test(s)) s = "'" + s; // чтобы таблица не приняла текст за формулу
